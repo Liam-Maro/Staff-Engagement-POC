@@ -1,49 +1,64 @@
-<div class="staff-management">
-  <div class="header">
-    <div class="header-left">
-      <a routerLink="/dashboard" class="btn-back">&larr; Back</a>
-      <h2>Staff Management</h2>
-    </div>
-    <a routerLink="/admin/staff/create" class="btn-create">+ Add Staff Member</a>
+<div>
+  <div class="page-header">
+    <h2>Staff Management</h2>
+    <a routerLink="/admin/staff/create" class="btn btn-primary">+ Add Staff Member</a>
   </div>
 
   @if (isLoading()) {
-    <p class="loading">Loading staff members...</p>
+    <p class="text-muted text-center mt-2">Loading staff members...</p>
   } @else if (staffMembers().length === 0) {
-    <p class="empty">No staff members found.</p>
+    <p class="text-muted text-center mt-2">No staff members found.</p>
   } @else {
-    <table>
-      <thead>
-        <tr>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Created</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (member of staffMembers(); track member.id) {
-          <tr [class.inactive]="!member.active">
-            <td>{{ member.email }}</td>
-            <td><span class="badge" [class.admin]="member.role === 'ADMIN'">{{ member.role }}</span></td>
-            <td>
-              @if (member.active) {
-                <span class="status active">Active</span>
-              } @else {
-                <span class="status inactive">Inactive</span>
-              }
-            </td>
-            <td>{{ member.createdAt | date:'mediumDate' }}</td>
-            <td class="actions">
-              @if (member.active) {
-                <button class="btn-deactivate" (click)="onDeactivate(member.id)">Deactivate</button>
-              }
-              <button class="btn-delete" (click)="onDelete(member.id)">Delete</button>
-            </td>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Actions</th>
           </tr>
-        }
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          @for (member of staffMembers(); track member.id) {
+            <tr>
+              <td>{{ member.email }}</td>
+              <td>
+                <span class="badge" [class.badge-admin]="member.role === 'ADMIN'" [class.badge-staff]="member.role === 'STAFF'">
+                  {{ member.role }}
+                </span>
+              </td>
+              <td>
+                @if (member.active) {
+                  <span class="badge-active">Active</span>
+                } @else {
+                  <span class="badge-inactive">Inactive</span>
+                }
+              </td>
+              <td>{{ member.createdAt | date:'mediumDate' }}</td>
+              <td>
+                @if (member.active) {
+                  <button class="btn btn-outline btn-sm" (click)="onDeactivate(member.id)">Deactivate</button>
+                } @else {
+                  <button class="btn btn-primary btn-sm" (click)="onActivate(member.id, member.role)">Activate</button>
+                }
+                <button class="btn btn-danger btn-sm" (click)="onDelete(member.id)">Delete</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   }
 </div>
+
+<app-confirm-modal
+  [isOpen]="showModal()"
+  [title]="modalTitle"
+  [message]="modalMessage"
+  [confirmText]="modalConfirmText"
+  variant="danger"
+  (confirmed)="onModalConfirm()"
+  (cancelled)="onModalCancel()"
+/>

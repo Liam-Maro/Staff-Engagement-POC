@@ -1,44 +1,31 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AuthService } from '../auth/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink],
   template: `
-    <div class="dashboard">
-      <header>
-        <h1>Staff Engagement</h1>
-        <nav>
-          <a routerLink="/employees" class="nav-link">Employees</a>
-          <a routerLink="/skills" class="nav-link">Skills Register</a>
-          @if (authService.userRole() === 'ADMIN') {
-            <a routerLink="/admin/staff" class="nav-link">Manage Staff</a>
-          }
-          <button (click)="onLogout()">Logout</button>
-        </nav>
-      </header>
-      <main>
-        <p>Welcome, {{ authService.userEmail() }}! You are logged in as <strong>{{ authService.userRole() }}</strong>.</p>
-      </main>
+    <div class="page-header">
+      <h2>Dashboard</h2>
+    </div>
+    <div class="dashboard-welcome">
+      <div class="welcome-card">
+        <h3>Welcome back, {{ authService.userEmail() }}</h3>
+        <p class="text-muted">You are signed in as <strong>{{ authService.userRole() }}</strong></p>
+      </div>
     </div>
   `,
   styles: [`
-    .dashboard { padding: 2rem; }
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid #eee; padding-bottom: 1rem; }
-    h1 { margin: 0; font-size: 1.5rem; }
-    nav { display: flex; align-items: center; gap: 1rem; }
-    .nav-link { color: #1976d2; text-decoration: none; font-weight: 500; }
-    .nav-link:hover { text-decoration: underline; }
-    button { padding: 0.5rem 1rem; background: #d32f2f; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    button:hover { background: #b71c1c; }
+    .welcome-card {
+      background: var(--color-bg-white);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    h3 { margin-bottom: 0.5rem; font-size: 1.2rem; }
   `]
 })
 export class DashboardComponent {
   constructor(public authService: AuthService) {}
-
-  onLogout(): void {
-    this.authService.logout();
-  }
 }
