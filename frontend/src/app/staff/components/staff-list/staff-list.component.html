@@ -1,0 +1,49 @@
+<div class="staff-management">
+  <div class="header">
+    <div class="header-left">
+      <a routerLink="/dashboard" class="btn-back">&larr; Back</a>
+      <h2>Staff Management</h2>
+    </div>
+    <a routerLink="/admin/staff/create" class="btn-create">+ Add Staff Member</a>
+  </div>
+
+  @if (isLoading()) {
+    <p class="loading">Loading staff members...</p>
+  } @else if (staffMembers().length === 0) {
+    <p class="empty">No staff members found.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (member of staffMembers(); track member.id) {
+          <tr [class.inactive]="!member.active">
+            <td>{{ member.email }}</td>
+            <td><span class="badge" [class.admin]="member.role === 'ADMIN'">{{ member.role }}</span></td>
+            <td>
+              @if (member.active) {
+                <span class="status active">Active</span>
+              } @else {
+                <span class="status inactive">Inactive</span>
+              }
+            </td>
+            <td>{{ member.createdAt | date:'mediumDate' }}</td>
+            <td class="actions">
+              @if (member.active) {
+                <button class="btn-deactivate" (click)="onDeactivate(member.id)">Deactivate</button>
+              }
+              <button class="btn-delete" (click)="onDelete(member.id)">Delete</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

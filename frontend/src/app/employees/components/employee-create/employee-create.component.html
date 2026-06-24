@@ -1,0 +1,51 @@
+<div class="create-container">
+  <div class="create-card">
+    <a routerLink="/employees" class="btn-back">&larr; Back to Employees</a>
+    <h2>Add Employee</h2>
+
+    @if (errorMessage()) {
+      <div class="error-message">{{ errorMessage() }}</div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input id="firstName" type="text" formControlName="firstName" />
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input id="lastName" type="text" formControlName="lastName" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" placeholder="john.doe@company.com" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="department">Department</label>
+          <input id="department" type="text" formControlName="department" placeholder="Engineering" />
+        </div>
+        <div class="form-group">
+          <label for="jobTitle">Job Title</label>
+          <input id="jobTitle" type="text" formControlName="jobTitle" placeholder="Software Developer" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="hireDate">Hire Date</label>
+        <input id="hireDate" type="date" formControlName="hireDate" />
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="onCancel()">Cancel</button>
+        <button type="submit" [disabled]="form.invalid || isLoading()">
+          @if (isLoading()) { Creating... } @else { Add Employee }
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
