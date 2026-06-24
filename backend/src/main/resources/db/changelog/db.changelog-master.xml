@@ -10,5 +10,6 @@
     <include file="db/changelog/changes/004-create-task-table.xml"/>
     <include file="db/changelog/changes/005-create-portfolio-table.xml"/>
     <include file="db/changelog/changes/006-create-skills-table.xml"/>
+    <include file="db/changelog/changes/007-add-auth-fields-to-staff.xml"/>
 
 </databaseChangeLog>
