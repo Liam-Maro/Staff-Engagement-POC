@@ -23,3 +23,14 @@
 .badge[data-level="advanced"] { background: #f0fdf4; color: #16a34a; }
 .badge[data-level="intermediate"] { background: #fffbeb; color: #d97706; }
 .badge[data-level="beginner"] { background: #fef2f2; color: #dc2626; }
+
+.error-message {
+  color: #dc2626;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
