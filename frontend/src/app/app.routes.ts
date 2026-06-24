@@ -21,6 +21,7 @@ export const routes: Routes = [
       { path: 'create', loadComponent: () => import('./staff/components/staff-create/staff-create.component').then(m => m.StaffCreateComponent) }
     ]
   },
+  { path: 'skills', loadComponent: () => import('./skills/components/skill-search/skill-search.component').then(m => m.SkillSearchComponent), canActivate: [authGuard] },
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: 'login' }
 ];

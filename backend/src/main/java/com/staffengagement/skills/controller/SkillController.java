@@ -2,6 +2,8 @@ package com.staffengagement.skills.controller;
 
 import com.staffengagement.skills.dto.CreateSkillRequest;
 import com.staffengagement.skills.dto.SkillResponse;
+import com.staffengagement.skills.dto.SkillSearchResult;
+import com.staffengagement.skills.dto.UpdateSkillRequest;
 import com.staffengagement.skills.service.SkillService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -30,10 +32,20 @@ class SkillController {
         return service.findByName(name);
     }
 
+    @GetMapping("/search")
+    List<SkillSearchResult> search(@RequestParam String query) {
+        return service.search(query);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     SkillResponse create(@Valid @RequestBody CreateSkillRequest request) {
         return service.create(request);
+    }
+
+    @PutMapping("/{id}")
+    SkillResponse update(@PathVariable UUID id, @Valid @RequestBody UpdateSkillRequest request) {
+        return service.update(id, request);
     }
 
     @DeleteMapping("/{id}")

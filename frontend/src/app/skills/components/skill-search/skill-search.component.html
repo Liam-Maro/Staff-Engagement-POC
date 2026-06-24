@@ -1,0 +1,49 @@
+<div class="skill-search">
+  <div class="header">
+    <a routerLink="/dashboard" class="btn-back">&larr; Back</a>
+    <h2>Skills Register</h2>
+  </div>
+
+  <p class="subtitle">Search for a skill to see who in the organisation has experience with it.</p>
+
+  <div class="search-bar">
+    <input
+      type="text"
+      [(ngModel)]="query"
+      placeholder="Search a skill (e.g. Angular, Java, Python...)"
+      (keyup.enter)="onSearch()"
+    />
+    <button (click)="onSearch()" [disabled]="!query.trim() || isLoading()">Search</button>
+  </div>
+
+  @if (isLoading()) {
+    <p class="loading">Searching...</p>
+  } @else if (hasSearched() && results().length === 0) {
+    <p class="empty">No employees found with that skill.</p>
+  } @else if (results().length > 0) {
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Years</th>
+          <th>Projects</th>
+          <th>Proficiency</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (result of results(); track result.employeeEmail; let i = $index) {
+          <tr>
+            <td>{{ i + 1 }}</td>
+            <td>{{ result.employeeFirstName }} {{ result.employeeLastName }}</td>
+            <td>{{ result.employeeEmail }}</td>
+            <td>{{ result.yearsExperience }}</td>
+            <td>{{ result.projectCount }}</td>
+            <td><span class="badge" [attr.data-level]="result.proficiency.toLowerCase()">{{ result.proficiency }}</span></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
