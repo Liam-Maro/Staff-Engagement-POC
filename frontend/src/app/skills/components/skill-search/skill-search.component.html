@@ -17,7 +17,13 @@
 
   @if (isLoading()) {
     <p class="text-muted text-center mt-2">Searching...</p>
-  } @else if (hasSearched() && results().length === 0) {
+  }
+
+  @if (errorMessage()) {
+    <p class="error-message">{{ errorMessage() }}</p>
+  }
+
+  @if (!isLoading() && !errorMessage() && hasSearched() && results().length === 0) {
     <p class="text-muted text-center mt-2">No employees found with that skill.</p>
   } @else if (results().length > 0) {
     <div class="table-container">

@@ -18,12 +18,14 @@ export class SkillSearchComponent {
   results = signal<SkillSearchResult[]>([]);
   hasSearched = signal(false);
   isLoading = signal(false);
+  errorMessage = signal<string | null>(null);
 
   constructor(private skillService: SkillService) {}
 
   onSearch(): void {
     if (!this.query.trim()) return;
 
+    this.errorMessage.set(null);
     this.isLoading.set(true);
     this.hasSearched.set(true);
 
@@ -32,7 +34,10 @@ export class SkillSearchComponent {
         this.results.set(data);
         this.isLoading.set(false);
       },
-      error: () => this.isLoading.set(false)
+      error: () => {
+        this.isLoading.set(false);
+        this.errorMessage.set('Search could not be completed. Please try again.');
+      }
     });
   }
 }

@@ -77,6 +77,37 @@ class SkillServiceTest {
     }
 
     @Test
+    void search_shouldReturnEmpty_whenQueryIsWhitespaceOnly() {
+        List<SkillSearchResult> results = service.search("   \t  ");
+        assertThat(results).isEmpty();
+        verify(skillRepository, never()).findByNameContainingIgnoreCase(any());
+    }
+
+    @Test
+    void search_shouldCapResultsAt50_whenMoreMatchingSkillsExist() {
+        // Create 60 skills with matching employees
+        List<Skill> sixtySkills = new java.util.ArrayList<>();
+        for (int i = 0; i < 60; i++) {
+            UUID empId = UUID.randomUUID();
+            Employee emp = new Employee();
+            emp.setId(empId);
+            emp.setFirstName("First" + i);
+            emp.setLastName("Last" + i);
+            emp.setEmail("emp" + i + "@example.com");
+            when(employeeRepository.findById(empId)).thenReturn(Optional.of(emp));
+
+            Skill skill = buildSkill(empId, "Java", i, i);
+            sixtySkills.add(skill);
+        }
+
+        when(skillRepository.findByNameContainingIgnoreCase("java")).thenReturn(sixtySkills);
+
+        List<SkillSearchResult> results = service.search("java");
+
+        assertThat(results).hasSize(50);
+    }
+
+    @Test
     void search_shouldSkipSkills_whenEmployeeNotFound() {
         Skill orphan = buildSkill(UUID.randomUUID(), "React", 5, 3);
         when(skillRepository.findByNameContainingIgnoreCase("react")).thenReturn(List.of(orphan));
@@ -90,6 +121,7 @@ class SkillServiceTest {
     void create_shouldSaveAndReturnSkill() {
         var request = new CreateSkillRequest(employeeId, "Java", 5, 8, "Advanced");
         Skill saved = buildSkill(employeeId, "Java", 5, 8);
+        when(employeeRepository.existsById(employeeId)).thenReturn(true);
         when(skillRepository.save(any())).thenReturn(saved);
 
         var result = service.create(request);
@@ -123,11 +155,59 @@ class SkillServiceTest {
     }
 
     @Test
+    void create_shouldThrow_whenEmployeeDoesNotExist() {
+        UUID nonExistentEmployeeId = UUID.randomUUID();
+        var request = new CreateSkillRequest(nonExistentEmployeeId, "Python", 3, 5, "Intermediate");
+        when(employeeRepository.existsById(nonExistentEmployeeId)).thenReturn(false);
+
+        assertThatThrownBy(() -> service.create(request))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Employee not found: " + nonExistentEmployeeId);
+
+        verify(skillRepository, never()).save(any());
+    }
+
+    @Test
+    void create_shouldSucceed_whenEmployeeExists() {
+        var request = new CreateSkillRequest(employeeId, "TypeScript", 4, 6, "Advanced");
+        Skill saved = buildSkill(employeeId, "TypeScript", 4, 6);
+        when(employeeRepository.existsById(employeeId)).thenReturn(true);
+        when(skillRepository.save(any())).thenReturn(saved);
+
+        var result = service.create(request);
+
+        assertThat(result).isNotNull();
+        assertThat(result.name()).isEqualTo("TypeScript");
+        assertThat(result.yearsExperience()).isEqualTo(4);
+        assertThat(result.projectCount()).isEqualTo(6);
+        verify(employeeRepository).existsById(employeeId);
+        verify(skillRepository).save(any(Skill.class));
+    }
+
+    @Test
     void delete_shouldThrow_whenSkillNotFound() {
         UUID id = UUID.randomUUID();
         when(skillRepository.existsById(id)).thenReturn(false);
         assertThatThrownBy(() -> service.delete(id))
                 .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    void findByEmployeeId_shouldReturnSkillsOrderedByNameAscending() {
+        // Skills in alphabetical order (as the repository would return from DB)
+        Skill angular = buildSkill(employeeId, "Angular", 3, 5);
+        Skill java = buildSkill(employeeId, "Java", 5, 8);
+        Skill python = buildSkill(employeeId, "Python", 2, 4);
+
+        when(skillRepository.findByEmployeeIdOrderByNameAsc(employeeId))
+                .thenReturn(List.of(angular, java, python));
+
+        var results = service.findByEmployeeId(employeeId);
+
+        assertThat(results).hasSize(3);
+        assertThat(results.get(0).name()).isEqualTo("Angular");
+        assertThat(results.get(1).name()).isEqualTo("Java");
+        assertThat(results.get(2).name()).isEqualTo("Python");
     }
 
     private Skill buildSkill(UUID empId, String name, int years, int projects) {

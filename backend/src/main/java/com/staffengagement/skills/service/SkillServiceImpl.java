@@ -28,7 +28,7 @@ class SkillServiceImpl implements SkillService {
 
     @Override
     public List<SkillResponse> findByEmployeeId(UUID employeeId) {
-        return repository.findByEmployeeId(employeeId).stream().map(this::toResponse).toList();
+        return repository.findByEmployeeIdOrderByNameAsc(employeeId).stream().map(this::toResponse).toList();
     }
 
     @Override
@@ -38,6 +38,10 @@ class SkillServiceImpl implements SkillService {
 
     @Override
     public List<SkillSearchResult> search(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return List.of();
+        }
+
         List<Skill> skills = repository.findByNameContainingIgnoreCase(query);
 
         return skills.stream()
@@ -58,11 +62,16 @@ class SkillServiceImpl implements SkillService {
                 .sorted(Comparator
                         .<SkillSearchResult>comparingInt(SkillSearchResult::yearsExperience).reversed()
                         .thenComparing(Comparator.<SkillSearchResult>comparingInt(SkillSearchResult::projectCount).reversed()))
+                .limit(50)
                 .toList();
     }
 
     @Override
     public SkillResponse create(CreateSkillRequest request) {
+        if (!employeeRepository.existsById(request.employeeId())) {
+            throw new EntityNotFoundException("Employee not found: " + request.employeeId());
+        }
+
         var skill = new Skill();
         skill.setEmployeeId(request.employeeId());
         skill.setName(request.name());
