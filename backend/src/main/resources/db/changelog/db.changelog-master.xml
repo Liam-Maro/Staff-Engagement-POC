@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-            https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
-    <!--
-        Add new changelog files here in order.
-        Each file corresponds to a migration script for a module.
-        Example:
-        <include file="db/changelog/changes/001-create-employee-table.xml"/>
-    -->
+    <include file="db/changelog/changes/001-create-employee-table.xml"/>
+    <include file="db/changelog/changes/002-create-staff-table.xml"/>
+    <include file="db/changelog/changes/003-create-interaction-table.xml"/>
+    <include file="db/changelog/changes/004-create-task-table.xml"/>
+    <include file="db/changelog/changes/005-create-portfolio-table.xml"/>
+    <include file="db/changelog/changes/006-create-skills-table.xml"/>
 
 </databaseChangeLog>
