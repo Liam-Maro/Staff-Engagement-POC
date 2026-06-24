@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- Add email and password columns to existing stf_staff table -->
+    <changeSet id="007-add-email-to-stf-staff" author="staffengagement">
+        <addColumn tableName="stf_staff">
+            <column name="email" type="varchar(255)">
+                <constraints nullable="true" unique="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="007-add-password-to-stf-staff" author="staffengagement">
+        <addColumn tableName="stf_staff">
+            <column name="password" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Change role column to match enum values (STAFF, ADMIN) -->
+    <changeSet id="007-alter-role-column-stf-staff" author="staffengagement">
+        <modifyDataType tableName="stf_staff" columnName="role" newDataType="varchar(50)"/>
+    </changeSet>
+
+    <!-- Create refresh token table -->
+    <changeSet id="007-create-stf-refresh-token" author="staffengagement">
+        <createTable tableName="stf_refresh_token">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="token" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="staff_id" type="uuid">
+                <constraints nullable="false"
+                             foreignKeyName="fk_refresh_token_staff"
+                             references="stf_staff(id)"/>
+            </column>
+            <column name="expires_at" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+            <column name="revoked" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
