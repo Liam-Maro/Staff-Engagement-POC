@@ -11,6 +11,7 @@ import { AuthService } from '../auth/services/auth.service';
       <header>
         <h1>Staff Engagement</h1>
         <nav>
+          <a routerLink="/employees" class="nav-link">Employees</a>
           @if (authService.userRole() === 'ADMIN') {
             <a routerLink="/admin/staff" class="nav-link">Manage Staff</a>
           }

@@ -1,0 +1,46 @@
+<div class="employee-list">
+  <div class="header">
+    <div class="header-left">
+      <a routerLink="/dashboard" class="btn-back">&larr; Back</a>
+      <h2>Employees</h2>
+    </div>
+    <a routerLink="/employees/create" class="btn-create">+ Add Employee</a>
+  </div>
+
+  @if (isLoading()) {
+    <p class="loading">Loading employees...</p>
+  } @else if (employees().length === 0) {
+    <p class="empty">No employees found. Add one to get started.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Department</th>
+          <th>Job Title</th>
+          <th>Hire Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (emp of employees(); track emp.id) {
+          <tr>
+            <td>{{ emp.firstName }} {{ emp.lastName }}</td>
+            <td>{{ emp.email }}</td>
+            <td>{{ emp.department }}</td>
+            <td>{{ emp.jobTitle }}</td>
+            <td>{{ emp.hireDate | date:'mediumDate' }}</td>
+            <td>
+              @if (emp.active) {
+                <span class="status active">Active</span>
+              } @else {
+                <span class="status inactive">Inactive</span>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>
