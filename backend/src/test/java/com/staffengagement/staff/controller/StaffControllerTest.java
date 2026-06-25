@@ -42,7 +42,7 @@ class StaffControllerTest {
     @MockitoBean StaffRepository staffRepository;
 
     private StaffResponse sampleResponse() {
-        return new StaffResponse(UUID.randomUUID(), UUID.randomUUID(), "john@example.com", StaffRole.STAFF, true, LocalDateTime.now());
+        return new StaffResponse(UUID.randomUUID(), "john@example.com", StaffRole.STAFF, true, LocalDateTime.now());
     }
 
     // --- GET /api/staff ---
@@ -76,7 +76,7 @@ class StaffControllerTest {
     @WithMockUser(roles = "ADMIN")
     void create_shouldReturn201_forAdminRole() throws Exception {
         when(staffService.create(any())).thenReturn(sampleResponse());
-        var request = new CreateStaffRequest(UUID.randomUUID(), "john@example.com", "password123", StaffRole.STAFF);
+        var request = new CreateStaffRequest("john@example.com", "password123", StaffRole.STAFF);
 
         mockMvc.perform(post("/api/staff")
                         .with(csrf())
@@ -88,7 +88,7 @@ class StaffControllerTest {
     @Test
     @WithMockUser(roles = "STAFF")
     void create_shouldReturn403_forStaffRole() throws Exception {
-        var request = new CreateStaffRequest(UUID.randomUUID(), "john@example.com", "password123", StaffRole.STAFF);
+        var request = new CreateStaffRequest("john@example.com", "password123", StaffRole.STAFF);
 
         mockMvc.perform(post("/api/staff")
                         .with(csrf())

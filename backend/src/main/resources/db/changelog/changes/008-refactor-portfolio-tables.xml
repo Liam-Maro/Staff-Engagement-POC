@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- Drop the old generic portfolio items table -->
+    <changeSet id="008-drop-prt-portfolio-items" author="staffengagement">
+        <dropTable tableName="prt_portfolio_items"/>
+    </changeSet>
+
+    <!-- Create prt_skills table -->
+    <changeSet id="008-create-prt-skills" author="staffengagement">
+        <createTable tableName="prt_skills">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="employee_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="proficiency" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="prt_skills"
+                                 baseColumnNames="employee_id"
+                                 referencedTableName="emp_employees"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_prt_skills_employee_id"/>
+
+        <sql>
+            ALTER TABLE prt_skills ADD CONSTRAINT chk_prt_skills_proficiency
+            CHECK (proficiency IN ('BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'));
+        </sql>
+    </changeSet>
+
+    <!-- Create prt_education table -->
+    <changeSet id="008-create-prt-education" author="staffengagement">
+        <createTable tableName="prt_education">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="employee_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="institution" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="degree" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="field_of_study" type="varchar(255)"/>
+            <column name="graduation_date" type="date"/>
+            <column name="created_at" type="timestamp" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="prt_education"
+                                 baseColumnNames="employee_id"
+                                 referencedTableName="emp_employees"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_prt_education_employee_id"/>
+    </changeSet>
+
+    <!-- Create prt_projects table -->
+    <changeSet id="008-create-prt-projects" author="staffengagement">
+        <createTable tableName="prt_projects">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="employee_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text"/>
+            <column name="role" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="technologies" type="jsonb">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="end_date" type="date"/>
+            <column name="created_at" type="timestamp" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="prt_projects"
+                                 baseColumnNames="employee_id"
+                                 referencedTableName="emp_employees"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_prt_projects_employee_id"/>
+    </changeSet>
+
+    <!-- Create prt_links table -->
+    <changeSet id="008-create-prt-links" author="staffengagement">
+        <createTable tableName="prt_links">
+            <column name="id" type="uuid" defaultValueComputed="gen_random_uuid()">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="employee_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="varchar(2048)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="label" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="NOW()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="prt_links"
+                                 baseColumnNames="employee_id"
+                                 referencedTableName="emp_employees"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_prt_links_employee_id"/>
+    </changeSet>
+
+</databaseChangeLog>

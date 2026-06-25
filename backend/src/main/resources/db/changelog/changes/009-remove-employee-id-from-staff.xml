@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- Make employee_id nullable since staff are no longer linked to employees -->
+    <changeSet id="009-make-employee-id-nullable" author="staffengagement">
+        <dropNotNullConstraint tableName="stf_staff" columnName="employee_id" columnDataType="uuid"/>
+    </changeSet>
+
+    <!-- Set existing employee_id values to null -->
+    <changeSet id="009-clear-employee-id-values" author="staffengagement">
+        <sql>UPDATE stf_staff SET employee_id = NULL;</sql>
+    </changeSet>
+
+</databaseChangeLog>

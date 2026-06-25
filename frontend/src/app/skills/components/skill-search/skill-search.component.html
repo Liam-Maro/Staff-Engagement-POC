@@ -1,10 +1,60 @@
 <div>
   <div class="page-header">
     <h2>Skills Register</h2>
+    <button class="btn btn-primary" (click)="openAddForm()">+ Register Skill</button>
   </div>
 
   <p class="text-muted mb-2">Search for a skill to see who in the organisation has experience with it.</p>
 
+  <!-- Add Skill Form -->
+  @if (showAddForm()) {
+    <div class="add-form">
+      <h3>Register a Skill</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="employee">Employee</label>
+          <select id="employee" [(ngModel)]="skillForm.employeeId">
+            <option value="">-- Select Employee --</option>
+            @for (emp of employees(); track emp.id) {
+              <option [value]="emp.id">{{ emp.firstName }} {{ emp.lastName }}</option>
+            }
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="skillName">Skill Name</label>
+          <input id="skillName" type="text" [(ngModel)]="skillForm.name" placeholder="e.g. Angular, Java, Docker" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="yearsExp">Years of Experience</label>
+          <input id="yearsExp" type="number" [(ngModel)]="skillForm.yearsExperience" min="0" max="50" />
+        </div>
+        <div class="form-group">
+          <label for="projectCount">Number of Projects</label>
+          <input id="projectCount" type="number" [(ngModel)]="skillForm.projectCount" min="0" max="500" />
+        </div>
+        <div class="form-group">
+          <label for="proficiency">Proficiency Level</label>
+          <select id="proficiency" [(ngModel)]="skillForm.proficiency">
+            @for (level of proficiencyLevels; track level) {
+              <option [value]="level">{{ level }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn-primary" (click)="saveSkill()" [disabled]="!isFormValid">Add Skill</button>
+        <button class="btn btn-secondary" (click)="cancelAddForm()">Cancel</button>
+      </div>
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="success-message">{{ successMessage() }}</div>
+  }
+
+  <!-- Search Bar -->
   <div class="search-bar">
     <input
       type="text"
@@ -33,6 +83,7 @@
             <th>#</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Skill</th>
             <th>Years</th>
             <th>Projects</th>
             <th>Proficiency</th>
@@ -44,6 +95,7 @@
               <td>{{ i + 1 }}</td>
               <td>{{ result.employeeFirstName }} {{ result.employeeLastName }}</td>
               <td>{{ result.employeeEmail }}</td>
+              <td>{{ result.skillName }}</td>
               <td>{{ result.yearsExperience }}</td>
               <td>{{ result.projectCount }}</td>
               <td><span class="badge" [attr.data-level]="result.proficiency.toLowerCase()">{{ result.proficiency }}</span></td>

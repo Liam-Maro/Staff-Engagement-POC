@@ -10,20 +10,7 @@
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="employeeId">Select Employee</label>
-        <select id="employeeId" formControlName="employeeId" (change)="onEmployeeSelect($event)">
-          <option value="" disabled>-- Choose an employee --</option>
-          @for (emp of employees(); track emp.id) {
-            <option [value]="emp.id">{{ emp.firstName }} {{ emp.lastName }} ({{ emp.email }})</option>
-          }
-        </select>
-        @if (form.get('employeeId')?.touched && form.get('employeeId')?.errors?.['required']) {
-          <span class="field-error">Please select an employee</span>
-        }
-      </div>
-
-      <div class="form-group">
-        <label for="email">Login Email</label>
+        <label for="email">Email</label>
         <input id="email" type="email" formControlName="email" placeholder="staff@company.com" autocomplete="email" />
         @if (form.get('email')?.touched && form.get('email')?.errors) {
           <span class="field-error">
@@ -55,7 +42,7 @@
       <div class="form-actions">
         <button type="button" class="btn btn-outline" (click)="onCancel()">Cancel</button>
         <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isLoading()">
-          @if (isLoading()) { Creating... } @else { Grant Staff Access }
+          @if (isLoading()) { Creating... } @else { Create Staff Member }
         </button>
       </div>
     </form>

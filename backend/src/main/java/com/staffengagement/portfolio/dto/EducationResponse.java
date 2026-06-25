@@ -4,13 +4,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record PortfolioItemResponse(
+public record EducationResponse(
         UUID id,
         UUID employeeId,
-        String type,
-        String title,
-        String description,
-        String url,
-        LocalDate dateObtained,
+        String institution,
+        String degree,
+        String fieldOfStudy,
+        LocalDate graduationDate,
         LocalDateTime createdAt
 ) {}

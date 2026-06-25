@@ -19,6 +19,7 @@
             <th>Job Title</th>
             <th>Hire Date</th>
             <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -35,6 +36,9 @@
                 } @else {
                   <span class="badge-inactive">Inactive</span>
                 }
+              </td>
+              <td>
+                <a [routerLink]="['/portfolio', emp.id]" class="btn-link">Portfolio</a>
               </td>
             </tr>
           }

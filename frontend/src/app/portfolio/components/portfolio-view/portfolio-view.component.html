@@ -1,0 +1,252 @@
+<div class="portfolio-container">
+  <div class="page-header">
+    <h2>Employee Portfolio</h2>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-indicator">
+      <div class="spinner"></div>
+      <p class="text-muted">Loading portfolio...</p>
+    </div>
+  }
+
+  @if (notFound()) {
+    <div class="not-found-message">
+      <p>Portfolio not found</p>
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-message">
+      <p>{{ errorMessage() }}</p>
+      <button class="btn btn-primary" (click)="retry()">Retry</button>
+    </div>
+  }
+
+  @if (!isLoading() && !notFound() && portfolio()) {
+    <!-- Skills Section (read-only, managed via Skills Register) -->
+    <section class="portfolio-section">
+      <div class="section-header">
+        <h3>Skills</h3>
+        <span class="text-muted hint">Manage via Skills Register</span>
+      </div>
+
+      @if (portfolio()!.skills.length === 0) {
+        <p class="text-muted">No skills registered. Add skills via the Skills Register page.</p>
+      } @else {
+        <div class="skills-list">
+          @for (skill of portfolio()!.skills; track skill.id) {
+            <div class="skill-item">
+              <span class="skill-name">{{ skill.name }}</span>
+              <span class="badge" [attr.data-level]="skill.proficiency.toLowerCase()">{{ skill.proficiency }}</span>
+              <span class="skill-meta text-muted">{{ skill.yearsExperience }}y · {{ skill.projectCount }} projects</span>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Education Section -->
+    <section class="portfolio-section">
+      <div class="section-header">
+        <h3>Education</h3>
+        <button class="btn btn-sm btn-primary" (click)="openAddEducationForm()">+ Add Education</button>
+      </div>
+
+      @if (showEducationForm()) {
+        <div class="inline-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="institution">Institution</label>
+              <input id="institution" type="text" [(ngModel)]="educationForm.institution" placeholder="e.g. University of Cape Town" />
+            </div>
+            <div class="form-group">
+              <label for="degree">Degree</label>
+              <input id="degree" type="text" [(ngModel)]="educationForm.degree" placeholder="e.g. BSc Computer Science" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fieldOfStudy">Field of Study (optional)</label>
+              <input id="fieldOfStudy" type="text" [(ngModel)]="educationForm.fieldOfStudy" placeholder="e.g. Software Engineering" />
+            </div>
+            <div class="form-group">
+              <label for="graduationDate">Graduation Date (optional)</label>
+              <input id="graduationDate" type="date" [(ngModel)]="educationForm.graduationDate" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" (click)="saveEducation()" [disabled]="!educationForm.institution || !educationForm.degree">
+              {{ editingEducationId() ? 'Update' : 'Add' }}
+            </button>
+            <button class="btn btn-secondary" (click)="cancelEducationForm()">Cancel</button>
+          </div>
+        </div>
+      }
+
+      @if (portfolio()!.education.length === 0) {
+        <p class="text-muted">No education records listed.</p>
+      } @else {
+        <div class="education-list">
+          @for (edu of portfolio()!.education; track edu.id) {
+            <div class="education-item">
+              <div class="item-content">
+                <div class="education-header">
+                  <strong>{{ edu.institution }}</strong>
+                </div>
+                <p class="education-detail">{{ edu.degree }}@if (edu.fieldOfStudy) { — {{ edu.fieldOfStudy }}}</p>
+                @if (edu.graduationDate) {
+                  <p class="education-date text-muted">Graduated: {{ edu.graduationDate | date:'mediumDate' }}</p>
+                }
+              </div>
+              <div class="item-actions">
+                <button class="btn-icon" title="Edit" (click)="openEditEducationForm(edu)">✏️</button>
+                <button class="btn-icon btn-danger" title="Delete" (click)="deleteEducation(edu)">🗑️</button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Projects Section -->
+    <section class="portfolio-section">
+      <div class="section-header">
+        <h3>Projects</h3>
+        <button class="btn btn-sm btn-primary" (click)="openAddProjectForm()">+ Add Project</button>
+      </div>
+
+      @if (showProjectForm()) {
+        <div class="inline-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="projectName">Project Name</label>
+              <input id="projectName" type="text" [(ngModel)]="projectForm.projectName" placeholder="e.g. Staff Engagement POC" />
+            </div>
+            <div class="form-group">
+              <label for="role">Role</label>
+              <input id="role" type="text" [(ngModel)]="projectForm.role" placeholder="e.g. Lead Developer" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label for="description">Description (optional)</label>
+              <textarea id="description" [(ngModel)]="projectForm.description" placeholder="Brief project description..." rows="3"></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full-width">
+              <label for="technologies">Technologies (comma-separated)</label>
+              <input id="technologies" type="text" [(ngModel)]="projectForm.technologies" placeholder="e.g. Angular, Spring Boot, PostgreSQL" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="startDate">Start Date</label>
+              <input id="startDate" type="date" [(ngModel)]="projectForm.startDate" />
+            </div>
+            <div class="form-group">
+              <label for="endDate">End Date (leave empty for ongoing)</label>
+              <input id="endDate" type="date" [(ngModel)]="projectForm.endDate" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" (click)="saveProject()" [disabled]="!projectForm.projectName || !projectForm.role || !projectForm.technologies || !projectForm.startDate">
+              {{ editingProjectId() ? 'Update' : 'Add' }}
+            </button>
+            <button class="btn btn-secondary" (click)="cancelProjectForm()">Cancel</button>
+          </div>
+        </div>
+      }
+
+      @if (portfolio()!.projects.length === 0) {
+        <p class="text-muted">No projects listed.</p>
+      } @else {
+        <div class="projects-list">
+          @for (project of portfolio()!.projects; track project.id) {
+            <div class="project-item">
+              <div class="item-content">
+                <div class="project-header">
+                  <strong>{{ project.projectName }}</strong>
+                  <span class="project-role text-muted">{{ project.role }}</span>
+                </div>
+                @if (project.description) {
+                  <p class="project-description">{{ project.description }}</p>
+                }
+                <div class="project-technologies">
+                  @for (tech of project.technologies; track tech) {
+                    <span class="tech-chip">{{ tech }}</span>
+                  }
+                </div>
+                <p class="project-dates text-muted">
+                  {{ project.startDate | date:'mediumDate' }} —
+                  @if (project.endDate) {
+                    {{ project.endDate | date:'mediumDate' }}
+                  } @else {
+                    Ongoing
+                  }
+                </p>
+              </div>
+              <div class="item-actions">
+                <button class="btn-icon" title="Edit" (click)="openEditProjectForm(project)">✏️</button>
+                <button class="btn-icon btn-danger" title="Delete" (click)="deleteProject(project)">🗑️</button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+
+    <!-- Links Section -->
+    <section class="portfolio-section">
+      <div class="section-header">
+        <h3>Links</h3>
+        <button class="btn btn-sm btn-primary" (click)="openAddLinkForm()">+ Add Link</button>
+      </div>
+
+      @if (showLinkForm()) {
+        <div class="inline-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="linkLabel">Label</label>
+              <input id="linkLabel" type="text" [(ngModel)]="linkForm.label" placeholder="e.g. GitHub Profile" />
+            </div>
+            <div class="form-group">
+              <label for="linkUrl">URL</label>
+              <input id="linkUrl" type="url" [(ngModel)]="linkForm.url" placeholder="https://github.com/username" />
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" (click)="saveLink()" [disabled]="!linkForm.label || !linkForm.url">
+              {{ editingLinkId() ? 'Update' : 'Add' }}
+            </button>
+            <button class="btn btn-secondary" (click)="cancelLinkForm()">Cancel</button>
+          </div>
+        </div>
+      }
+
+      @if (portfolio()!.links.length === 0) {
+        <p class="text-muted">No links listed.</p>
+      } @else {
+        <div class="links-list">
+          @for (link of portfolio()!.links; track link.id) {
+            <div class="link-item">
+              <a
+                [href]="link.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="portfolio-link"
+              >
+                {{ link.label }}
+              </a>
+              <div class="item-actions">
+                <button class="btn-icon" title="Edit" (click)="openEditLinkForm(link)">✏️</button>
+                <button class="btn-icon btn-danger" title="Delete" (click)="deleteLink(link)">🗑️</button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  }
+</div>

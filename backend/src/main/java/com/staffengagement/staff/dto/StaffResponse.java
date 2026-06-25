@@ -7,7 +7,6 @@ import java.util.UUID;
 
 public record StaffResponse(
         UUID id,
-        UUID employeeId,
         String email,
         StaffRole role,
         boolean active,

@@ -18,9 +18,6 @@ public class Staff implements UserDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    private UUID employeeId;
-
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -66,9 +63,6 @@ public class Staff implements UserDetails {
 
     // Getters and setters
     public UUID getId() { return id; }
-
-    public UUID getEmployeeId() { return employeeId; }
-    public void setEmployeeId(UUID employeeId) { this.employeeId = employeeId; }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
