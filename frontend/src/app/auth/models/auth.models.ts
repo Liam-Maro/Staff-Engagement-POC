@@ -14,4 +14,5 @@ export interface AuthResponse {
   expiresIn: number;
   email: string;
   role: string;
+  staffId: string;
 }

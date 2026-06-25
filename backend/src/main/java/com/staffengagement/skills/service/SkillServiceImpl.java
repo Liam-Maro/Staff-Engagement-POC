@@ -27,6 +27,11 @@ class SkillServiceImpl implements SkillService {
     }
 
     @Override
+    public List<SkillResponse> findAll() {
+        return repository.findAll().stream().map(this::toResponse).toList();
+    }
+
+    @Override
     public List<SkillResponse> findByEmployeeId(UUID employeeId) {
         return repository.findByEmployeeIdOrderByNameAsc(employeeId).stream().map(this::toResponse).toList();
     }

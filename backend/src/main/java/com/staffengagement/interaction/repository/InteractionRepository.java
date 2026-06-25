@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface InteractionRepository extends JpaRepository<Interaction, UUID> {
     List<Interaction> findByEmployeeId(UUID employeeId);
+    List<Interaction> findByStaffId(UUID staffId);
 }

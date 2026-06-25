@@ -6,9 +6,10 @@ public record AuthResponse(
         String tokenType,
         long expiresIn,
         String email,
-        String role
+        String role,
+        String staffId
 ) {
-    public static AuthResponse of(String accessToken, String refreshToken, long expiresIn, String email, String role) {
-        return new AuthResponse(accessToken, refreshToken, "Bearer", expiresIn, email, role);
+    public static AuthResponse of(String accessToken, String refreshToken, long expiresIn, String email, String role, String staffId) {
+        return new AuthResponse(accessToken, refreshToken, "Bearer", expiresIn, email, role, staffId);
     }
 }

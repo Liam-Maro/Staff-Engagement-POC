@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface SkillService {
+    List<SkillResponse> findAll();
     List<SkillResponse> findByEmployeeId(UUID employeeId);
     List<SkillResponse> findByName(String name);
     List<SkillSearchResult> search(String query);

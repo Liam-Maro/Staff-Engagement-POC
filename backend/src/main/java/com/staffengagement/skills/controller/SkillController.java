@@ -26,6 +26,11 @@ class SkillController {
         this.service = service;
     }
 
+    @GetMapping
+    List<SkillResponse> findAll() {
+        return service.findAll();
+    }
+
     @GetMapping(params = "employeeId")
     List<SkillResponse> byEmployee(@RequestParam UUID employeeId) {
         return service.findByEmployeeId(employeeId);
