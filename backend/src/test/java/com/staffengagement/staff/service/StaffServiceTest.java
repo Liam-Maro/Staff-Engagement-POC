@@ -41,7 +41,6 @@ class StaffServiceTest {
         staffId = UUID.randomUUID();
         staff = new Staff();
         ReflectionTestUtils.setField(staff, "id", staffId);
-        staff.setEmployeeId(UUID.randomUUID());
         staff.setEmail("john@example.com");
         staff.setPassword("encoded");
         staff.setRole(StaffRole.STAFF);
@@ -77,7 +76,7 @@ class StaffServiceTest {
         when(passwordEncoder.encode("plaintext")).thenReturn("encoded");
         when(repository.save(any())).thenReturn(staff);
 
-        var request = new CreateStaffRequest(UUID.randomUUID(), "john@example.com", "plaintext", StaffRole.STAFF);
+        var request = new CreateStaffRequest("john@example.com", "plaintext", StaffRole.STAFF);
         var result = service.create(request);
 
         assertThat(result.email()).isEqualTo("john@example.com");
@@ -88,7 +87,7 @@ class StaffServiceTest {
     @Test
     void create_shouldThrow_whenEmailAlreadyExists() {
         when(repository.existsByEmail("john@example.com")).thenReturn(true);
-        var request = new CreateStaffRequest(UUID.randomUUID(), "john@example.com", "password", StaffRole.STAFF);
+        var request = new CreateStaffRequest("john@example.com", "password", StaffRole.STAFF);
         assertThatThrownBy(() -> service.create(request))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("already exists");

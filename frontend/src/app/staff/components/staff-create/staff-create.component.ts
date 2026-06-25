@@ -1,53 +1,32 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { StaffService } from '../../services/staff.service';
-import { EmployeeService } from '../../../employees/services/employee.service';
-import { Employee } from '../../../employees/models/employee.models';
 
 @Component({
   selector: 'app-staff-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './staff-create.component.html',
-  styleUrl: './staff-create.component.css'
+  styleUrls: ['./staff-create.component.css']
 })
-export class StaffCreateComponent implements OnInit {
+export class StaffCreateComponent {
 
   form: FormGroup;
-  employees = signal<Employee[]>([]);
   errorMessage = signal('');
   isLoading = signal(false);
 
   constructor(
     private fb: FormBuilder,
     private staffService: StaffService,
-    private employeeService: EmployeeService,
     private router: Router
   ) {
     this.form = this.fb.group({
-      employeeId: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       role: ['STAFF', [Validators.required]]
     });
-  }
-
-  ngOnInit(): void {
-    this.employeeService.findAll().subscribe({
-      next: (data) => this.employees.set(data),
-      error: () => this.errorMessage.set('Failed to load employees.')
-    });
-  }
-
-  onEmployeeSelect(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const employeeId = select.value;
-    const employee = this.employees().find(e => e.id === employeeId);
-    if (employee) {
-      this.form.patchValue({ email: employee.email });
-    }
   }
 
   onSubmit(): void {

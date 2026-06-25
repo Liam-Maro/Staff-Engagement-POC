@@ -11,5 +11,7 @@
     <include file="db/changelog/changes/005-create-portfolio-table.xml"/>
     <include file="db/changelog/changes/006-create-skills-table.xml"/>
     <include file="db/changelog/changes/007-add-auth-fields-to-staff.xml"/>
+    <include file="db/changelog/changes/008-refactor-portfolio-tables.xml"/>
+    <include file="db/changelog/changes/009-remove-employee-id-from-staff.xml"/>
 
 </databaseChangeLog>

@@ -16,6 +16,7 @@ export const routes: Routes = [
       { path: 'skills', loadComponent: () => import('./skills/components/skill-search/skill-search.component').then(m => m.SkillSearchComponent) },
       { path: 'admin/staff', loadComponent: () => import('./staff/components/staff-list/staff-list.component').then(m => m.StaffListComponent), canActivate: [adminGuard] },
       { path: 'admin/staff/create', loadComponent: () => import('./staff/components/staff-create/staff-create.component').then(m => m.StaffCreateComponent), canActivate: [adminGuard] },
+      { path: 'portfolio/:employeeId', loadComponent: () => import('./portfolio/components/portfolio-view/portfolio-view.component').then(m => m.PortfolioViewComponent) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

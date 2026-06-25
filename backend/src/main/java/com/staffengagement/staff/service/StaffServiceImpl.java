@@ -40,7 +40,6 @@ class StaffServiceImpl implements StaffService {
             throw new IllegalArgumentException("A staff member with this email already exists.");
         }
         var staff = new Staff();
-        staff.setEmployeeId(request.employeeId());
         staff.setEmail(request.email());
         staff.setPassword(passwordEncoder.encode(request.password()));
         staff.setRole(request.role());
@@ -74,6 +73,6 @@ class StaffServiceImpl implements StaffService {
     }
 
     private StaffResponse toResponse(Staff s) {
-        return new StaffResponse(s.getId(), s.getEmployeeId(), s.getEmail(), s.getRole(), s.isActive(), s.getCreatedAt());
+        return new StaffResponse(s.getId(), s.getEmail(), s.getRole(), s.isActive(), s.getCreatedAt());
     }
 }
