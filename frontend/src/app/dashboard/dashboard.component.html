@@ -1,0 +1,215 @@
+<div class="dashboard">
+  <div class="page-header">
+    <h2>Dashboard</h2>
+  </div>
+
+  <div class="welcome-card">
+    <h3>Welcome back, {{ authService.userEmail() }}</h3>
+    <p class="text-muted">You are signed in as <strong>{{ authService.userRole() }}</strong></p>
+  </div>
+
+  @if (isLoading()) {
+    <div class="stats-grid">
+      <div class="stat-card shimmer"></div>
+      <div class="stat-card shimmer"></div>
+      <div class="stat-card shimmer"></div>
+      <div class="stat-card shimmer"></div>
+    </div>
+  } @else if (data()) {
+    <!-- Row 1: Summary Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon employees">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">{{ data()!.stats.totalEmployees }}</span>
+          <span class="stat-label">Active Employees</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon tasks">
+          <i class="fa-solid fa-clipboard-list"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">{{ data()!.stats.openTasks }}</span>
+          <span class="stat-label">Open Tasks</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon interactions">
+          <i class="fa-solid fa-comments"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">{{ data()!.stats.interactionsThisMonth }}</span>
+          <span class="stat-label">Interactions This Month</span>
+        </div>
+      </div>
+
+      <div class="stat-card" [class.alert]="data()!.stats.overdueTasks > 0">
+        <div class="stat-icon overdue">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">{{ data()!.stats.overdueTasks }}</span>
+          <span class="stat-label">Overdue Tasks</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Recent Activity & Task Breakdown -->
+    <div class="two-col-grid">
+      <!-- Recent Interactions -->
+      <div class="panel">
+        <div class="panel-header">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <h4>Recent Interactions</h4>
+        </div>
+        @if (data()!.recentInteractions.length === 0) {
+          <p class="text-muted empty-state">No interactions recorded yet.</p>
+        } @else {
+          <ul class="activity-list">
+            @for (interaction of data()!.recentInteractions; track interaction.id) {
+              <li class="activity-item">
+                <div class="activity-icon">
+                  <i class="fa-solid fa-message"></i>
+                </div>
+                <div class="activity-content">
+                  <span class="activity-primary">{{ interaction.employeeName }}</span>
+                  <span class="activity-secondary">{{ interaction.type }}</span>
+                </div>
+                <span class="activity-time">{{ interaction.occurredAt | date:'shortDate' }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+      <!-- Task Status Breakdown -->
+      <div class="panel">
+        <div class="panel-header">
+          <i class="fa-solid fa-chart-pie"></i>
+          <h4>Task Status</h4>
+        </div>
+        @if (totalTasks === 0) {
+          <p class="text-muted empty-state">No tasks created yet.</p>
+        } @else {
+          <div class="task-breakdown">
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <span class="dot dot-open"></span>
+                <span>Open</span>
+              </div>
+              <div class="breakdown-bar-wrapper">
+                <div class="breakdown-bar bar-open" [style.width.%]="taskPercentage(data()!.taskBreakdown.open)"></div>
+              </div>
+              <span class="breakdown-count">{{ data()!.taskBreakdown.open }}</span>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <span class="dot dot-progress"></span>
+                <span>In Progress</span>
+              </div>
+              <div class="breakdown-bar-wrapper">
+                <div class="breakdown-bar bar-progress" [style.width.%]="taskPercentage(data()!.taskBreakdown.inProgress)"></div>
+              </div>
+              <span class="breakdown-count">{{ data()!.taskBreakdown.inProgress }}</span>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <span class="dot dot-completed"></span>
+                <span>Completed</span>
+              </div>
+              <div class="breakdown-bar-wrapper">
+                <div class="breakdown-bar bar-completed" [style.width.%]="taskPercentage(data()!.taskBreakdown.completed)"></div>
+              </div>
+              <span class="breakdown-count">{{ data()!.taskBreakdown.completed }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Row 3: Top Skills & Department Distribution -->
+    <div class="two-col-grid">
+      <!-- Top Skills -->
+      <div class="panel">
+        <div class="panel-header">
+          <i class="fa-solid fa-star"></i>
+          <h4>Top Skills</h4>
+        </div>
+        @if (data()!.topSkills.length === 0) {
+          <p class="text-muted empty-state">No skills registered yet.</p>
+        } @else {
+          <ul class="ranking-list">
+            @for (skill of data()!.topSkills; track skill.name; let i = $index) {
+              <li class="ranking-item">
+                <span class="ranking-position">{{ i + 1 }}</span>
+                <span class="ranking-name">{{ skill.name }}</span>
+                <span class="ranking-badge">{{ skill.count }} {{ skill.count === 1 ? 'person' : 'people' }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+
+      <!-- Employees by Department -->
+      <div class="panel">
+        <div class="panel-header">
+          <i class="fa-solid fa-building"></i>
+          <h4>Employees by Department</h4>
+        </div>
+        @if (data()!.departmentCounts.length === 0) {
+          <p class="text-muted empty-state">No employees found.</p>
+        } @else {
+          <ul class="ranking-list">
+            @for (dept of data()!.departmentCounts; track dept.department) {
+              <li class="ranking-item">
+                <span class="ranking-name">{{ dept.department }}</span>
+                <span class="ranking-badge">{{ dept.count }}</span>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+
+    <!-- Row 4: Upcoming Tasks -->
+    <div class="panel full-width">
+      <div class="panel-header">
+        <i class="fa-solid fa-calendar-check"></i>
+        <h4>Upcoming Due Dates</h4>
+      </div>
+      @if (data()!.upcomingTasks.length === 0) {
+        <p class="text-muted empty-state">No upcoming tasks.</p>
+      } @else {
+        <table class="upcoming-table">
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th>Employee</th>
+              <th>Due Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (task of data()!.upcomingTasks; track task.id) {
+              <tr>
+                <td>{{ task.title }}</td>
+                <td>{{ task.employeeName }}</td>
+                <td>{{ task.dueDate | date:'mediumDate' }}</td>
+                <td>
+                  <span class="status-badge" [attr.data-status]="task.status.toLowerCase().replace('_', '-')">
+                    {{ task.status.replace('_', ' ') }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </div>
+  }
+</div>

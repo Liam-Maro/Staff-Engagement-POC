@@ -45,7 +45,8 @@ public class AuthService {
                 refreshToken.getToken(),
                 jwtService.getAccessTokenExpirationMs(),
                 staff.getEmail(),
-                staff.getRole().name()
+                staff.getRole().name(),
+                staff.getId().toString()
         );
     }
 
@@ -61,7 +62,8 @@ public class AuthService {
                 refreshToken.getToken(),
                 jwtService.getAccessTokenExpirationMs(),
                 staff.getEmail(),
-                staff.getRole().name()
+                staff.getRole().name(),
+                staff.getId().toString()
         );
     }
 

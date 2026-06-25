@@ -38,7 +38,7 @@ class AuthControllerTest {
 
     @Test
     void login_shouldReturn200_withValidCredentials() throws Exception {
-        AuthResponse response = AuthResponse.of("access-token", "refresh-token", 900_000L, "john@example.com", "STAFF");
+        AuthResponse response = AuthResponse.of("access-token", "refresh-token", 900_000L, "john@example.com", "STAFF", "staff-uuid-123");
         when(authService.login(any(LoginRequest.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/auth/login")
@@ -85,7 +85,7 @@ class AuthControllerTest {
 
     @Test
     void refresh_shouldReturn200_withValidRefreshToken() throws Exception {
-        AuthResponse response = AuthResponse.of("new-access-token", "refresh-token", 900_000L, "john@example.com", "STAFF");
+        AuthResponse response = AuthResponse.of("new-access-token", "refresh-token", 900_000L, "john@example.com", "STAFF", "staff-uuid-123");
         when(authService.refresh(any(RefreshTokenRequest.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/auth/refresh")

@@ -36,6 +36,11 @@ class TaskController {
         return taskService.findByEmployeeId(employeeId);
     }
 
+    @GetMapping(params = "staffId")
+    List<TaskResponse> findByStaffId(@RequestParam UUID staffId) {
+        return taskService.findByStaffId(staffId);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     TaskResponse create(@Valid @RequestBody CreateTaskRequest request) {

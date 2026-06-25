@@ -10,6 +10,7 @@ public interface TaskService {
     List<TaskResponse> findAll();
     TaskResponse findById(UUID id);
     List<TaskResponse> findByEmployeeId(UUID employeeId);
+    List<TaskResponse> findByStaffId(UUID staffId);
     TaskResponse create(CreateTaskRequest request);
     TaskResponse updateStatus(UUID id, String status);
 }

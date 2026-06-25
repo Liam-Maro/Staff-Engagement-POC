@@ -18,6 +18,7 @@ export class AuthService {
   readonly isAuthenticated = computed(() => !!this.currentUser());
   readonly userEmail = computed(() => this.currentUser()?.email ?? '');
   readonly userRole = computed(() => this.currentUser()?.role ?? '');
+  readonly staffId = computed(() => this.currentUser()?.staffId ?? '');
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -54,7 +55,7 @@ export class AuthService {
   private storeTokens(response: AuthResponse): void {
     localStorage.setItem(this.TOKEN_KEY, response.accessToken);
     localStorage.setItem(this.REFRESH_KEY, response.refreshToken);
-    localStorage.setItem(this.USER_KEY, JSON.stringify({ email: response.email, role: response.role }));
+    localStorage.setItem(this.USER_KEY, JSON.stringify({ email: response.email, role: response.role, staffId: response.staffId }));
     this.currentUser.set(response);
   }
 
@@ -71,8 +72,8 @@ export class AuthService {
     const userJson = localStorage.getItem(this.USER_KEY);
     if (!token || !userJson) return null;
     try {
-      const { email, role } = JSON.parse(userJson);
-      return { accessToken: token, refreshToken: '', tokenType: 'Bearer', expiresIn: 0, email, role };
+      const { email, role, staffId } = JSON.parse(userJson);
+      return { accessToken: token, refreshToken: '', tokenType: 'Bearer', expiresIn: 0, email, role, staffId: staffId ?? '' };
     } catch {
       return null;
     }

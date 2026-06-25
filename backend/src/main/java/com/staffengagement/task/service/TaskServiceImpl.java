@@ -1,5 +1,7 @@
 package com.staffengagement.task.service;
 
+import com.staffengagement.interaction.model.Interaction;
+import com.staffengagement.interaction.repository.InteractionRepository;
 import com.staffengagement.task.dto.CreateTaskRequest;
 import com.staffengagement.task.dto.TaskResponse;
 import com.staffengagement.task.model.Task;
@@ -13,9 +15,11 @@ import java.util.UUID;
 class TaskServiceImpl implements TaskService {
 
     private final TaskRepository repository;
+    private final InteractionRepository interactionRepository;
 
-    TaskServiceImpl(TaskRepository repository) {
+    TaskServiceImpl(TaskRepository repository, InteractionRepository interactionRepository) {
         this.repository = repository;
+        this.interactionRepository = interactionRepository;
     }
 
     @Override
@@ -31,6 +35,17 @@ class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskResponse> findByEmployeeId(UUID employeeId) {
         return repository.findByEmployeeId(employeeId).stream().map(this::toResponse).toList();
+    }
+
+    @Override
+    public List<TaskResponse> findByStaffId(UUID staffId) {
+        List<UUID> interactionIds = interactionRepository.findByStaffId(staffId).stream()
+                .map(Interaction::getId)
+                .toList();
+        if (interactionIds.isEmpty()) {
+            return List.of();
+        }
+        return repository.findByInteractionIdIn(interactionIds).stream().map(this::toResponse).toList();
     }
 
     @Override
