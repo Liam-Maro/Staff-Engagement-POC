@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- Add creator_id column to tsk_tasks -->
+    <changeSet id="008-add-creator-id-to-tsk-tasks" author="staffengagement">
+        <addColumn tableName="tsk_tasks">
+            <column name="creator_id" type="uuid">
+                <constraints nullable="true"
+                             foreignKeyName="fk_tsk_creator"
+                             references="stf_staff(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Add assignee_id column to tsk_tasks -->
+    <changeSet id="008-add-assignee-id-to-tsk-tasks" author="staffengagement">
+        <addColumn tableName="tsk_tasks">
+            <column name="assignee_id" type="uuid">
+                <constraints nullable="true"
+                             foreignKeyName="fk_tsk_assignee"
+                             references="stf_staff(id)"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Add index on assignee_id for query performance -->
+    <changeSet id="008-add-index-assignee-id" author="staffengagement">
+        <createIndex indexName="idx_tsk_tasks_assignee_id" tableName="tsk_tasks">
+            <column name="assignee_id"/>
+        </createIndex>
+    </changeSet>
+
+    <!-- Add index on creator_id for query performance -->
+    <changeSet id="008-add-index-creator-id" author="staffengagement">
+        <createIndex indexName="idx_tsk_tasks_creator_id" tableName="tsk_tasks">
+            <column name="creator_id"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
