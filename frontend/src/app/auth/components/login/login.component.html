@@ -1,0 +1,93 @@
+<div class="login-page">
+  <div class="login-branding">
+    <div class="branding-content fade-in">
+      <div class="brand-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+      </div>
+      <h1>Staff Engagement</h1>
+      <p class="brand-tagline">Management System</p>
+
+      <ul class="feature-list">
+        <li>
+          <span class="feature-icon">✓</span>
+          Track staff interactions & check-ins
+        </li>
+        <li>
+          <span class="feature-icon">✓</span>
+          Manage skills & employee portfolios
+        </li>
+        <li>
+          <span class="feature-icon">✓</span>
+          Centralise follow-up tasks & actions
+        </li>
+      </ul>
+
+      <p class="brand-footer">© 2026 Staff Engagement POC</p>
+    </div>
+  </div>
+
+  <div class="login-form-section">
+    <div class="login-card fade-in-delayed">
+      <h2>Sign in</h2>
+      <p class="subtitle">Enter your credentials to access the system</p>
+
+      @if (errorMessage()) {
+        <div class="alert-error">{{ errorMessage() }}</div>
+      }
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="16" x="2" y="4" rx="2"/>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="you@company.com"
+              autocomplete="email"
+            />
+          </div>
+          @if (loginForm.get('email')?.touched && loginForm.get('email')?.errors) {
+            <span class="field-error">
+              @if (loginForm.get('email')?.errors?.['required']) { Email is required }
+              @if (loginForm.get('email')?.errors?.['email']) { Must be a valid email }
+            </span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input
+              id="password"
+              type="password"
+              formControlName="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            />
+          </div>
+          @if (loginForm.get('password')?.touched && loginForm.get('password')?.errors?.['required']) {
+            <span class="field-error">Password is required</span>
+          }
+        </div>
+
+        <button type="submit" [disabled]="loginForm.invalid || isLoading()">
+          @if (isLoading()) { Signing in... } @else { Sign in }
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
