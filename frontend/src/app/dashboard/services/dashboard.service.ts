@@ -121,7 +121,7 @@ export class DashboardService {
         // --- Row 2: Recent Interactions ---
         const sortedInteractions = [...interactions]
           .sort((a, b) => new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime())
-          .slice(0, 5);
+          .slice(0, 3);
 
         const recentInteractions: RecentInteraction[] = sortedInteractions.map(i => {
           const emp = employeeMap.get(i.employeeId);
@@ -147,7 +147,7 @@ export class DashboardService {
         });
         const topSkills: SkillCount[] = [...skillCounts.entries()]
           .sort((a, b) => b[1] - a[1])
-          .slice(0, 5)
+          .slice(0, 3)
           .map(([name, count]) => ({ name, count }));
 
         // --- Row 3: Employees by Department ---
@@ -158,13 +158,14 @@ export class DashboardService {
         });
         const departmentCounts: DepartmentCount[] = [...deptCounts.entries()]
           .sort((a, b) => b[1] - a[1])
+          .slice(0, 3)
           .map(([department, count]) => ({ department, count }));
 
         // --- Row 4: Upcoming Tasks ---
         const upcomingTasks: UpcomingTask[] = tasks
           .filter(t => t.status !== 'COMPLETED' && t.dueDate && t.dueDate >= today)
           .sort((a, b) => a.dueDate!.localeCompare(b.dueDate!))
-          .slice(0, 5)
+          .slice(0, 3)
           .map(t => {
             const emp = employeeMap.get(t.employeeId);
             return {
