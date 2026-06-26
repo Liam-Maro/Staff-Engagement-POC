@@ -42,45 +42,15 @@ class TaskValidationPropertyTest {
     }
 
     // ========================================================================
-    // Feature: staff-task-assignment, Property 2: Invalid field values are always rejected
+    // Feature: staff-task-assignment, Property 2: Description validation rejects blank and oversized inputs
     // ========================================================================
 
     @Property(tries = 100)
-    void blankTitlesAreRejected(@ForAll("blankTitles") String title) {
+    void blankDescriptionsAreRejected(@ForAll("blankDescriptions") String description) {
         // **Validates: Requirements 1.3**
         var request = new CreateTaskRequest(
                 UUID.randomUUID(), null, UUID.randomUUID(),
-                title, "Valid description", LocalDate.now().plusDays(1)
-        );
-
-        Set<ConstraintViolation<CreateTaskRequest>> violations = validator.validate(request);
-
-        assertThat(violations).isNotEmpty();
-        assertThat(violations.stream()
-                .anyMatch(v -> v.getPropertyPath().toString().equals("title"))).isTrue();
-    }
-
-    @Property(tries = 100)
-    void longTitlesAreRejected(@ForAll("longTitles") String title) {
-        // **Validates: Requirements 1.3, 4.1**
-        var request = new CreateTaskRequest(
-                UUID.randomUUID(), null, UUID.randomUUID(),
-                title, "Valid description", LocalDate.now().plusDays(1)
-        );
-
-        Set<ConstraintViolation<CreateTaskRequest>> violations = validator.validate(request);
-
-        assertThat(violations).isNotEmpty();
-        assertThat(violations.stream()
-                .anyMatch(v -> v.getPropertyPath().toString().equals("title"))).isTrue();
-    }
-
-    @Property(tries = 100)
-    void longDescriptionsAreRejected(@ForAll("longDescriptions") String description) {
-        // **Validates: Requirements 1.6**
-        var request = new CreateTaskRequest(
-                UUID.randomUUID(), null, UUID.randomUUID(),
-                "Valid Title", description, LocalDate.now().plusDays(1)
+                description, LocalDate.now().plusDays(1)
         );
 
         Set<ConstraintViolation<CreateTaskRequest>> violations = validator.validate(request);
@@ -91,11 +61,26 @@ class TaskValidationPropertyTest {
     }
 
     @Property(tries = 100)
-    void nullAssigneeIdIsRejected(@ForAll("validTitles") String title) {
+    void longDescriptionsAreRejected(@ForAll("longDescriptions") String description) {
+        // **Validates: Requirements 1.3, 4.1**
+        var request = new CreateTaskRequest(
+                UUID.randomUUID(), null, UUID.randomUUID(),
+                description, LocalDate.now().plusDays(1)
+        );
+
+        Set<ConstraintViolation<CreateTaskRequest>> violations = validator.validate(request);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations.stream()
+                .anyMatch(v -> v.getPropertyPath().toString().equals("description"))).isTrue();
+    }
+
+    @Property(tries = 100)
+    void nullAssigneeIdIsRejected(@ForAll("validDescriptions") String description) {
         // **Validates: Requirements 4.1**
         var request = new CreateTaskRequest(
                 UUID.randomUUID(), null, null,
-                title, "Valid description", LocalDate.now().plusDays(1)
+                description, LocalDate.now().plusDays(1)
         );
 
         Set<ConstraintViolation<CreateTaskRequest>> violations = validator.validate(request);
@@ -105,26 +90,40 @@ class TaskValidationPropertyTest {
                 .anyMatch(v -> v.getPropertyPath().toString().equals("assigneeId"))).isTrue();
     }
 
+    @Property(tries = 100)
+    void nullIndividualIdIsRejected(@ForAll("validDescriptions") String description) {
+        // **Validates: Requirements 4.1**
+        var request = new CreateTaskRequest(
+                null, null, UUID.randomUUID(),
+                description, LocalDate.now().plusDays(1)
+        );
+
+        Set<ConstraintViolation<CreateTaskRequest>> violations = validator.validate(request);
+
+        assertThat(violations).isNotEmpty();
+        assertThat(violations.stream()
+                .anyMatch(v -> v.getPropertyPath().toString().equals("individualId"))).isTrue();
+    }
+
     // ========================================================================
     // Feature: staff-task-assignment, Property 3: Multi-field validation returns all errors simultaneously
     // ========================================================================
 
     @Property(tries = 100)
     void multipleInvalidFieldsReturnAllErrors(
-            @ForAll @IntRange(min = 2, max = 4) int numberOfInvalidFields
+            @ForAll @IntRange(min = 2, max = 3) int numberOfInvalidFields
     ) {
         // **Validates: Requirements 1.7**
         // Build a request with exactly N invalid fields
-        String title = "Valid Title";
         String description = "Valid description";
         UUID assigneeId = UUID.randomUUID();
-        UUID employeeId = UUID.randomUUID();
+        UUID individualId = UUID.randomUUID();
 
         int invalidCount = 0;
 
-        // Field 1: blank title
+        // Field 1: blank description
         if (invalidCount < numberOfInvalidFields) {
-            title = "";
+            description = "";
             invalidCount++;
         }
 
@@ -134,21 +133,15 @@ class TaskValidationPropertyTest {
             invalidCount++;
         }
 
-        // Field 3: long description (> 2000 chars)
+        // Field 3: null individualId
         if (invalidCount < numberOfInvalidFields) {
-            description = "x".repeat(2001);
-            invalidCount++;
-        }
-
-        // Field 4: null employeeId
-        if (invalidCount < numberOfInvalidFields) {
-            employeeId = null;
+            individualId = null;
             invalidCount++;
         }
 
         var request = new CreateTaskRequest(
-                employeeId, null, assigneeId,
-                title, description, LocalDate.now().plusDays(1)
+                individualId, null, assigneeId,
+                description, LocalDate.now().plusDays(1)
         );
 
         Set<ConstraintViolation<CreateTaskRequest>> violations = validator.validate(request);
@@ -165,20 +158,20 @@ class TaskValidationPropertyTest {
         // **Validates: Requirements 4.2**
         var creatorId = UUID.randomUUID();
         var assigneeId = UUID.randomUUID();
-        var employeeId = UUID.randomUUID();
+        var individualId = UUID.randomUUID();
 
         var request = new CreateTaskRequest(
-                employeeId, null, assigneeId,
-                "Valid Task Title", "Valid description", pastDate
+                individualId, null, assigneeId,
+                "Valid description", pastDate
         );
 
         // Set up mocks for the service layer validation
         TaskRepository repository = mock(TaskRepository.class);
         StaffService staffService = mock(StaffService.class);
 
-        var activeCreator = new StaffResponse(creatorId, UUID.randomUUID(),
+        var activeCreator = new StaffResponse(creatorId,
                 "creator@test.com", StaffRole.ADMIN, true, LocalDateTime.now());
-        var activeAssignee = new StaffResponse(assigneeId, UUID.randomUUID(),
+        var activeAssignee = new StaffResponse(assigneeId,
                 "assignee@test.com", StaffRole.STAFF, true, LocalDateTime.now());
 
         when(staffService.findById(creatorId)).thenReturn(activeCreator);
@@ -189,7 +182,7 @@ class TaskValidationPropertyTest {
 
         assertThatThrownBy(() -> taskService.create(request, creatorId))
                 .isInstanceOf(InvalidParameterException.class)
-                .hasMessage("Due date must be today or in the future");
+                .hasMessage("Due date must not be in the past");
 
         verify(repository, never()).save(any(Task.class));
     }
@@ -199,16 +192,8 @@ class TaskValidationPropertyTest {
     // ========================================================================
 
     @Provide
-    Arbitrary<String> blankTitles() {
+    Arbitrary<String> blankDescriptions() {
         return Arbitraries.of("", "   ", "  \t  ", "\n", "\t");
-    }
-
-    @Provide
-    Arbitrary<String> longTitles() {
-        return Arbitraries.strings()
-                .alpha()
-                .ofMinLength(256)
-                .ofMaxLength(500);
     }
 
     @Provide
@@ -220,11 +205,11 @@ class TaskValidationPropertyTest {
     }
 
     @Provide
-    Arbitrary<String> validTitles() {
+    Arbitrary<String> validDescriptions() {
         return Arbitraries.strings()
                 .alpha()
                 .ofMinLength(1)
-                .ofMaxLength(255);
+                .ofMaxLength(2000);
     }
 
     @Provide
@@ -241,9 +226,16 @@ class TaskValidationPropertyTest {
     private TaskService createTaskServiceImpl(TaskRepository repository, StaffService staffService) {
         try {
             Class<?> implClass = Class.forName("com.staffengagement.task.service.TaskServiceImpl");
-            Constructor<?> constructor = implClass.getDeclaredConstructor(TaskRepository.class, StaffService.class);
+            Constructor<?> constructor = implClass.getDeclaredConstructor(
+                    TaskRepository.class, StaffService.class,
+                    com.staffengagement.employee.service.EmployeeService.class,
+                    com.staffengagement.interaction.service.InteractionService.class);
             constructor.setAccessible(true);
-            return (TaskService) constructor.newInstance(repository, staffService);
+            var employeeService = mock(com.staffengagement.employee.service.EmployeeService.class);
+            when(employeeService.existsById(any(UUID.class))).thenReturn(true);
+            return (TaskService) constructor.newInstance(repository, staffService,
+                    employeeService,
+                    mock(com.staffengagement.interaction.service.InteractionService.class));
         } catch (Exception e) {
             throw new RuntimeException("Failed to create TaskServiceImpl via reflection", e);
         }

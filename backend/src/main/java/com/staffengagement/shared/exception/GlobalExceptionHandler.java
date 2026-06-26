@@ -103,6 +103,24 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(404, ex.getMessage(), List.of(), LocalDateTime.now()));
     }
 
+    @ExceptionHandler(InactiveStaffException.class)
+    public ResponseEntity<ErrorResponse> handleInactiveStaff(InactiveStaffException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(400, ex.getMessage(), List.of(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(TaskAssignmentForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleTaskAssignmentForbidden(TaskAssignmentForbiddenException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse(403, ex.getMessage(), List.of(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(InvalidParameterException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidParameter(InvalidParameterException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(400, ex.getMessage(), List.of(), LocalDateTime.now()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

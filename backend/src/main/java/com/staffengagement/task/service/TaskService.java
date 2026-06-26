@@ -1,16 +1,16 @@
 package com.staffengagement.task.service;
 
-import com.staffengagement.task.dto.CreateTaskRequest;
-import com.staffengagement.task.dto.TaskResponse;
+import com.staffengagement.task.dto.*;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface TaskService {
-    List<TaskResponse> findAll();
     TaskResponse findById(UUID id);
-    List<TaskResponse> findByEmployeeId(UUID employeeId);
-    List<TaskResponse> findByStaffId(UUID staffId);
-    TaskResponse create(CreateTaskRequest request);
-    TaskResponse updateStatus(UUID id, String status);
+    TaskQueryResult findTasks(TaskQueryParams params);
+    TaskResponse create(CreateTaskRequest request, UUID creatorId);
+    TaskResponse update(UUID taskId, UpdateTaskRequest request, UUID requesterId);
+    TaskResponse updateStatus(UUID taskId, UpdateStatusRequest request, UUID requesterId);
+    void delete(UUID taskId, UUID requesterId);
+    List<InteractionResponse> getInteractionsForIndividual(UUID individualId);
 }

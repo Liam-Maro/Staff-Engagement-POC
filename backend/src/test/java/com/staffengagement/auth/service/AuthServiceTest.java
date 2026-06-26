@@ -47,7 +47,6 @@ class AuthServiceTest {
         staff.setEmail("john@example.com");
         staff.setPassword("encoded");
         staff.setRole(StaffRole.STAFF);
-        staff.setEmployeeId(UUID.randomUUID());
     }
 
     @Test

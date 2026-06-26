@@ -73,7 +73,6 @@ class JwtServiceTest {
         staff.setEmail(email);
         staff.setPassword("encoded");
         staff.setRole(StaffRole.STAFF);
-        staff.setEmployeeId(UUID.randomUUID());
         return staff;
     }
 }
