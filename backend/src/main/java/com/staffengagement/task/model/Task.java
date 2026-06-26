@@ -13,31 +13,39 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
-    private UUID employeeId;
+    @Column(name = "individual_id", nullable = false)
+    private UUID individualId;
 
+    @Column(name = "interaction_id")
     private UUID interactionId;
 
-    @Column(nullable = false)
-    private String title;
+    @Column(name = "creator_id", nullable = false)
+    private UUID creatorId;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "assignee_id", nullable = false)
+    private UUID assigneeId;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private TaskStatus status;
 
+    @Column(name = "due_date")
     private LocalDate dueDate;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     protected Task() {}
 
-    public Task(UUID employeeId, UUID interactionId, String title, String description, String status, LocalDate dueDate) {
-        this.employeeId = employeeId;
+    public Task(UUID individualId, UUID interactionId, UUID creatorId, UUID assigneeId,
+                String description, TaskStatus status, LocalDate dueDate) {
+        this.individualId = individualId;
         this.interactionId = interactionId;
-        this.title = title;
+        this.creatorId = creatorId;
+        this.assigneeId = assigneeId;
         this.description = description;
         this.status = status;
         this.dueDate = dueDate;
@@ -45,13 +53,19 @@ public class Task {
     }
 
     public UUID getId() { return id; }
-    public UUID getEmployeeId() { return employeeId; }
+    public UUID getIndividualId() { return individualId; }
     public UUID getInteractionId() { return interactionId; }
-    public String getTitle() { return title; }
+    public UUID getCreatorId() { return creatorId; }
+    public UUID getAssigneeId() { return assigneeId; }
     public String getDescription() { return description; }
-    public String getStatus() { return status; }
+    public TaskStatus getStatus() { return status; }
     public LocalDate getDueDate() { return dueDate; }
     public LocalDateTime getCreatedAt() { return createdAt; }
 
-    public void setStatus(String status) { this.status = status; }
+    public void setIndividualId(UUID individualId) { this.individualId = individualId; }
+    public void setInteractionId(UUID interactionId) { this.interactionId = interactionId; }
+    public void setAssigneeId(UUID assigneeId) { this.assigneeId = assigneeId; }
+    public void setDescription(String description) { this.description = description; }
+    public void setStatus(TaskStatus status) { this.status = status; }
+    public void setDueDate(LocalDate dueDate) { this.dueDate = dueDate; }
 }

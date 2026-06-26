@@ -14,5 +14,6 @@
     <include file="db/changelog/changes/008-refactor-portfolio-tables.xml"/>
     <include file="db/changelog/changes/009-remove-employee-id-from-staff.xml"/>
     <include file="db/changelog/changes/010-alter-interaction-table.xml"/>
+    <include file="db/changelog/changes/010-evolve-tsk-tasks-for-assignment.xml"/>
 
 </databaseChangeLog>

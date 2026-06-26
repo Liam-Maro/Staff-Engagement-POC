@@ -31,6 +31,11 @@ class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public boolean existsById(UUID id) {
+        return repository.existsById(id);
+    }
+
+    @Override
     public EmployeeResponse create(CreateEmployeeRequest request) {
         var employee = new Employee();
         employee.setFirstName(request.firstName());

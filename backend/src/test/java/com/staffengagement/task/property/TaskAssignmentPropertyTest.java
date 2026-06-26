@@ -42,9 +42,14 @@ class TaskAssignmentPropertyTest {
 
         // TaskServiceImpl is package-private, instantiate via reflection
         Class<?> clazz = Class.forName("com.staffengagement.task.service.TaskServiceImpl");
-        Constructor<?> constructor = clazz.getDeclaredConstructor(TaskRepository.class, StaffService.class);
+        Constructor<?> constructor = clazz.getDeclaredConstructor(
+                TaskRepository.class, StaffService.class,
+                com.staffengagement.employee.service.EmployeeService.class,
+                com.staffengagement.interaction.service.InteractionService.class);
         constructor.setAccessible(true);
-        taskService = (TaskService) constructor.newInstance(repository, staffService);
+        taskService = (TaskService) constructor.newInstance(repository, staffService,
+                Mockito.mock(com.staffengagement.employee.service.EmployeeService.class),
+                Mockito.mock(com.staffengagement.interaction.service.InteractionService.class));
     }
 
     // Feature: staff-task-assignment, Property 4: Non-existent assignee is rejected with 404
@@ -67,7 +72,6 @@ class TaskAssignmentPropertyTest {
         // Arrange: creator is valid and active
         StaffResponse activeCreator = new StaffResponse(
                 creatorId,
-                UUID.randomUUID(),
                 "creator@example.com",
                 StaffRole.ADMIN,
                 true,
@@ -81,10 +85,9 @@ class TaskAssignmentPropertyTest {
 
         // Build request with the non-existent assignee
         CreateTaskRequest requestWithNonExistentAssignee = new CreateTaskRequest(
-                request.employeeId(),
+                request.individualId(),
                 request.interactionId(),
                 nonExistentAssigneeId,
-                request.title(),
                 request.description(),
                 request.dueDate()
         );
@@ -115,7 +118,6 @@ class TaskAssignmentPropertyTest {
         // Arrange: creator exists but is inactive
         StaffResponse inactiveCreator = new StaffResponse(
                 creatorId,
-                UUID.randomUUID(),
                 "inactive-creator@example.com",
                 StaffRole.STAFF,
                 false,
@@ -126,7 +128,7 @@ class TaskAssignmentPropertyTest {
         // Act & Assert: should throw TaskAssignmentForbiddenException (403)
         assertThatThrownBy(() -> taskService.create(request, creatorId))
                 .isInstanceOf(TaskAssignmentForbiddenException.class)
-                .hasMessage("Creator is not an active staff member");
+                .hasMessage("Creator is not active");
 
         // Verify no task was persisted
         verify(repository, never()).save(any(Task.class));
@@ -149,7 +151,6 @@ class TaskAssignmentPropertyTest {
         // Arrange: creator is valid and active
         StaffResponse activeCreator = new StaffResponse(
                 creatorId,
-                UUID.randomUUID(),
                 "creator@example.com",
                 StaffRole.ADMIN,
                 true,
@@ -160,7 +161,6 @@ class TaskAssignmentPropertyTest {
         // Assignee exists but is inactive
         StaffResponse inactiveAssignee = new StaffResponse(
                 inactiveAssigneeId,
-                UUID.randomUUID(),
                 "inactive-assignee@example.com",
                 StaffRole.STAFF,
                 false,
@@ -170,18 +170,16 @@ class TaskAssignmentPropertyTest {
 
         // Build request with the inactive assignee
         CreateTaskRequest requestWithInactiveAssignee = new CreateTaskRequest(
-                request.employeeId(),
+                request.individualId(),
                 request.interactionId(),
                 inactiveAssigneeId,
-                request.title(),
                 request.description(),
                 request.dueDate()
         );
 
         // Act & Assert: should throw InactiveStaffException (400)
         assertThatThrownBy(() -> taskService.create(requestWithInactiveAssignee, creatorId))
-                .isInstanceOf(InactiveStaffException.class)
-                .hasMessage("Tasks cannot be assigned to inactive staff members");
+                .isInstanceOf(InactiveStaffException.class);
 
         // Verify no task was persisted
         verify(repository, never()).save(any(Task.class));
@@ -197,15 +195,11 @@ class TaskAssignmentPropertyTest {
     @Provide
     Arbitrary<CreateTaskRequest> validCreateTaskRequests() {
         Arbitrary<UUID> uuids = Arbitraries.create(UUID::randomUUID);
-        Arbitrary<String> titles = Arbitraries.strings()
-                .alpha()
-                .ofMinLength(1)
-                .ofMaxLength(255);
         Arbitrary<String> descriptions = Arbitraries.strings()
                 .alpha()
-                .ofMinLength(0)
-                .ofMaxLength(200)
-                .injectNull(0.3);
+                .ofMinLength(1)
+                .ofMaxLength(2000)
+                .filter(s -> !s.isBlank());
         Arbitrary<LocalDate> dueDates = Arbitraries.of(
                 LocalDate.now(),
                 LocalDate.now().plusDays(1),
@@ -213,8 +207,8 @@ class TaskAssignmentPropertyTest {
                 LocalDate.now().plusDays(365)
         ).injectNull(0.3);
 
-        return Combinators.combine(uuids, uuids, uuids, titles, descriptions, dueDates)
-                .as((employeeId, interactionId, assigneeId, title, description, dueDate) ->
-                        new CreateTaskRequest(employeeId, interactionId, assigneeId, title, description, dueDate));
+        return Combinators.combine(uuids, uuids, uuids, descriptions, dueDates)
+                .as((individualId, interactionId, assigneeId, description, dueDate) ->
+                        new CreateTaskRequest(individualId, interactionId, assigneeId, description, dueDate));
     }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
 
@@ -17,6 +17,7 @@ import { AuthService } from '../../auth/services/auth.service';
         <ul class="sidebar-nav">
           <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
           <li><a routerLink="/employees" routerLinkActive="active">Employees</a></li>
+          <li><a routerLink="/tasks" routerLinkActive="active">My Tasks</a></li>
           <li><a routerLink="/skills" routerLinkActive="active">Skills Register</a></li>
           <li><a routerLink="/interactions" routerLinkActive="active">Interactions</a></li>
           @if (authService.userRole() === 'ADMIN') {
@@ -41,7 +42,7 @@ import { AuthService } from '../../auth/services/auth.service';
   styles: [`:host { display: block; height: 100%; }`]
 })
 export class LayoutComponent {
-  constructor(public authService: AuthService) {}
+  authService = inject(AuthService);
 
   onLogout(): void {
     this.authService.logout();

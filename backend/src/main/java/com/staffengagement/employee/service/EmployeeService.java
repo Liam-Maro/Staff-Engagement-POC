@@ -10,6 +10,7 @@ import java.util.UUID;
 public interface EmployeeService {
     List<EmployeeResponse> findAll();
     EmployeeResponse findById(UUID id);
+    boolean existsById(UUID id);
     EmployeeResponse create(CreateEmployeeRequest request);
     EmployeeResponse update(UUID id, UpdateEmployeeRequest request);
     void delete(UUID id);

@@ -6,9 +6,10 @@ import java.util.UUID;
 
 public record TaskResponse(
         UUID id,
-        UUID employeeId,
+        UUID individualId,
         UUID interactionId,
-        String title,
+        UUID creatorId,
+        UUID assigneeId,
         String description,
         String status,
         LocalDate dueDate,
