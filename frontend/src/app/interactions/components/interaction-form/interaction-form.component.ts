@@ -5,6 +5,7 @@ import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { InteractionService } from '../../services/interaction.service';
 import { EmployeeService } from '../../../employees/services/employee.service';
+import { AuthService } from '../../../auth/services/auth.service';
 import { Employee } from '../../../employees/models/employee.models';
 import {
   INTERACTION_TYPES,
@@ -35,13 +36,11 @@ export class InteractionFormComponent implements OnInit {
   employeeSearchTerm = signal('');
   interactionTypes = INTERACTION_TYPES;
 
-  // Hardcoded staffId for now (would come from auth context in production)
-  private readonly currentStaffId = '00000000-0000-0000-0000-000000000001';
-
   constructor(
     private fb: FormBuilder,
     private interactionService: InteractionService,
     private employeeService: EmployeeService,
+    private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -177,7 +176,7 @@ export class InteractionFormComponent implements OnInit {
     const formValue = this.form.getRawValue();
     const request: CreateInteractionRequest = {
       employeeId: formValue.employeeId,
-      staffId: this.currentStaffId,
+      staffId: this.authService.staffId(),
       type: formValue.type as InteractionType,
       occurredAt: new Date(formValue.occurredAt).toISOString(),
       notes: formValue.notes || undefined
