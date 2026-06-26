@@ -21,7 +21,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      if (error.status === 401 && !isRefreshing) {
+      if ((error.status === 401 || error.status === 403) && !isRefreshing) {
         isRefreshing = true;
 
         return authService.refresh().pipe(
