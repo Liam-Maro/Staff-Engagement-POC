@@ -15,6 +15,7 @@ import com.staffengagement.interaction.repository.InteractionSpecifications;
 import com.staffengagement.task.dto.CreateTaskRequest;
 import com.staffengagement.task.dto.TaskResponse;
 import com.staffengagement.task.service.TaskService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ class InteractionServiceImpl implements InteractionService {
 
     InteractionServiceImpl(InteractionRepository repository,
                            EmployeeService employeeService,
-                           TaskService taskService) {
+                           @Lazy TaskService taskService) {
         this.repository = repository;
         this.employeeService = employeeService;
         this.taskService = taskService;
@@ -124,13 +125,13 @@ class InteractionServiceImpl implements InteractionService {
         var taskRequest = new CreateTaskRequest(
                 interaction.getEmployeeId(),
                 interactionId,
-                request.title(),
-                request.description(),
+                interaction.getStaffId(),
+                request.title() + (request.description() != null ? " - " + request.description() : ""),
                 request.dueDate()
         );
 
         try {
-            return taskService.create(taskRequest);
+            return taskService.create(taskRequest, interaction.getStaffId());
         } catch (Exception e) {
             throw new TaskCreationFailedException(e.getMessage());
         }

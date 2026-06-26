@@ -50,6 +50,13 @@ class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<TaskResponse> findByStaffId(UUID staffId) {
+        return repository.findByAssigneeId(staffId).stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Override
     public TaskQueryResult findTasks(TaskQueryParams params) {
         // 1. Build specification by composing filters with AND logic
         Specification<Task> spec = Specification.where(null);
@@ -266,18 +273,18 @@ class TaskServiceImpl implements TaskService {
             throw new EntityNotFoundException("Individual not found with id: " + individualId);
         }
 
-        // 2. Fetch interactions via InteractionService
-        List<InteractionResponse> interactions = interactionService.findByEmployeeId(individualId);
+        // 2. Fetch interactions via InteractionService (paginated, sorted by occurredAt DESC)
+        var pageable = org.springframework.data.domain.PageRequest.of(0, 50,
+                org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "occurredAt"));
+        var page = interactionService.findAll(individualId, null, null, null, pageable);
 
-        // 3. Sort by occurredAt descending, limit to 50, and map to task-module DTO
-        return interactions.stream()
-                .sorted((a, b) -> b.occurredAt().compareTo(a.occurredAt()))
-                .limit(50)
+        // 3. Map to task-module DTO
+        return page.getContent().stream()
                 .map(i -> new com.staffengagement.task.dto.InteractionResponse(
                         i.id(),
                         i.employeeId(),
                         i.staffId(),
-                        i.type(),
+                        i.type().name(),
                         i.notes(),
                         i.occurredAt(),
                         i.createdAt()
