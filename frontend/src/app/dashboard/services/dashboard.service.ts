@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, forkJoin, map, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface DashboardStats {
@@ -88,12 +89,16 @@ export class DashboardService {
   constructor(private http: HttpClient) {}
 
   getDashboardData(role: string, staffId: string): Observable<DashboardData> {
-    const employees$ = this.http.get<EmployeeResponse[]>(`${this.apiUrl}/employees`);
-    const tasks$ = role === 'ADMIN'
-      ? this.http.get<TaskResponse[]>(`${this.apiUrl}/tasks`)
-      : this.http.get<TaskResponse[]>(`${this.apiUrl}/tasks?staffId=${staffId}`);
-    const interactions$ = this.http.get<InteractionResponse[]>(`${this.apiUrl}/interactions`);
-    const skills$ = this.http.get<SkillResponse[]>(`${this.apiUrl}/skills`);
+    const employees$ = this.http.get<EmployeeResponse[]>(`${this.apiUrl}/employees`).pipe(catchError(() => of([])));
+    const tasks$ = (role === 'ADMIN'
+      ? this.http.get<{ tasks: TaskResponse[] }>(`${this.apiUrl}/tasks?size=200`).pipe(map(r => r.tasks))
+      : this.http.get<TaskResponse[]>(`${this.apiUrl}/tasks?staffId=${staffId}`)
+    ).pipe(catchError(() => of([] as TaskResponse[])));
+    const interactions$ = this.http.get<{ content: InteractionResponse[] }>(`${this.apiUrl}/interactions?size=100`).pipe(
+      map(r => r.content),
+      catchError(() => of([] as InteractionResponse[]))
+    );
+    const skills$ = this.http.get<SkillResponse[]>(`${this.apiUrl}/skills`).pipe(catchError(() => of([])));
 
     return forkJoin([employees$, tasks$, interactions$, skills$]).pipe(
       map(([employees, tasks, interactions, skills]) => {
