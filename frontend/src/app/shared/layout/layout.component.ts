@@ -18,6 +18,7 @@ import { AuthService } from '../../auth/services/auth.service';
           <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
           <li><a routerLink="/employees" routerLinkActive="active">Employees</a></li>
           <li><a routerLink="/skills" routerLinkActive="active">Skills Register</a></li>
+          <li><a routerLink="/interactions" routerLinkActive="active">Interactions</a></li>
           @if (authService.userRole() === 'ADMIN') {
             <li><a routerLink="/admin/staff" routerLinkActive="active">Manage Staff</a></li>
           }

@@ -1,0 +1,93 @@
+<div>
+  <div class="page-header" style="justify-content: center;">
+    <h2>{{ isEditMode() ? 'Edit Interaction' : 'Record Interaction' }}</h2>
+  </div>
+
+  @if (isLoadingData()) {
+    <div class="loading-container">
+      <p>Loading interaction data...</p>
+    </div>
+  } @else {
+    <div class="form-card">
+      @if (errorMessage()) {
+        <div class="alert alert-error">
+          <span>{{ errorMessage() }}</span>
+          @if (errorMessage().includes('server error')) {
+            <button type="button" class="btn btn-outline btn-sm retry-btn" (click)="onRetry()">Retry</button>
+          }
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="employeeId">Employee <span class="required">*</span></label>
+          <select
+            id="employeeId"
+            formControlName="employeeId"
+            [attr.disabled]="isEditMode() ? true : null"
+          >
+            <option value="" disabled>Select an employee</option>
+            @for (employee of filteredEmployees(); track employee.id) {
+              <option [value]="employee.id">
+                {{ employee.firstName }} {{ employee.lastName }} ({{ employee.department }})
+              </option>
+            }
+          </select>
+          @if (getFieldError('employeeId')) {
+            <span class="field-error">{{ getFieldError('employeeId') }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="type">Interaction Type <span class="required">*</span></label>
+          <select id="type" formControlName="type">
+            <option value="" disabled>Select interaction type</option>
+            @for (t of interactionTypes; track t) {
+              <option [value]="t">{{ formatType(t) }}</option>
+            }
+          </select>
+          @if (getFieldError('type')) {
+            <span class="field-error">{{ getFieldError('type') }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="occurredAt">Date & Time <span class="required">*</span></label>
+          <input
+            id="occurredAt"
+            type="datetime-local"
+            formControlName="occurredAt"
+          />
+          @if (getFieldError('occurredAt')) {
+            <span class="field-error">{{ getFieldError('occurredAt') }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Notes</label>
+          <textarea
+            id="notes"
+            formControlName="notes"
+            rows="5"
+            placeholder="Enter interaction notes (optional, max 5000 characters)"
+          ></textarea>
+          <span class="char-count">{{ form.get('notes')?.value?.length || 0 }} / 5000</span>
+          @if (getFieldError('notes')) {
+            <span class="field-error">{{ getFieldError('notes') }}</span>
+          }
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" (click)="onCancel()">Cancel</button>
+          <button type="submit" class="btn btn-primary" [disabled]="form.invalid || isLoading()">
+            @if (isLoading()) {
+              {{ isEditMode() ? 'Saving...' : 'Creating...' }}
+            } @else {
+              {{ isEditMode() ? 'Save Changes' : 'Record Interaction' }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

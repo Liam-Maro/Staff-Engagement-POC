@@ -6,11 +6,8 @@ import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-public record CreateInteractionRequest(
-        @NotNull UUID employeeId,
-        @NotNull UUID staffId,
+public record UpdateInteractionRequest(
         @NotNull InteractionType type,
         @Size(max = 5000) String notes,
         @NotNull @PastOrPresent LocalDateTime occurredAt

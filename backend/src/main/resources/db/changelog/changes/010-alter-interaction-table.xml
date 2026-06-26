@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <!-- Add updated_at column -->
+    <changeSet id="010-01-add-updated-at-to-interactions" author="staffengagement">
+        <addColumn tableName="int_interactions">
+            <column name="updated_at" type="timestamp" defaultValueComputed="now()">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Set default gen_random_uuid() on id column -->
+    <changeSet id="010-02-add-default-uuid-to-interactions" author="staffengagement">
+        <addDefaultValue tableName="int_interactions" columnName="id" defaultValueComputed="gen_random_uuid()"/>
+    </changeSet>
+
+    <!-- Add FK constraint: employee_id → emp_employees(id) ON DELETE RESTRICT -->
+    <changeSet id="010-03-add-employee-fk-to-interactions" author="staffengagement">
+        <addForeignKeyConstraint
+                baseTableName="int_interactions"
+                baseColumnNames="employee_id"
+                referencedTableName="emp_employees"
+                referencedColumnNames="id"
+                constraintName="fk_int_interactions_employee_id"
+                onDelete="RESTRICT"/>
+    </changeSet>
+
+    <!-- Add FK constraint: staff_id → stf_staff(id) ON DELETE RESTRICT -->
+    <changeSet id="010-04-add-staff-fk-to-interactions" author="staffengagement">
+        <addForeignKeyConstraint
+                baseTableName="int_interactions"
+                baseColumnNames="staff_id"
+                referencedTableName="stf_staff"
+                referencedColumnNames="id"
+                constraintName="fk_int_interactions_staff_id"
+                onDelete="RESTRICT"/>
+    </changeSet>
+
+    <!-- Modify type column from VARCHAR(255) to VARCHAR(20) and add CHECK constraint -->
+    <changeSet id="010-05-alter-type-column-interactions" author="staffengagement">
+        <modifyDataType tableName="int_interactions" columnName="type" newDataType="varchar(20)"/>
+        <sql>
+            ALTER TABLE int_interactions
+                ADD CONSTRAINT chk_int_interactions_type
+                    CHECK (type IN ('CHECK_IN', 'MENTORING', 'CATCH_UP', 'PERFORMANCE_REVIEW', 'INFORMAL'));
+        </sql>
+    </changeSet>
+
+    <!-- Add CHECK constraint on notes length -->
+    <changeSet id="010-06-add-notes-length-check-interactions" author="staffengagement">
+        <sql>
+            ALTER TABLE int_interactions
+                ADD CONSTRAINT chk_int_interactions_notes_length
+                    CHECK (char_length(notes) &lt;= 5000);
+        </sql>
+    </changeSet>
+
+    <!-- Add indexes -->
+    <changeSet id="010-07-add-indexes-to-interactions" author="staffengagement">
+        <createIndex tableName="int_interactions" indexName="idx_int_interactions_employee_id">
+            <column name="employee_id"/>
+        </createIndex>
+        <createIndex tableName="int_interactions" indexName="idx_int_interactions_staff_id">
+            <column name="staff_id"/>
+        </createIndex>
+        <createIndex tableName="int_interactions" indexName="idx_int_interactions_type">
+            <column name="type"/>
+        </createIndex>
+        <sql>
+            CREATE INDEX idx_int_interactions_occurred_at ON int_interactions(occurred_at DESC);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

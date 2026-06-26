@@ -1,5 +1,7 @@
 package com.staffengagement.interaction.dto;
 
+import com.staffengagement.interaction.model.InteractionType;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -7,8 +9,9 @@ public record InteractionResponse(
         UUID id,
         UUID employeeId,
         UUID staffId,
-        String type,
+        InteractionType type,
         String notes,
         LocalDateTime occurredAt,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {}
