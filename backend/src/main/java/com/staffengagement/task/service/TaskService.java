@@ -8,6 +8,7 @@ import java.util.UUID;
 public interface TaskService {
     TaskResponse findById(UUID id);
     TaskQueryResult findTasks(TaskQueryParams params);
+    List<TaskResponse> findByStaffId(UUID staffId);
     TaskResponse create(CreateTaskRequest request, UUID creatorId);
     TaskResponse update(UUID taskId, UpdateTaskRequest request, UUID requesterId);
     TaskResponse updateStatus(UUID taskId, UpdateStatusRequest request, UUID requesterId);
