@@ -1,6 +1,9 @@
 package com.staffengagement.shared.exception;
 
 import com.staffengagement.auth.exception.TokenRefreshException;
+import com.staffengagement.interaction.exception.InteractionNotFoundException;
+import com.staffengagement.interaction.exception.InvalidDateRangeException;
+import com.staffengagement.interaction.exception.TaskCreationFailedException;
 import com.staffengagement.shared.dto.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -10,9 +13,12 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -57,6 +63,38 @@ public class GlobalExceptionHandler {
                 .toList();
         return ResponseEntity.badRequest()
                 .body(new ErrorResponse(400, "Validation failed", errors, LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(InteractionNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleInteractionNotFound(InteractionNotFoundException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("error", "Interaction not found");
+        String message = ex.getMessage();
+        if (message != null && message.contains(": ")) {
+            body.put("id", message.substring(message.lastIndexOf(": ") + 2));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    @ExceptionHandler(InvalidDateRangeException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidDateRange(InvalidDateRangeException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("error", "fromDate must be on or before toDate");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    @ExceptionHandler(TaskCreationFailedException.class)
+    public ResponseEntity<Map<String, Object>> handleTaskCreationFailed(TaskCreationFailedException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("error", "Failed to create follow-up task");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, Object>> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("error", "Invalid parameter format: " + ex.getName());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)

@@ -9,4 +9,5 @@ import {
 getTestBed().initTestEnvironment(
   BrowserTestingModule,
   platformBrowserTesting(),
+  { teardown: { destroyAfterEach: true } },
 );

@@ -1,0 +1,72 @@
+<div class="interaction-detail">
+  <div class="page-header">
+    <h2>Interaction Details</h2>
+    <a routerLink="/interactions" class="btn btn-secondary">← Back to List</a>
+  </div>
+
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p class="text-muted">Loading interaction...</p>
+    </div>
+  } @else if (isNotFound()) {
+    <div class="not-found">
+      <h3>Interaction Not Found</h3>
+      <p>The interaction you're looking for does not exist or has been removed.</p>
+      <a routerLink="/interactions" class="btn btn-primary">Back to Interactions</a>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="error-container">
+      <p class="error-message">{{ errorMessage() }}</p>
+      <button class="btn btn-primary" (click)="loadInteraction()">Retry</button>
+    </div>
+  } @else if (interaction()) {
+    <div class="detail-card">
+      <div class="detail-actions">
+        <a [routerLink]="['/interactions', interaction()!.id, 'edit']" class="btn btn-secondary">Edit</a>
+        <button class="btn btn-primary" (click)="createFollowUpTask()">Create Follow-up Task</button>
+      </div>
+
+      <div class="detail-grid">
+        <div class="detail-field">
+          <label>Type</label>
+          <span class="type-badge">{{ formatType(interaction()!.type) }}</span>
+        </div>
+
+        <div class="detail-field">
+          <label>Employee ID</label>
+          <span>{{ interaction()!.employeeId }}</span>
+        </div>
+
+        <div class="detail-field">
+          <label>Staff Member ID</label>
+          <span>{{ interaction()!.staffId }}</span>
+        </div>
+
+        <div class="detail-field">
+          <label>Occurred Date</label>
+          <span>{{ interaction()!.occurredAt | date:'medium' }}</span>
+        </div>
+
+        <div class="detail-field">
+          <label>Created At</label>
+          <span>{{ interaction()!.createdAt | date:'medium' }}</span>
+        </div>
+
+        <div class="detail-field">
+          <label>Updated At</label>
+          <span>{{ interaction()!.updatedAt | date:'medium' }}</span>
+        </div>
+      </div>
+
+      <div class="detail-field notes-field">
+        <label>Notes</label>
+        @if (interaction()!.notes) {
+          <p class="notes-content">{{ interaction()!.notes }}</p>
+        } @else {
+          <p class="text-muted">No notes recorded.</p>
+        }
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,94 @@
+<div>
+  <div class="page-header">
+    <h2>Interactions</h2>
+    <a routerLink="/interactions/create" class="btn btn-primary">+ Create New</a>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <div class="filter-group">
+      <label for="employeeFilter">Employee</label>
+      <select id="employeeFilter" [(ngModel)]="selectedEmployeeId" (change)="applyFilters()">
+        <option value="">All Employees</option>
+        @for (emp of employees(); track emp.id) {
+          <option [value]="emp.id">{{ emp.firstName }} {{ emp.lastName }}</option>
+        }
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="typeFilter">Type</label>
+      <select id="typeFilter" [(ngModel)]="selectedType" (change)="applyFilters()">
+        <option value="">All Types</option>
+        @for (type of interactionTypes; track type) {
+          <option [value]="type">{{ formatType(type) }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p class="text-muted">Loading interactions...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @else if (errorMessage()) {
+    <div class="error-container">
+      <p class="error-message">{{ errorMessage() }}</p>
+      <button class="btn btn-secondary" (click)="retry()">Retry</button>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @else if (interactions().length === 0) {
+    <div class="empty-container">
+      <p class="text-muted">No interactions found. Try adjusting your filters or create a new interaction.</p>
+    </div>
+  }
+
+  <!-- Data Table -->
+  @else {
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Employee</th>
+            <th>Occurred Date</th>
+            <th>Notes Preview</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (interaction of interactions(); track interaction.id) {
+            <tr>
+              <td><span class="type-badge">{{ formatType(interaction.type) }}</span></td>
+              <td>{{ getEmployeeName(interaction.employeeId) }}</td>
+              <td>{{ interaction.occurredAt | date:'mediumDate' }}</td>
+              <td class="notes-preview">{{ truncateNotes(interaction.notes) }}</td>
+              <td>
+                <a [routerLink]="['/interactions', interaction.id]" class="btn-link">View</a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    @if (totalPages() > 1) {
+      <div class="pagination">
+        <button class="btn btn-secondary btn-sm" (click)="previousPage()" [disabled]="currentPage() === 0">
+          Previous
+        </button>
+        <span class="page-info">Page {{ currentPage() + 1 }} of {{ totalPages() }}</span>
+        <button class="btn btn-secondary btn-sm" (click)="nextPage()" [disabled]="currentPage() >= totalPages() - 1">
+          Next
+        </button>
+      </div>
+    }
+  }
+</div>
