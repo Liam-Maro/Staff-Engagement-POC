@@ -242,7 +242,7 @@ class TaskUpdateDeletePropertyTest {
         TaskResponse response = taskService.updateStatus(taskId, request, assigneeId);
 
         // Assert: transition succeeded
-        assertThat(response.status()).isEqualTo(toStatus.name());
+        assertThat(response.status()).isEqualTo(toStatus.getDisplayName());
         verify(repository).save(any(Task.class));
     }
 
@@ -412,8 +412,9 @@ class TaskUpdateDeletePropertyTest {
 
         // Interaction exists and belongs to the individual
         var interactionResponse = new com.staffengagement.interaction.dto.InteractionResponse(
-                interactionId, individualId, UUID.randomUUID(), "CHECK_IN", "notes",
-                LocalDateTime.now(), LocalDateTime.now());
+                interactionId, individualId, UUID.randomUUID(),
+                com.staffengagement.interaction.model.InteractionType.CHECK_IN, "notes",
+                LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now());
         when(interactionService.findById(interactionId)).thenReturn(interactionResponse);
         when(repository.save(any(Task.class))).thenAnswer(invocation -> invocation.getArgument(0));
 

@@ -376,7 +376,7 @@ class TaskControllerPropertyTest {
         // the service validated the interaction exists before including it in the response
         TaskResponse responseWithValidInteraction = new TaskResponse(
                 taskId, individualId, interactionId, creatorId, assigneeId,
-                "Task with valid interaction", "TODO", null, LocalDateTime.now());
+                "Task with valid interaction", "To Do", null, LocalDateTime.now());
         when(taskService.findById(taskId)).thenReturn(responseWithValidInteraction);
 
         // Act
@@ -403,7 +403,7 @@ class TaskControllerPropertyTest {
         // Service returns a response with null interactionId (interaction was deleted)
         TaskResponse responseWithNullInteraction = new TaskResponse(
                 taskId, individualId, null, creatorId, assigneeId,
-                "Task with deleted interaction", "TODO", null, LocalDateTime.now());
+                "Task with deleted interaction", "To Do", null, LocalDateTime.now());
         when(taskService.findById(taskId)).thenReturn(responseWithNullInteraction);
 
         // Act

@@ -68,7 +68,7 @@ class TaskCreationEdgeCaseTest {
         // Assert: task created with null dueDate
         assertThat(result).isNotNull();
         assertThat(result.dueDate()).isNull();
-        assertThat(result.status()).isEqualTo("TODO");
+        assertThat(result.status()).isEqualTo("To Do");
         assertThat(result.description()).isEqualTo("Valid description");
         assertThat(result.creatorId()).isEqualTo(creatorId);
         assertThat(result.assigneeId()).isEqualTo(assigneeId);
@@ -91,7 +91,7 @@ class TaskCreationEdgeCaseTest {
         // Assert: InteractionService is never called
         verify(interactionService, never()).findById(any());
         assertThat(result.interactionId()).isNull();
-        assertThat(result.status()).isEqualTo("TODO");
+        assertThat(result.status()).isEqualTo("To Do");
     }
 
     // --- Description boundary: 2000-char description passes through to repository ---

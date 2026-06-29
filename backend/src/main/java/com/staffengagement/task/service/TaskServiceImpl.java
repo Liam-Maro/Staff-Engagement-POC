@@ -308,7 +308,7 @@ class TaskServiceImpl implements TaskService {
                 t.getCreatorId(),
                 t.getAssigneeId(),
                 t.getDescription(),
-                t.getStatus().name(),
+                t.getStatus().getDisplayName(),
                 t.getDueDate(),
                 t.getCreatedAt()
         );
