@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staffengagement.employee.model.Employee;
 import com.staffengagement.employee.repository.EmployeeRepository;
 import com.staffengagement.interaction.model.Interaction;
+import com.staffengagement.interaction.model.InteractionType;
 import com.staffengagement.interaction.repository.InteractionRepository;
 import com.staffengagement.staff.model.Staff;
 import com.staffengagement.staff.model.StaffRole;
@@ -153,7 +154,7 @@ class TaskApiIntegrationTest {
                 .andExpect(jsonPath("$.creatorId").value(creator.getId().toString()))
                 .andExpect(jsonPath("$.assigneeId").value(assignee.getId().toString()))
                 .andExpect(jsonPath("$.description").value("Integration test task description"))
-                .andExpect(jsonPath("$.status").value("TODO"))
+                .andExpect(jsonPath("$.status").value("To Do"))
                 .andExpect(jsonPath("$.dueDate").value(dueDate.toString()))
                 .andExpect(jsonPath("$.createdAt").isNotEmpty())
                 .andReturn();
@@ -167,7 +168,7 @@ class TaskApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(taskId))
                 .andExpect(jsonPath("$.description").value("Integration test task description"))
-                .andExpect(jsonPath("$.status").value("TODO"))
+                .andExpect(jsonPath("$.status").value("To Do"))
                 .andExpect(jsonPath("$.assigneeId").value(assignee.getId().toString()));
 
         // 3. FILTER — by assignee
@@ -184,7 +185,7 @@ class TaskApiIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UpdateStatusRequest("IN_PROGRESS"))))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value("IN_PROGRESS"));
+                .andExpect(jsonPath("$.status").value("In Progress"));
 
         // 5. EDIT via PUT (creator edits)
         var updateRequest = new UpdateTaskRequest(
@@ -369,7 +370,7 @@ class TaskApiIntegrationTest {
         Interaction interaction = new Interaction();
         interaction.setEmployeeId(individual.getId());
         interaction.setStaffId(creator.getId());
-        interaction.setType("CHECK_IN");
+        interaction.setType(InteractionType.CHECK_IN);
         interaction.setNotes("Integration test interaction");
         interaction.setOccurredAt(LocalDateTime.now().minusDays(1));
         interactionRepository.save(interaction);
@@ -419,7 +420,7 @@ class TaskApiIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(taskId))
                 .andExpect(jsonPath("$.description").value("Task that should persist after 403"))
-                .andExpect(jsonPath("$.status").value("TODO"))
+                .andExpect(jsonPath("$.status").value("To Do"))
                 .andExpect(jsonPath("$.assigneeId").value(assignee.getId().toString()));
     }
 

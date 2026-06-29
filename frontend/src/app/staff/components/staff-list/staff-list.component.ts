@@ -56,7 +56,7 @@ export class StaffListComponent implements OnInit {
     this.modalMessage = 'This will restore their login access. They will be able to sign in again.';
     this.modalConfirmText = 'Activate';
     this.pendingAction = () => {
-      this.staffService.update(id, { role: role as 'STAFF' | 'ADMIN', active: true }).subscribe(() => this.loadStaff());
+      this.staffService.update(id, { role: role as 'Staff' | 'Admin', active: true }).subscribe(() => this.loadStaff());
     };
     this.showModal.set(true);
   }

@@ -201,8 +201,8 @@
                 <td>{{ task.employeeName }}</td>
                 <td>{{ task.dueDate | date:'mediumDate' }}</td>
                 <td>
-                  <span class="status-badge" [attr.data-status]="task.status.toLowerCase().replace('_', '-')">
-                    {{ task.status.replace('_', ' ') }}
+                  <span class="status-badge" [attr.data-status]="task.status.toLowerCase().replace(' ', '-')">
+                    {{ task.status }}
                   </span>
                 </td>
               </tr>

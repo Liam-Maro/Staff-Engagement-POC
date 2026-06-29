@@ -25,7 +25,7 @@ export class StaffCreateComponent {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      role: ['STAFF', [Validators.required]]
+      role: ['Staff', [Validators.required]]
     });
   }
 

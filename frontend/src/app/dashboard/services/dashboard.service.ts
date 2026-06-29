@@ -90,7 +90,7 @@ export class DashboardService {
 
   getDashboardData(role: string, staffId: string): Observable<DashboardData> {
     const employees$ = this.http.get<EmployeeResponse[]>(`${this.apiUrl}/employees`).pipe(catchError(() => of([])));
-    const tasks$ = (role === 'ADMIN'
+    const tasks$ = (role === 'Admin'
       ? this.http.get<{ tasks: TaskResponse[] }>(`${this.apiUrl}/tasks?size=200`).pipe(map(r => r.tasks))
       : this.http.get<TaskResponse[]>(`${this.apiUrl}/tasks?staffId=${staffId}`)
     ).pipe(catchError(() => of([] as TaskResponse[])));
@@ -112,9 +112,9 @@ export class DashboardService {
 
         // --- Row 1: Stats ---
         const totalEmployees = employees.filter(e => e.active).length;
-        const openTasks = tasks.filter(t => t.status !== 'COMPLETED').length;
+        const openTasks = tasks.filter(t => t.status !== 'Done').length;
         const overdueTasks = tasks.filter(t =>
-          t.status !== 'COMPLETED' && t.dueDate && t.dueDate < today
+          t.status !== 'Done' && t.dueDate && t.dueDate < today
         ).length;
         const interactionsThisMonth = interactions.filter(i => {
           const date = new Date(i.occurredAt);
@@ -140,9 +140,9 @@ export class DashboardService {
 
         // --- Row 2: Task Status Breakdown ---
         const taskBreakdown: TaskStatusBreakdown = {
-          open: tasks.filter(t => t.status === 'OPEN').length,
-          inProgress: tasks.filter(t => t.status === 'IN_PROGRESS').length,
-          completed: tasks.filter(t => t.status === 'COMPLETED').length
+          open: tasks.filter(t => t.status === 'To Do').length,
+          inProgress: tasks.filter(t => t.status === 'In Progress').length,
+          completed: tasks.filter(t => t.status === 'Done').length
         };
 
         // --- Row 3: Top Skills ---
@@ -168,7 +168,7 @@ export class DashboardService {
 
         // --- Row 4: Upcoming Tasks ---
         const upcomingTasks: UpcomingTask[] = tasks
-          .filter(t => t.status !== 'COMPLETED' && t.dueDate && t.dueDate >= today)
+          .filter(t => t.status !== 'Done' && t.dueDate && t.dueDate >= today)
           .sort((a, b) => a.dueDate!.localeCompare(b.dueDate!))
           .slice(0, 3)
           .map(t => {

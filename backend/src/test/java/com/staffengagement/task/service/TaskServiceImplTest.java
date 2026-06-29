@@ -65,7 +65,7 @@ class TaskServiceImplTest {
 
         TaskResponse result = taskService.create(request, creatorId);
 
-        assertThat(result.status()).isEqualTo("TODO");
+        assertThat(result.status()).isEqualTo("To Do");
         assertThat(result.creatorId()).isEqualTo(creatorId);
         assertThat(result.assigneeId()).isEqualTo(assigneeId);
         assertThat(result.individualId()).isEqualTo(individualId);
@@ -157,7 +157,7 @@ class TaskServiceImplTest {
         TaskResponse result = taskService.create(request, creatorId);
 
         assertThat(result.dueDate()).isNull();
-        assertThat(result.status()).isEqualTo("TODO");
+        assertThat(result.status()).isEqualTo("To Do");
     }
 
     @Test
@@ -174,7 +174,7 @@ class TaskServiceImplTest {
         TaskResponse result = taskService.create(request, creatorId);
 
         assertThat(result.dueDate()).isEqualTo(LocalDate.now());
-        assertThat(result.status()).isEqualTo("TODO");
+        assertThat(result.status()).isEqualTo("To Do");
     }
 
     @Test

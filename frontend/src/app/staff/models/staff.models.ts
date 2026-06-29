@@ -1,7 +1,7 @@
 export interface StaffMember {
   id: string;
   email: string;
-  role: 'STAFF' | 'ADMIN';
+  role: 'Staff' | 'Admin';
   active: boolean;
   createdAt: string;
 }
@@ -9,10 +9,10 @@ export interface StaffMember {
 export interface CreateStaffRequest {
   email: string;
   password: string;
-  role: 'STAFF' | 'ADMIN';
+  role: 'Staff' | 'Admin';
 }
 
 export interface UpdateStaffRequest {
-  role: 'STAFF' | 'ADMIN';
+  role: 'Staff' | 'Admin';
   active: boolean;
 }

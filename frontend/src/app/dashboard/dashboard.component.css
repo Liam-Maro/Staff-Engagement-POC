@@ -346,9 +346,9 @@
   text-transform: capitalize;
 }
 
-.status-badge[data-status="open"] { background: #fffbeb; color: #d97706; }
-.status-badge[data-status="in-progress"] { background: #eff6ff; color: #1d4ed8; }
-.status-badge[data-status="completed"] { background: #f0fdf4; color: #16a34a; }
+.status-badge[data-status="to do"] { background: #fffbeb; color: #d97706; }
+.status-badge[data-status="in progress"] { background: #eff6ff; color: #1d4ed8; }
+.status-badge[data-status="done"] { background: #f0fdf4; color: #16a34a; }
 
 /* ==================== Responsive ==================== */
 @media (max-width: 768px) {

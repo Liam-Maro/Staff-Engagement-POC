@@ -74,7 +74,7 @@ class TaskStatusEditDeleteEdgeCaseTest {
         TaskResponse result = taskService.updateStatus(taskId, request, assigneeId);
 
         // Assert: update succeeds, status remains TODO
-        assertThat(result.status()).isEqualTo("TODO");
+        assertThat(result.status()).isEqualTo("To Do");
         verify(repository).save(task);
     }
 
@@ -91,7 +91,7 @@ class TaskStatusEditDeleteEdgeCaseTest {
         TaskResponse result = taskService.updateStatus(taskId, request, assigneeId);
 
         // Assert
-        assertThat(result.status()).isEqualTo("IN_PROGRESS");
+        assertThat(result.status()).isEqualTo("In Progress");
         verify(repository).save(task);
     }
 
