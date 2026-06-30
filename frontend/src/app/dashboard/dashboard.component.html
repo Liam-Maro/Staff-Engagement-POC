@@ -48,7 +48,7 @@
         </div>
       </div>
 
-      <div class="stat-card" [class.alert]="data()!.stats.overdueTasks > 0">
+      <div class="stat-card" [class.alert]="data()!.stats.overdueTasks > 0" [class.pulse]="data()!.stats.overdueTasks > 0">
         <div class="stat-icon overdue">
           <i class="fa-solid fa-triangle-exclamation"></i>
         </div>
@@ -155,20 +155,21 @@
         }
       </div>
 
-      <!-- Employees by Department -->
+      <!-- Engagement Coverage -->
       <div class="panel">
         <div class="panel-header">
-          <i class="fa-solid fa-building"></i>
-          <h4>Employees by Department</h4>
+          <i class="fa-solid fa-user-clock"></i>
+          <h4>Needs Attention</h4>
         </div>
-        @if (data()!.departmentCounts.length === 0) {
-          <p class="text-muted empty-state">No employees found.</p>
+        @if (data()!.neglectedEmployees.length === 0) {
+          <p class="text-muted empty-state">All employees engaged in the last 30 days.</p>
         } @else {
+          <p class="coverage-warning">{{ data()!.neglectedEmployees.length }} employee{{ data()!.neglectedEmployees.length > 1 ? 's' : '' }} with no interaction in 30+ days</p>
           <ul class="ranking-list">
-            @for (dept of data()!.departmentCounts; track dept.department) {
+            @for (emp of data()!.neglectedEmployees; track emp.name) {
               <li class="ranking-item">
-                <span class="ranking-name">{{ dept.department }}</span>
-                <span class="ranking-badge">{{ dept.count }}</span>
+                <span class="ranking-name">{{ emp.name }}</span>
+                <span class="due-badge" data-urgency="overdue">{{ emp.daysSince }}d ago</span>
               </li>
             }
           </ul>
@@ -180,7 +181,7 @@
     <div class="panel full-width">
       <div class="panel-header">
         <i class="fa-solid fa-calendar-check"></i>
-        <h4>Upcoming Due Dates</h4>
+        <h4>Tasks &amp; Deadlines</h4>
       </div>
       @if (data()!.upcomingTasks.length === 0) {
         <p class="text-muted empty-state">No upcoming tasks.</p>
@@ -199,7 +200,11 @@
               <tr>
                 <td>{{ task.title }}</td>
                 <td>{{ task.employeeName }}</td>
-                <td>{{ task.dueDate | date:'mediumDate' }}</td>
+                <td>
+                  <span class="due-badge" [attr.data-urgency]="dueUrgency(task.dueDate)">
+                    {{ daysRemaining(task.dueDate) }}
+                  </span>
+                </td>
                 <td>
                   <span class="status-badge" [attr.data-status]="task.status.toLowerCase().replace(' ', '-')">
                     {{ task.status }}
