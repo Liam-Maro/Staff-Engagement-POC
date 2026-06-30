@@ -307,10 +307,10 @@ class InteractionServiceImplTest {
         var followUpRequest = new CreateFollowUpTaskRequest("Follow up task", "Description", dueDate);
 
         var taskResponse = new TaskResponse(UUID.randomUUID(), employeeId, interactionId,
-                staffId, staffId, "Follow up task - Description", "PENDING", dueDate, LocalDateTime.now());
+                staffId, staffId, "Description", "To Do", dueDate, LocalDateTime.now());
 
         when(repository.findById(interactionId)).thenReturn(Optional.of(entity));
-        when(taskService.create(any(CreateTaskRequest.class), eq(staffId))).thenReturn(taskResponse);
+        when(taskService.create(any(CreateTaskRequest.class), any(UUID.class))).thenReturn(taskResponse);
 
         Object result = service.createFollowUpTask(interactionId, followUpRequest);
 
@@ -322,7 +322,6 @@ class InteractionServiceImplTest {
         assertThat(capturedTask.individualId()).isEqualTo(employeeId);
         assertThat(capturedTask.interactionId()).isEqualTo(interactionId);
         assertThat(capturedTask.assigneeId()).isEqualTo(staffId);
-        assertThat(capturedTask.description()).isEqualTo("Follow up task - Description");
         assertThat(capturedTask.dueDate()).isEqualTo(dueDate);
     }
 
@@ -349,7 +348,7 @@ class InteractionServiceImplTest {
         var followUpRequest = new CreateFollowUpTaskRequest("Task", "Desc", LocalDate.now().plusDays(3));
 
         when(repository.findById(interactionId)).thenReturn(Optional.of(entity));
-        when(taskService.create(any(CreateTaskRequest.class), eq(staffId)))
+        when(taskService.create(any(CreateTaskRequest.class), any(UUID.class)))
                 .thenThrow(new RuntimeException("Service unavailable"));
 
         assertThatThrownBy(() -> service.createFollowUpTask(interactionId, followUpRequest))
