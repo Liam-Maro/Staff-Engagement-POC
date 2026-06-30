@@ -236,7 +236,7 @@ class TaskServiceImpl implements TaskService {
         // 3. Validate status value is a valid enum (400)
         TaskStatus newStatus;
         try {
-            newStatus = TaskStatus.valueOf(request.status().toUpperCase());
+            newStatus = TaskStatus.fromValue(request.status());
         } catch (IllegalArgumentException e) {
             throw new InvalidParameterException(
                     "Invalid status value. Valid values are: TODO, IN_PROGRESS, DONE");
