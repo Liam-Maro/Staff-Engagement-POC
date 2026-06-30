@@ -70,3 +70,19 @@
     </div>
   }
 </div>
+
+@if (showTaskFormModal()) {
+  <app-task-form
+    [interactionContext]="taskFormContext()"
+    (closed)="onModalClose()"
+    (taskCreated)="onTaskCreated()"
+  ></app-task-form>
+}
+
+@if (toastMessage()) {
+  <app-toast-notification
+    [message]="toastMessage()!"
+    [type]="toastType()"
+    (dismissed)="onToastDismissed()"
+  />
+}

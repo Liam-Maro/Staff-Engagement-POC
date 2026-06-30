@@ -12,7 +12,7 @@ import { TaskService } from '../../services/task.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { StaffService } from '../../../staff/services/staff.service';
 import { EmployeeService } from '../../../employees/services/employee.service';
-import { TaskResponse, InteractionSummary } from '../../models/task.model';
+import { TaskResponse, InteractionSummary, InteractionContext } from '../../models/task.model';
 
 describe('TaskFormComponent', () => {
   let component: TaskFormComponent;
@@ -94,6 +94,13 @@ describe('TaskFormComponent', () => {
     if (editTask) {
       component.editTask = editTask;
     }
+    fixture.detectChanges();
+  }
+
+  function createComponentWithContext(context: InteractionContext | null): void {
+    fixture = TestBed.createComponent(TaskFormComponent);
+    component = fixture.componentInstance;
+    component.interactionContext = context;
     fixture.detectChanges();
   }
 
@@ -468,7 +475,7 @@ describe('TaskFormComponent', () => {
 
       const errorEl = fixture.debugElement.query(By.css('.server-error'));
       expect(errorEl).toBeTruthy();
-      expect(errorEl.nativeElement.textContent).toContain('Unable to save');
+      expect(errorEl.nativeElement.textContent).toContain('Server error');
     }));
 
     it('should allow retry after server error without losing data', fakeAsync(() => {
@@ -561,6 +568,22 @@ describe('TaskFormComponent', () => {
       expect(closedSpy).toHaveBeenCalled();
     });
 
+    it('should emit closed event when Escape key is pressed', () => {
+      const closedSpy = vi.spyOn(component.closed, 'emit');
+      const event = new KeyboardEvent('keydown', { key: 'Escape' });
+      document.dispatchEvent(event);
+
+      expect(closedSpy).toHaveBeenCalled();
+    });
+
+    it('should call onClose when Escape key is pressed', () => {
+      const onCloseSpy = vi.spyOn(component, 'onClose');
+      const event = new KeyboardEvent('keydown', { key: 'Escape' });
+      document.dispatchEvent(event);
+
+      expect(onCloseSpy).toHaveBeenCalled();
+    });
+
     it('should default assignee to current user on create mode', () => {
       // After ngOnInit resolves staff, the assignee should default to current staff
       expect(component.taskForm.get('assigneeId')?.value).toBe(STAFF_ID);
@@ -570,6 +593,631 @@ describe('TaskFormComponent', () => {
       const activeStaff = component.activeStaff();
       expect(activeStaff.every(s => s.active)).toBe(true);
       expect(activeStaff.find(s => s.id === 'staff-inactive')).toBeUndefined();
+    });
+  });
+
+  describe('Pre-population from interaction context', () => {
+    const VALID_EMPLOYEE_UUID = 'a1b2c3d4-e5f6-7890-abcd-ef1234567890';
+    const VALID_INTERACTION_UUID = 'b2c3d4e5-f6a7-8901-bcde-f12345678901';
+    const OTHER_EMPLOYEE_UUID = 'c3d4e5f6-a7b8-9012-cdef-123456789012';
+
+    const uuidInteractions: InteractionSummary[] = [
+      { id: VALID_INTERACTION_UUID, employeeId: VALID_EMPLOYEE_UUID, staffId: STAFF_ID, type: 'CHECK_IN', notes: 'Monthly check-in', occurredAt: '2025-01-10T14:00:00', createdAt: '2025-01-10T14:00:00' },
+      { id: 'd4e5f6a7-b8c9-0123-def0-234567890123', employeeId: VALID_EMPLOYEE_UUID, staffId: STAFF_ID, type: 'MENTORING', notes: 'Mentoring session', occurredAt: '2025-01-08T10:00:00', createdAt: '2025-01-08T10:00:00' }
+    ];
+
+    describe('Full pre-population (Requirements 3.1, 3.2, 3.3)', () => {
+      it('should set individualId, toggle, and interactionId when both UUIDs are valid and interaction exists', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: VALID_EMPLOYEE_UUID,
+          interactionType: 'CHECK_IN',
+          interactionDate: '2025-01-10'
+        };
+
+        // Mock returns interaction matching the context interactionId
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(uuidInteractions));
+
+        createComponentWithContext(context);
+
+        expect(component.taskForm.get('individualId')?.value).toBe(VALID_EMPLOYEE_UUID);
+        expect(component.taskForm.get('linkInteraction')?.value).toBe(true);
+        expect(component.taskForm.get('interactionId')?.value).toBe(VALID_INTERACTION_UUID);
+      });
+
+      it('should call getInteractionsForIndividual with the employeeId', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: VALID_EMPLOYEE_UUID
+        };
+
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(uuidInteractions));
+        createComponentWithContext(context);
+
+        expect(mockTaskService.getInteractionsForIndividual).toHaveBeenCalledWith(VALID_EMPLOYEE_UUID);
+      });
+
+      it('should leave interactionId unselected when interaction not found in loaded list (Req 5.7)', () => {
+        const nonExistentInteractionUuid = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee';
+        const context: InteractionContext = {
+          interactionId: nonExistentInteractionUuid,
+          employeeId: VALID_EMPLOYEE_UUID
+        };
+
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(uuidInteractions));
+        createComponentWithContext(context);
+
+        // Toggle should still be enabled but no interaction pre-selected
+        expect(component.taskForm.get('individualId')?.value).toBe(VALID_EMPLOYEE_UUID);
+        expect(component.taskForm.get('linkInteraction')?.value).toBe(true);
+        expect(component.taskForm.get('interactionId')?.value).toBe('');
+      });
+    });
+
+    describe('Partial pre-population - employeeId only (Requirement 5.3)', () => {
+      it('should set individualId and leave toggle off when only employeeId is valid', () => {
+        const context: InteractionContext = {
+          interactionId: '', // empty = not valid UUID
+          employeeId: VALID_EMPLOYEE_UUID
+        };
+
+        createComponentWithContext(context);
+
+        expect(component.taskForm.get('individualId')?.value).toBe(VALID_EMPLOYEE_UUID);
+        expect(component.taskForm.get('linkInteraction')?.value).toBe(false);
+        expect(component.taskForm.get('interactionId')?.value).toBe('');
+      });
+
+      it('should not fetch interactions when only employeeId is provided', () => {
+        const context: InteractionContext = {
+          interactionId: '',
+          employeeId: VALID_EMPLOYEE_UUID
+        };
+
+        createComponentWithContext(context);
+
+        // getInteractionsForIndividual should NOT be called for pre-population
+        expect(component.taskForm.get('linkInteraction')?.value).toBe(false);
+      });
+    });
+
+    describe('InteractionId-only context is ignored (Requirement 5.4)', () => {
+      it('should behave as default form when only interactionId is provided without employeeId', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: '' // empty = not valid
+        };
+
+        createComponentWithContext(context);
+
+        // Default state: individual empty, toggle off, no interaction
+        expect(component.taskForm.get('individualId')?.value).toBe('');
+        expect(component.taskForm.get('linkInteraction')?.value).toBe(false);
+        expect(component.taskForm.get('interactionId')?.value).toBe('');
+      });
+
+      it('should not call getInteractionsForIndividual when only interactionId is provided', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: ''
+        };
+
+        // Reset mock to track calls only after this point
+        mockTaskService.getInteractionsForIndividual.mockClear();
+        createComponentWithContext(context);
+
+        expect(mockTaskService.getInteractionsForIndividual).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('Malformed UUID is silently ignored (Requirement 5.5)', () => {
+      it('should ignore context when employeeId is malformed', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: 'not-a-valid-uuid'
+        };
+
+        createComponentWithContext(context);
+
+        expect(component.taskForm.get('individualId')?.value).toBe('');
+        expect(component.taskForm.get('linkInteraction')?.value).toBe(false);
+      });
+
+      it('should partial-populate when employeeId is valid but interactionId is malformed', () => {
+        const context: InteractionContext = {
+          interactionId: 'bad-uuid-format',
+          employeeId: VALID_EMPLOYEE_UUID
+        };
+
+        createComponentWithContext(context);
+
+        // Only employeeId is valid → partial pre-population
+        expect(component.taskForm.get('individualId')?.value).toBe(VALID_EMPLOYEE_UUID);
+        expect(component.taskForm.get('linkInteraction')?.value).toBe(false);
+      });
+
+      it('should ignore entirely when both UUIDs are malformed', () => {
+        const context: InteractionContext = {
+          interactionId: 'xxx',
+          employeeId: '12345'
+        };
+
+        createComponentWithContext(context);
+
+        expect(component.taskForm.get('individualId')?.value).toBe('');
+        expect(component.taskForm.get('linkInteraction')?.value).toBe(false);
+        expect(component.taskForm.get('interactionId')?.value).toBe('');
+      });
+
+      it('should not show any error to the user when UUIDs are malformed', () => {
+        const context: InteractionContext = {
+          interactionId: 'garbage',
+          employeeId: 'also-garbage'
+        };
+
+        createComponentWithContext(context);
+        fixture.detectChanges();
+
+        expect(component.serverError()).toBeNull();
+        const errorEl = fixture.debugElement.query(By.css('.server-error'));
+        expect(errorEl).toBeFalsy();
+      });
+    });
+
+    describe('Context banner display (Requirement 4.1)', () => {
+      it('should display banner with correct type and date when full context is provided', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: VALID_EMPLOYEE_UUID,
+          interactionType: 'CHECK_IN',
+          interactionDate: '2025-01-10'
+        };
+
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(uuidInteractions));
+        createComponentWithContext(context);
+        fixture.detectChanges();
+
+        const banner = fixture.debugElement.query(By.css('.context-banner'));
+        expect(banner).toBeTruthy();
+        expect(banner.nativeElement.textContent).toContain('CHECK_IN');
+        expect(banner.nativeElement.textContent).toContain('2025-01-10');
+      });
+
+      it('should not display banner when interactionType or interactionDate is missing', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: VALID_EMPLOYEE_UUID
+          // No interactionType or interactionDate
+        };
+
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(uuidInteractions));
+        createComponentWithContext(context);
+        fixture.detectChanges();
+
+        const banner = fixture.debugElement.query(By.css('.context-banner'));
+        expect(banner).toBeFalsy();
+      });
+
+      it('should not display banner when context is null', () => {
+        createComponentWithContext(null);
+        fixture.detectChanges();
+
+        const banner = fixture.debugElement.query(By.css('.context-banner'));
+        expect(banner).toBeFalsy();
+      });
+
+      it('should display banner text matching format "Creating task from [type] interaction on [date]"', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: VALID_EMPLOYEE_UUID,
+          interactionType: 'MENTORING',
+          interactionDate: '2025-02-15'
+        };
+
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(uuidInteractions));
+        createComponentWithContext(context);
+        fixture.detectChanges();
+
+        expect(component.contextBannerText()).toBe('Creating task from MENTORING interaction on 2025-02-15');
+      });
+    });
+
+    describe('Individual change clears interaction and reloads (Requirements 3.5, 4.4)', () => {
+      it('should clear interactionId when individual is changed after pre-population', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: VALID_EMPLOYEE_UUID
+        };
+
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(uuidInteractions));
+        createComponentWithContext(context);
+
+        // Verify pre-populated state
+        expect(component.taskForm.get('interactionId')?.value).toBe(VALID_INTERACTION_UUID);
+
+        // Change individual
+        const newInteractions: InteractionSummary[] = [
+          { id: 'e5f6a7b8-c9d0-1234-ef01-345678901234', employeeId: OTHER_EMPLOYEE_UUID, staffId: STAFF_ID, type: 'CATCH_UP', notes: 'Catch up', occurredAt: '2025-02-01T10:00:00', createdAt: '2025-02-01T10:00:00' }
+        ];
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(newInteractions));
+
+        component.taskForm.get('individualId')?.setValue(OTHER_EMPLOYEE_UUID);
+        fixture.detectChanges();
+
+        // interactionId should be cleared
+        expect(component.taskForm.get('interactionId')?.value).toBe('');
+      });
+
+      it('should reload interactions for newly selected individual', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: VALID_EMPLOYEE_UUID
+        };
+
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(uuidInteractions));
+        createComponentWithContext(context);
+
+        mockTaskService.getInteractionsForIndividual.mockClear();
+        const newInteractions: InteractionSummary[] = [];
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(newInteractions));
+
+        component.taskForm.get('individualId')?.setValue(OTHER_EMPLOYEE_UUID);
+        fixture.detectChanges();
+
+        expect(mockTaskService.getInteractionsForIndividual).toHaveBeenCalledWith(OTHER_EMPLOYEE_UUID);
+      });
+
+      it('should keep linkInteraction toggle in its current state when individual changes', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: VALID_EMPLOYEE_UUID
+        };
+
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(uuidInteractions));
+        createComponentWithContext(context);
+
+        expect(component.taskForm.get('linkInteraction')?.value).toBe(true);
+
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of([]));
+        component.taskForm.get('individualId')?.setValue(OTHER_EMPLOYEE_UUID);
+        fixture.detectChanges();
+
+        // Toggle should remain true
+        expect(component.taskForm.get('linkInteraction')?.value).toBe(true);
+      });
+    });
+
+    describe('Toggle off clears interaction selection (Requirement 4.3)', () => {
+      it('should clear interactionId when linkInteraction toggle is set to false', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: VALID_EMPLOYEE_UUID
+        };
+
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(uuidInteractions));
+        createComponentWithContext(context);
+
+        // Verify pre-populated
+        expect(component.taskForm.get('interactionId')?.value).toBe(VALID_INTERACTION_UUID);
+        expect(component.taskForm.get('linkInteraction')?.value).toBe(true);
+
+        // Toggle off
+        component.taskForm.get('linkInteraction')?.setValue(false);
+        fixture.detectChanges();
+
+        expect(component.taskForm.get('interactionId')?.value).toBe('');
+      });
+
+      it('should clear interactions list when toggle is set to false', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: VALID_EMPLOYEE_UUID
+        };
+
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(uuidInteractions));
+        createComponentWithContext(context);
+
+        // Interactions loaded
+        expect(component.interactions().length).toBeGreaterThan(0);
+
+        // Toggle off
+        component.taskForm.get('linkInteraction')?.setValue(false);
+        fixture.detectChanges();
+
+        expect(component.interactions()).toEqual([]);
+      });
+
+      it('should hide interaction dropdown when toggle is off', () => {
+        const context: InteractionContext = {
+          interactionId: VALID_INTERACTION_UUID,
+          employeeId: VALID_EMPLOYEE_UUID
+        };
+
+        mockTaskService.getInteractionsForIndividual.mockReturnValue(of(uuidInteractions));
+        createComponentWithContext(context);
+        fixture.detectChanges();
+
+        // Initially dropdown should be visible
+        let dropdown = fixture.debugElement.query(By.css('#interactionId'));
+        expect(dropdown).toBeTruthy();
+
+        // Toggle off
+        component.taskForm.get('linkInteraction')?.setValue(false);
+        fixture.detectChanges();
+
+        // Dropdown should be hidden
+        dropdown = fixture.debugElement.query(By.css('#interactionId'));
+        expect(dropdown).toBeFalsy();
+      });
+    });
+  });
+
+  describe('Error handling for task creation in modal context (Requirements 6.4, 6.5, 7.4)', () => {
+    beforeEach(() => {
+      createComponent();
+      component.taskForm.patchValue({
+        description: 'Valid task description',
+        assigneeId: STAFF_ID,
+        individualId: 'emp-001'
+      });
+    });
+
+    describe('400 validation errors with field errors array', () => {
+      it('should show inline field errors and keep modal open', fakeAsync(() => {
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({
+            status: 400,
+            error: { errors: [{ field: 'description', message: 'Description is required' }] }
+          }))
+        );
+
+        component.onSubmit();
+        tick();
+        fixture.detectChanges();
+
+        expect(component.inlineErrors()['description']).toBe('Description is required');
+        expect(component.serverError()).toBeNull();
+      }));
+
+      it('should handle multiple field errors', fakeAsync(() => {
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({
+            status: 400,
+            error: { errors: [
+              { field: 'description', message: 'Too short' },
+              { field: 'assigneeId', message: 'Invalid assignee' }
+            ] }
+          }))
+        );
+
+        component.onSubmit();
+        tick();
+        fixture.detectChanges();
+
+        expect(component.inlineErrors()['description']).toBe('Too short');
+        expect(component.inlineErrors()['assigneeId']).toBe('Invalid assignee');
+      }));
+
+      it('should use defaultMessage when message is missing', fakeAsync(() => {
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({
+            status: 400,
+            error: { errors: [{ field: 'description', defaultMessage: 'Fallback message' }] }
+          }))
+        );
+
+        component.onSubmit();
+        tick();
+        fixture.detectChanges();
+
+        expect(component.inlineErrors()['description']).toBe('Fallback message');
+      }));
+    });
+
+    describe('400 validation errors with fieldErrors object', () => {
+      it('should show inline errors from flat fieldErrors object', fakeAsync(() => {
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({
+            status: 400,
+            error: { fieldErrors: { description: 'required', individualId: 'not found' } }
+          }))
+        );
+
+        component.onSubmit();
+        tick();
+        fixture.detectChanges();
+
+        expect(component.inlineErrors()['description']).toBe('required');
+        expect(component.inlineErrors()['individualId']).toBe('not found');
+        expect(component.serverError()).toBeNull();
+      }));
+    });
+
+    describe('400 with message only (no field-level errors)', () => {
+      it('should show server error banner with message', fakeAsync(() => {
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({
+            status: 400,
+            error: { message: 'Request body is malformed' }
+          }))
+        );
+
+        component.onSubmit();
+        tick();
+        fixture.detectChanges();
+
+        expect(component.serverError()).toBe('Request body is malformed');
+        expect(Object.keys(component.inlineErrors())).toHaveLength(0);
+      }));
+    });
+
+    describe('500 server error', () => {
+      it('should show server error banner for 500', fakeAsync(() => {
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({ status: 500, statusText: 'Internal Server Error' }))
+        );
+
+        component.onSubmit();
+        tick();
+        fixture.detectChanges();
+
+        expect(component.serverError()).toBe('Server error. Please try again.');
+      }));
+
+      it('should show server error banner for 502', fakeAsync(() => {
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({ status: 502, statusText: 'Bad Gateway' }))
+        );
+
+        component.onSubmit();
+        tick();
+        fixture.detectChanges();
+
+        expect(component.serverError()).toBe('Server error. Please try again.');
+      }));
+
+      it('should keep form data intact on server error', fakeAsync(() => {
+        const description = 'Important task content';
+        component.taskForm.get('description')?.setValue(description);
+
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({ status: 500, statusText: 'Internal Server Error' }))
+        );
+
+        component.onSubmit();
+        tick();
+        fixture.detectChanges();
+
+        expect(component.taskForm.get('description')?.value).toBe(description);
+        expect(component.taskForm.get('assigneeId')?.value).toBe(STAFF_ID);
+        expect(component.taskForm.get('individualId')?.value).toBe('emp-001');
+      }));
+    });
+
+    describe('Network error (status 0)', () => {
+      it('should show network error message when status is 0', fakeAsync(() => {
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({ status: 0, statusText: 'Unknown Error' }))
+        );
+
+        component.onSubmit();
+        tick();
+        fixture.detectChanges();
+
+        expect(component.serverError()).toBe('Unable to connect. Please check your network and try again.');
+      }));
+
+      it('should keep modal open and preserve form data on network error', fakeAsync(() => {
+        const closedSpy = vi.spyOn(component.closed, 'emit');
+        const taskCreatedSpy = vi.spyOn(component.taskCreated, 'emit');
+
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({ status: 0, statusText: 'Unknown Error' }))
+        );
+
+        component.onSubmit();
+        tick();
+        fixture.detectChanges();
+
+        expect(closedSpy).not.toHaveBeenCalled();
+        expect(taskCreatedSpy).not.toHaveBeenCalled();
+        expect(component.taskForm.get('description')?.value).toBe('Valid task description');
+      }));
+    });
+
+    describe('No success event on error', () => {
+      it('should NOT emit taskCreated on 400 error', fakeAsync(() => {
+        const taskCreatedSpy = vi.spyOn(component.taskCreated, 'emit');
+
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({
+            status: 400,
+            error: { errors: [{ field: 'description', message: 'required' }] }
+          }))
+        );
+
+        component.onSubmit();
+        tick();
+
+        expect(taskCreatedSpy).not.toHaveBeenCalled();
+      }));
+
+      it('should NOT emit taskCreated on 500 error', fakeAsync(() => {
+        const taskCreatedSpy = vi.spyOn(component.taskCreated, 'emit');
+
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({ status: 500, statusText: 'Internal Server Error' }))
+        );
+
+        component.onSubmit();
+        tick();
+
+        expect(taskCreatedSpy).not.toHaveBeenCalled();
+      }));
+
+      it('should NOT emit taskCreated on network error', fakeAsync(() => {
+        const taskCreatedSpy = vi.spyOn(component.taskCreated, 'emit');
+
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({ status: 0, statusText: 'Unknown Error' }))
+        );
+
+        component.onSubmit();
+        tick();
+
+        expect(taskCreatedSpy).not.toHaveBeenCalled();
+      }));
+
+      it('should NOT emit closed on any error', fakeAsync(() => {
+        const closedSpy = vi.spyOn(component.closed, 'emit');
+
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({ status: 500, statusText: 'Internal Server Error' }))
+        );
+
+        component.onSubmit();
+        tick();
+
+        expect(closedSpy).not.toHaveBeenCalled();
+      }));
+    });
+
+    describe('Clear errors on retry', () => {
+      it('should clear serverError on resubmission', fakeAsync(() => {
+        // First attempt fails with server error
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({ status: 500, statusText: 'Internal Server Error' }))
+        );
+
+        component.onSubmit();
+        tick();
+        expect(component.serverError()).toBe('Server error. Please try again.');
+
+        // Second attempt clears error before trying
+        mockTaskService.createTask.mockReturnValue(of({ id: 'new-task' }));
+        component.onSubmit();
+        // After clearing but before response
+        expect(component.serverError()).toBeNull();
+      }));
+
+      it('should clear inlineErrors on resubmission', fakeAsync(() => {
+        // First attempt fails with validation errors
+        mockTaskService.createTask.mockReturnValue(
+          throwError(() => new HttpErrorResponse({
+            status: 400,
+            error: { errors: [{ field: 'description', message: 'too short' }] }
+          }))
+        );
+
+        component.onSubmit();
+        tick();
+        expect(Object.keys(component.inlineErrors()).length).toBeGreaterThan(0);
+
+        // Second attempt clears inline errors
+        mockTaskService.createTask.mockReturnValue(of({ id: 'new-task' }));
+        component.onSubmit();
+        expect(Object.keys(component.inlineErrors())).toHaveLength(0);
+      }));
     });
   });
 });

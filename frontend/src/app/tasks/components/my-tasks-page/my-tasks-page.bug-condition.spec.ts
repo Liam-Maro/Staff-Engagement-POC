@@ -43,8 +43,16 @@ const taskResponseArb: fc.Arbitrary<TaskResponse> = fc.record({
   assigneeId: fc.constant('staff-1'),
   description: fc.string({ minLength: 1, maxLength: 200 }),
   status: taskStatusArb,
-  dueDate: fc.option(fc.date({ min: new Date('2020-01-01'), max: new Date('2030-12-31') }).map(d => d.toISOString().split('T')[0]), { nil: null }),
-  createdAt: fc.date({ min: new Date('2020-01-01'), max: new Date('2025-12-31') }).map(d => d.toISOString()),
+  dueDate: fc.option(fc.integer({ min: 0, max: 3650 }).map(days => {
+    const d = new Date('2020-01-01');
+    d.setDate(d.getDate() + days);
+    return d.toISOString().split('T')[0];
+  }), { nil: null }),
+  createdAt: fc.integer({ min: 0, max: 1825 }).map(days => {
+    const d = new Date('2020-01-01');
+    d.setDate(d.getDate() + days);
+    return d.toISOString();
+  }),
 });
 
 const staffMembersFixture: StaffMember[] = [

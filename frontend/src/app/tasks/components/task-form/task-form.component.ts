@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, inject, signal, computed } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 
@@ -8,7 +8,7 @@ import { StaffService } from '../../../staff/services/staff.service';
 import { EmployeeService } from '../../../employees/services/employee.service';
 import { StaffMember } from '../../../staff/models/staff.models';
 import { Employee } from '../../../employees/models/employee.models';
-import { TaskResponse, CreateTaskRequest, UpdateTaskRequest, InteractionSummary } from '../../models/task.model';
+import { TaskResponse, CreateTaskRequest, UpdateTaskRequest, InteractionSummary, InteractionContext } from '../../models/task.model';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -23,6 +23,12 @@ import { HttpErrorResponse } from '@angular/common/http';
           <button class="close-btn" (click)="onClose()" aria-label="Close form">&times;</button>
         </div>
         <div class="task-form-body">
+          @if (showContextBanner()) {
+            <div class="context-banner">
+              <span class="context-banner-icon">ℹ</span>
+              <span class="context-banner-text">{{ contextBannerText() }}</span>
+            </div>
+          }
           <form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
 
             <!-- Description -->
@@ -327,13 +333,38 @@ import { HttpErrorResponse } from '@angular/common/http';
       background: #93c5fd;
       cursor: not-allowed;
     }
+
+    .context-banner {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1.25rem;
+      color: #1e40af;
+      font-size: 0.875rem;
+    }
+
+    .context-banner-icon {
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .context-banner-text {
+      line-height: 1.4;
+    }
   `]
 })
 export class TaskFormComponent implements OnInit {
   @Input() editTask: TaskResponse | null = null;
+  @Input() interactionContext: InteractionContext | null = null;
   @Output() closed = new EventEmitter<void>();
   @Output() taskCreated = new EventEmitter<void>();
   @Output() taskUpdated = new EventEmitter<void>();
+
+  private readonly UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
   private readonly fb = inject(FormBuilder);
   private readonly taskService = inject(TaskService);
@@ -351,6 +382,7 @@ export class TaskFormComponent implements OnInit {
   serverError = signal<string | null>(null);
   inlineErrors = signal<Record<string, string>>({});
   currentStaffId = signal<string>('');
+  private applyingContext = false;
 
   get editMode(): boolean {
     return !!this.editTask;
@@ -362,6 +394,20 @@ export class TaskFormComponent implements OnInit {
     return 2000 - this.descriptionLength();
   });
 
+  showContextBanner = computed(() => {
+    const ctx = this.interactionContext;
+    if (!ctx) return false;
+    const hasValidEmployeeId = !!ctx.employeeId && this.isValidUuid(ctx.employeeId);
+    const hasValidInteractionId = !!ctx.interactionId && this.isValidUuid(ctx.interactionId);
+    return hasValidEmployeeId && hasValidInteractionId && !!ctx.interactionType && !!ctx.interactionDate;
+  });
+
+  contextBannerText = computed(() => {
+    const ctx = this.interactionContext;
+    if (!ctx || !ctx.interactionType || !ctx.interactionDate) return '';
+    return `Creating task from ${ctx.interactionType} interaction on ${ctx.interactionDate}`;
+  });
+
   ngOnInit(): void {
     this.initForm();
     this.loadStaff();
@@ -370,7 +416,51 @@ export class TaskFormComponent implements OnInit {
 
     if (this.editTask) {
       this.populateForEdit();
+    } else if (this.interactionContext) {
+      this.applyInteractionContext(this.interactionContext);
     }
+  }
+
+  private isValidUuid(value: string): boolean {
+    return this.UUID_REGEX.test(value);
+  }
+
+  private applyInteractionContext(context: InteractionContext): void {
+    const hasValidEmployeeId = !!context.employeeId && this.isValidUuid(context.employeeId);
+    const hasValidInteractionId = !!context.interactionId && this.isValidUuid(context.interactionId);
+
+    if (hasValidEmployeeId && hasValidInteractionId) {
+      // Full pre-population: both UUIDs valid
+      this.applyingContext = true;
+      // Set individualId — if employee doesn't exist in the list, field stays empty (Req 5.6)
+      this.taskForm.get('individualId')?.setValue(context.employeeId);
+      // Enable link interaction toggle (Req 3.2)
+      this.taskForm.get('linkInteraction')?.setValue(true);
+      this.applyingContext = false;
+      // Load interactions and pre-select the matching one (Req 3.1, 3.3)
+      this.loadInteractionsAndPreselect(context.employeeId, context.interactionId);
+    } else if (hasValidEmployeeId && !hasValidInteractionId) {
+      // Partial pre-population: only employeeId valid → set individual, leave toggle off
+      this.taskForm.get('individualId')?.setValue(context.employeeId);
+      // linkInteraction stays false, no interaction pre-selected
+    } else {
+      // Only interactionId valid (no employeeId) OR both malformed → ignore entirely
+      // Behave as standard form with no pre-population
+    }
+  }
+
+  private loadInteractionsAndPreselect(employeeId: string, interactionId: string): void {
+    this.taskService.getInteractionsForIndividual(employeeId).subscribe({
+      next: (interactions) => {
+        this.interactions.set(interactions);
+        // Pre-select matching interaction if it exists in the list (Req 3.3)
+        // If interaction not found, leave dropdown unselected (Req 5.7)
+        const match = interactions.find(i => i.id === interactionId);
+        if (match) {
+          this.taskForm.get('interactionId')?.setValue(interactionId);
+        }
+      }
+    });
   }
 
   private initForm(): void {
@@ -388,21 +478,27 @@ export class TaskFormComponent implements OnInit {
       this.descriptionLength.set((value ?? '').length);
     });
 
-    // Watch individual changes to load interactions
+    // Watch individual changes to load interactions (Req 3.5, 4.4)
     this.taskForm.get('individualId')?.valueChanges.subscribe(individualId => {
+      if (this.applyingContext) return;
+      // Always clear interaction selection when individual changes
+      this.taskForm.get('interactionId')?.setValue('', { emitEvent: false });
       if (individualId && this.taskForm.get('linkInteraction')?.value) {
+        // Reload interactions for new employee, keep toggle in current state
         this.loadInteractions(individualId);
       } else {
         this.interactions.set([]);
       }
     });
 
-    // Watch toggle changes
+    // Watch toggle changes (Req 4.3, 4.5)
     this.taskForm.get('linkInteraction')?.valueChanges.subscribe(linked => {
+      if (this.applyingContext) return;
       const individualId = this.taskForm.get('individualId')?.value;
       if (linked && individualId) {
         this.loadInteractions(individualId);
       } else {
+        // Toggle off: clear interactionId immediately and reset interactions
         this.interactions.set([]);
         this.taskForm.get('interactionId')?.setValue('');
       }
@@ -571,19 +667,25 @@ export class TaskFormComponent implements OnInit {
   private handleError(err: HttpErrorResponse): void {
     this.submitting.set(false);
 
-    if (err.status >= 500) {
+    if (err.status === 0 || !err.status) {
+      // Network error — no response received from server
+      this.serverError.set('Unable to connect. Please check your network and try again.');
+    } else if (err.status >= 500) {
       // Server error — preserve form data for retry
-      this.serverError.set('Unable to save the task. Please try again.');
+      this.serverError.set('Server error. Please try again.');
     } else if (err.status === 400 && err.error) {
       // Validation errors — show inline
-      if (typeof err.error === 'object' && err.error.errors && err.error.errors.length > 0) {
+      if (typeof err.error === 'object' && err.error.errors && Array.isArray(err.error.errors) && err.error.errors.length > 0) {
         const errors: Record<string, string> = {};
         for (const e of err.error.errors) {
           if (e.field) {
-            errors[e.field] = e.message;
+            errors[e.field] = e.message || e.defaultMessage;
           }
         }
         this.inlineErrors.set(errors);
+      } else if (typeof err.error === 'object' && err.error.fieldErrors && typeof err.error.fieldErrors === 'object') {
+        // Flat fieldErrors object format: { fieldErrors: { description: "required" } }
+        this.inlineErrors.set(err.error.fieldErrors);
       } else if (typeof err.error === 'object' && err.error.message) {
         this.serverError.set(err.error.message);
       } else if (typeof err.error === 'string') {
@@ -594,6 +696,11 @@ export class TaskFormComponent implements OnInit {
     } else {
       this.serverError.set(err.error?.message || 'An unexpected error occurred.');
     }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.onClose();
   }
 
   onClose(): void {

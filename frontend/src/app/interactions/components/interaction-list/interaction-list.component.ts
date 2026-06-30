@@ -6,11 +6,14 @@ import { InteractionService, InteractionFilterParams } from '../../services/inte
 import { InteractionResponse, InteractionType, INTERACTION_TYPES, PageResponse } from '../../models/interaction.model';
 import { EmployeeService } from '../../../employees/services/employee.service';
 import { Employee } from '../../../employees/models/employee.models';
+import { InteractionContext } from '../../../tasks/models/task.model';
+import { TaskFormComponent } from '../../../tasks/components/task-form/task-form.component';
+import { ToastNotificationComponent } from '../../../shared/components/toast-notification/toast-notification.component';
 
 @Component({
   selector: 'app-interaction-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  imports: [CommonModule, RouterLink, FormsModule, TaskFormComponent, ToastNotificationComponent],
   templateUrl: './interaction-list.component.html',
   styleUrl: './interaction-list.component.css'
 })
@@ -20,6 +23,14 @@ export class InteractionListComponent implements OnInit {
   employees = signal<Employee[]>([]);
   isLoading = signal(true);
   errorMessage = signal<string | null>(null);
+
+  // Task form modal state
+  showTaskFormModal = signal(false);
+  taskFormContext = signal<InteractionContext | null>(null);
+
+  // Toast notification state
+  toastMessage = signal<string | null>(null);
+  toastType = signal<'success' | 'error'>('success');
 
   // Pagination
   currentPage = signal(0);
@@ -119,5 +130,29 @@ export class InteractionListComponent implements OnInit {
 
   retry(): void {
     this.loadInteractions();
+  }
+
+  openCreateTask(interaction: InteractionResponse): void {
+    this.taskFormContext.set({
+      interactionId: interaction.id,
+      employeeId: interaction.employeeId,
+      interactionType: interaction.type,
+      interactionDate: interaction.occurredAt
+    });
+    this.showTaskFormModal.set(true);
+  }
+
+  onModalClose(): void {
+    this.showTaskFormModal.set(false);
+  }
+
+  onTaskCreated(): void {
+    this.showTaskFormModal.set(false);
+    this.toastMessage.set('Follow-up task created successfully');
+    this.toastType.set('success');
+  }
+
+  onToastDismissed(): void {
+    this.toastMessage.set(null);
   }
 }
