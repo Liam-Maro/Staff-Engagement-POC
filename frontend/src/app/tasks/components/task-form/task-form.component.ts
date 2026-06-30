@@ -576,7 +576,7 @@ export class TaskFormComponent implements OnInit {
       this.serverError.set('Unable to save the task. Please try again.');
     } else if (err.status === 400 && err.error) {
       // Validation errors — show inline
-      if (typeof err.error === 'object' && err.error.errors) {
+      if (typeof err.error === 'object' && err.error.errors && err.error.errors.length > 0) {
         const errors: Record<string, string> = {};
         for (const e of err.error.errors) {
           if (e.field) {
@@ -586,6 +586,8 @@ export class TaskFormComponent implements OnInit {
         this.inlineErrors.set(errors);
       } else if (typeof err.error === 'object' && err.error.message) {
         this.serverError.set(err.error.message);
+      } else if (typeof err.error === 'string') {
+        this.serverError.set(err.error);
       } else {
         this.serverError.set('Validation failed. Please check your input.');
       }
