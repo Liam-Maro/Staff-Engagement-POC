@@ -374,8 +374,8 @@ class InteractionControllerIntegrationTest extends BaseIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         String body = response.getBody();
         assertThat(body).isNotNull();
-        assertThat(body).contains("\"title\":\"Follow up with employee\"");
-        assertThat(body).contains("\"employeeId\":\"" + employeeId + "\"");
+        assertThat(body).contains("\"description\":\"Follow up with employee - Discuss progress on project goals\"");
+        assertThat(body).contains("\"individualId\":\"" + employeeId + "\"");
     }
 
     @Test

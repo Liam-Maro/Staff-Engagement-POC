@@ -299,8 +299,10 @@ class InteractionServiceImplTest {
         UUID interactionId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
         UUID staffId = UUID.randomUUID();
+        UUID staffId = UUID.randomUUID();
         LocalDate dueDate = LocalDate.now().plusDays(7);
 
+        var entity = createInteractionEntity(interactionId, employeeId, staffId,
         var entity = createInteractionEntity(interactionId, employeeId, staffId,
                 InteractionType.MENTORING, "Notes", LocalDateTime.now().minusDays(1));
 
@@ -318,9 +320,13 @@ class InteractionServiceImplTest {
 
         ArgumentCaptor<CreateTaskRequest> taskCaptor = ArgumentCaptor.forClass(CreateTaskRequest.class);
         verify(taskService).create(taskCaptor.capture(), eq(staffId));
+        verify(taskService).create(taskCaptor.capture(), eq(staffId));
         CreateTaskRequest capturedTask = taskCaptor.getValue();
         assertThat(capturedTask.individualId()).isEqualTo(employeeId);
+        assertThat(capturedTask.individualId()).isEqualTo(employeeId);
         assertThat(capturedTask.interactionId()).isEqualTo(interactionId);
+        assertThat(capturedTask.assigneeId()).isEqualTo(staffId);
+        assertThat(capturedTask.description()).isEqualTo("Follow up task - Description");
         assertThat(capturedTask.assigneeId()).isEqualTo(staffId);
         assertThat(capturedTask.description()).isEqualTo("Follow up task - Description");
         assertThat(capturedTask.dueDate()).isEqualTo(dueDate);
@@ -341,8 +347,9 @@ class InteractionServiceImplTest {
     void createFollowUpTask_whenTaskServiceFails_throwsTaskCreationFailedException() {
         UUID interactionId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
+        UUID staffId = UUID.randomUUID();
 
-        var entity = createInteractionEntity(interactionId, employeeId, UUID.randomUUID(),
+        var entity = createInteractionEntity(interactionId, employeeId, staffId,
                 InteractionType.CHECK_IN, null, LocalDateTime.now().minusDays(1));
 
         var followUpRequest = new CreateFollowUpTaskRequest("Task", "Desc", LocalDate.now().plusDays(3));
