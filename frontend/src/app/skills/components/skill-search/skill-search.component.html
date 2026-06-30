@@ -1,7 +1,10 @@
 <div>
   <div class="page-header">
     <h2>Skills Register</h2>
-    <button class="btn btn-primary" (click)="openAddForm()">+ Register Skill</button>
+    <div>
+      <button class="btn btn-secondary" (click)="openManageSection()" style="margin-right: 0.5rem;">Manage Skills</button>
+      <button class="btn btn-primary" (click)="openAddForm()">+ Register Skill</button>
+    </div>
   </div>
 
   <p class="text-muted mb-2">Search for a skill to see who in the organisation has experience with it.</p>
@@ -105,4 +108,84 @@
       </table>
     </div>
   }
+
+  <!-- Manage Skills Section -->
+  @if (showManageSection()) {
+    <div class="add-form" style="margin-top: 2rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h3>Manage Employee Skills</h3>
+        <button class="btn btn-secondary" (click)="closeManageSection()" style="font-size: 0.8rem;">Close</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="manageEmployee">Select Employee</label>
+          <select id="manageEmployee" [(ngModel)]="managedEmployeeId" (ngModelChange)="loadEmployeeSkills()">
+            <option value="">-- Select Employee --</option>
+            @for (emp of employees(); track emp.id) {
+              <option [value]="emp.id">{{ emp.firstName }} {{ emp.lastName }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      @if (managedSkills().length > 0) {
+        <table class="manage-table">
+          <thead>
+            <tr>
+              <th>Skill</th>
+              <th>Years</th>
+              <th>Projects</th>
+              <th>Proficiency</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (skill of managedSkills(); track skill.id) {
+              @if (editingSkillId() === skill.id) {
+                <tr class="edit-row">
+                  <td><input type="text" [(ngModel)]="editForm.name" /></td>
+                  <td><input type="number" [(ngModel)]="editForm.yearsExperience" min="0" max="50" style="width: 60px;" /></td>
+                  <td><input type="number" [(ngModel)]="editForm.projectCount" min="0" max="500" style="width: 60px;" /></td>
+                  <td>
+                    <select [(ngModel)]="editForm.proficiency">
+                      @for (level of proficiencyLevels; track level) {
+                        <option [value]="level">{{ level }}</option>
+                      }
+                    </select>
+                  </td>
+                  <td>
+                    <button class="btn-icon" title="Save" (click)="saveEdit()">💾</button>
+                    <button class="btn-icon" title="Cancel" (click)="cancelEdit()">✖️</button>
+                  </td>
+                </tr>
+              } @else {
+                <tr>
+                  <td>{{ skill.name }}</td>
+                  <td>{{ skill.yearsExperience }}</td>
+                  <td>{{ skill.projectCount }}</td>
+                  <td><span class="badge" [attr.data-level]="skill.proficiency.toLowerCase()">{{ skill.proficiency }}</span></td>
+                  <td>
+                    <button class="btn-icon" title="Edit" (click)="openEditForm(skill)">✏️</button>
+                    <button class="btn-icon" title="Delete" (click)="deleteSkill(skill)">🗑️</button>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      } @else if (managedEmployeeId) {
+        <p class="text-muted" style="margin-top: 1rem;">No skills registered for this employee.</p>
+      }
+    </div>
+  }
 </div>
+
+<app-confirm-modal
+  [isOpen]="showModal()"
+  [title]="modalTitle"
+  [message]="modalMessage"
+  [confirmText]="modalConfirmText"
+  variant="danger"
+  (confirmed)="onModalConfirm()"
+  (cancelled)="onModalCancel()"
+/>
