@@ -2,14 +2,15 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SkillService } from '../../services/skill.service';
-import { SkillSearchResult } from '../../models/skill.models';
+import { Skill, SkillSearchResult } from '../../models/skill.models';
 import { EmployeeService } from '../../../employees/services/employee.service';
 import { Employee } from '../../../employees/models/employee.models';
+import { ConfirmModalComponent } from '../../../shared/components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-skill-search',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmModalComponent],
   templateUrl: './skill-search.component.html',
   styleUrls: ['./skill-search.component.css']
 })
@@ -33,6 +34,20 @@ export class SkillSearchComponent implements OnInit {
     proficiency: 'INTERMEDIATE'
   };
   successMessage = signal<string | null>(null);
+
+  // Edit/manage skills
+  showManageSection = signal(false);
+  managedEmployeeId = '';
+  managedSkills = signal<any[]>([]);
+  editingSkillId = signal<string | null>(null);
+  editForm = { name: '', yearsExperience: 0, projectCount: 0, proficiency: 'Intermediate' };
+
+  // Delete confirmation modal
+  showModal = signal(false);
+  modalTitle = '';
+  modalMessage = '';
+  modalConfirmText = 'Delete';
+  private pendingAction: (() => void) | null = null;
 
   constructor(
     private skillService: SkillService,
@@ -109,5 +124,86 @@ export class SkillSearchComponent implements OnInit {
 
   get isFormValid(): boolean {
     return !!this.skillForm.employeeId && !!this.skillForm.name.trim() && !!this.skillForm.proficiency;
+  }
+
+  // ==================== Manage Skills ====================
+
+  openManageSection(): void {
+    this.showManageSection.set(true);
+    this.managedEmployeeId = '';
+    this.managedSkills.set([]);
+    this.editingSkillId.set(null);
+  }
+
+  closeManageSection(): void {
+    this.showManageSection.set(false);
+    this.editingSkillId.set(null);
+  }
+
+  loadEmployeeSkills(): void {
+    if (!this.managedEmployeeId) return;
+    this.skillService.findByEmployee(this.managedEmployeeId).subscribe({
+      next: (skills) => this.managedSkills.set(skills),
+      error: () => this.errorMessage.set('Failed to load skills.')
+    });
+  }
+
+  openEditForm(skill: Skill): void {
+    this.editForm = {
+      name: skill.name,
+      yearsExperience: skill.yearsExperience,
+      projectCount: skill.projectCount,
+      proficiency: skill.proficiency
+    };
+    this.editingSkillId.set(skill.id);
+  }
+
+  cancelEdit(): void {
+    this.editingSkillId.set(null);
+  }
+
+  saveEdit(): void {
+    const id = this.editingSkillId();
+    if (!id) return;
+
+    this.skillService.update(id, this.editForm).subscribe({
+      next: () => {
+        this.successMessage.set('Skill updated successfully.');
+        this.editingSkillId.set(null);
+        this.loadEmployeeSkills();
+        if (this.hasSearched() && this.query.trim()) this.onSearch();
+      },
+      error: () => this.errorMessage.set('Failed to update skill.')
+    });
+  }
+
+  deleteSkill(skill: Skill): void {
+    this.modalTitle = 'Delete Skill';
+    this.modalMessage = `Are you sure you want to delete "${skill.name}"? This action cannot be undone.`;
+    this.modalConfirmText = 'Delete';
+    this.pendingAction = () => {
+      this.skillService.delete(skill.id).subscribe({
+        next: () => {
+          this.successMessage.set(`Skill "${skill.name}" deleted.`);
+          this.loadEmployeeSkills();
+          if (this.hasSearched() && this.query.trim()) this.onSearch();
+        },
+        error: () => this.errorMessage.set('Failed to delete skill.')
+      });
+    };
+    this.showModal.set(true);
+  }
+
+  onModalConfirm(): void {
+    this.showModal.set(false);
+    if (this.pendingAction) {
+      this.pendingAction();
+      this.pendingAction = null;
+    }
+  }
+
+  onModalCancel(): void {
+    this.showModal.set(false);
+    this.pendingAction = null;
   }
 }
