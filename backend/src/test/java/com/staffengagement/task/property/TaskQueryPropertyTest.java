@@ -284,7 +284,7 @@ class TaskQueryPropertyTest {
         // Verify every returned task satisfies ALL filter constraints
         for (TaskResponse task : result.tasks()) {
             if (combo.status() != null) {
-                assertThat(task.status()).isEqualTo(combo.status().name());
+                assertThat(task.status()).isEqualTo(combo.status().getDisplayName());
             }
             if (combo.assigneeId() != null) {
                 assertThat(task.assigneeId()).isEqualTo(combo.assigneeId());

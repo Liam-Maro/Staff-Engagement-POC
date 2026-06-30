@@ -298,30 +298,31 @@ class InteractionServiceImplTest {
     void createFollowUpTask_withValidData_delegatesToTaskService() {
         UUID interactionId = UUID.randomUUID();
         UUID employeeId = UUID.randomUUID();
+        UUID staffId = UUID.randomUUID();
         LocalDate dueDate = LocalDate.now().plusDays(7);
 
-        var entity = createInteractionEntity(interactionId, employeeId, UUID.randomUUID(),
+        var entity = createInteractionEntity(interactionId, employeeId, staffId,
                 InteractionType.MENTORING, "Notes", LocalDateTime.now().minusDays(1));
 
         var followUpRequest = new CreateFollowUpTaskRequest("Follow up task", "Description", dueDate);
 
         var taskResponse = new TaskResponse(UUID.randomUUID(), employeeId, interactionId,
-                "Follow up task", "Description", "PENDING", dueDate, LocalDateTime.now());
+                staffId, staffId, "Follow up task - Description", "To Do", dueDate, LocalDateTime.now());
 
         when(repository.findById(interactionId)).thenReturn(Optional.of(entity));
-        when(taskService.create(any(CreateTaskRequest.class))).thenReturn(taskResponse);
+        when(taskService.create(any(CreateTaskRequest.class), any(UUID.class))).thenReturn(taskResponse);
 
         Object result = service.createFollowUpTask(interactionId, followUpRequest);
 
         assertThat(result).isEqualTo(taskResponse);
 
         ArgumentCaptor<CreateTaskRequest> taskCaptor = ArgumentCaptor.forClass(CreateTaskRequest.class);
-        verify(taskService).create(taskCaptor.capture());
+        verify(taskService).create(taskCaptor.capture(), eq(staffId));
         CreateTaskRequest capturedTask = taskCaptor.getValue();
-        assertThat(capturedTask.employeeId()).isEqualTo(employeeId);
+        assertThat(capturedTask.individualId()).isEqualTo(employeeId);
         assertThat(capturedTask.interactionId()).isEqualTo(interactionId);
-        assertThat(capturedTask.title()).isEqualTo("Follow up task");
-        assertThat(capturedTask.description()).isEqualTo("Description");
+        assertThat(capturedTask.assigneeId()).isEqualTo(staffId);
+        assertThat(capturedTask.description()).isEqualTo("Follow up task - Description");
         assertThat(capturedTask.dueDate()).isEqualTo(dueDate);
     }
 
@@ -347,7 +348,7 @@ class InteractionServiceImplTest {
         var followUpRequest = new CreateFollowUpTaskRequest("Task", "Desc", LocalDate.now().plusDays(3));
 
         when(repository.findById(interactionId)).thenReturn(Optional.of(entity));
-        when(taskService.create(any(CreateTaskRequest.class)))
+        when(taskService.create(any(CreateTaskRequest.class), any(UUID.class)))
                 .thenThrow(new RuntimeException("Service unavailable"));
 
         assertThatThrownBy(() -> service.createFollowUpTask(interactionId, followUpRequest))
