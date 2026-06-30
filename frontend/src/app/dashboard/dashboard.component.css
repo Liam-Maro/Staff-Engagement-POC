@@ -50,6 +50,15 @@
   color: #dc2626;
 }
 
+.stat-card.pulse {
+  animation: pulse-border 2s ease-in-out infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.6); border-color: #dc2626; }
+  50% { box-shadow: 0 0 12px 4px rgba(220, 38, 38, 0.3); border-color: #f87171; }
+}
+
 .stat-icon {
   width: 3rem;
   height: 3rem;
@@ -144,6 +153,16 @@
   text-align: center;
   padding: 1.5rem 0;
   font-size: 0.85rem;
+}
+
+.coverage-warning {
+  font-size: 0.8rem;
+  color: #dc2626;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  padding: 0.4rem 0.6rem;
+  background: #fef2f2;
+  border-radius: 0.375rem;
 }
 
 /* ==================== Activity List (Recent Interactions) ==================== */
@@ -349,6 +368,31 @@
 .status-badge[data-status="to do"] { background: #fffbeb; color: #d97706; }
 .status-badge[data-status="in progress"] { background: #eff6ff; color: #1d4ed8; }
 .status-badge[data-status="done"] { background: #f0fdf4; color: #16a34a; }
+
+/* ==================== Due Badge ==================== */
+.due-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.due-badge[data-urgency="normal"] {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.due-badge[data-urgency="urgent"] {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.due-badge[data-urgency="overdue"] {
+  background: #fef2f2;
+  color: #dc2626;
+  font-weight: 700;
+}
 
 /* ==================== Responsive ==================== */
 @media (max-width: 768px) {

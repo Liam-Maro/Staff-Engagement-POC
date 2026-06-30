@@ -45,4 +45,29 @@ export class DashboardComponent implements OnInit {
     if (total === 0) return 0;
     return Math.round((count / total) * 100);
   }
+
+  daysRemaining(dueDate: string): string {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const due = new Date(dueDate);
+    due.setHours(0, 0, 0, 0);
+    const diff = Math.ceil((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diff < 0) return `${Math.abs(diff)}d overdue`;
+    if (diff === 0) return 'Due today';
+    if (diff === 1) return '1d left';
+    return `${diff}d left`;
+  }
+
+  dueUrgency(dueDate: string): string {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const due = new Date(dueDate);
+    due.setHours(0, 0, 0, 0);
+    const diff = Math.ceil((due.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+
+    if (diff < 0) return 'overdue';
+    if (diff <= 2) return 'urgent';
+    return 'normal';
+  }
 }

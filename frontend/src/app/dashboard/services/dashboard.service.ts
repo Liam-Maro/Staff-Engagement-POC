@@ -29,9 +29,9 @@ export interface SkillCount {
   count: number;
 }
 
-export interface DepartmentCount {
-  department: string;
-  count: number;
+export interface NeglectedEmployee {
+  name: string;
+  daysSince: number;
 }
 
 export interface UpcomingTask {
@@ -47,7 +47,7 @@ export interface DashboardData {
   recentInteractions: RecentInteraction[];
   taskBreakdown: TaskStatusBreakdown;
   topSkills: SkillCount[];
-  departmentCounts: DepartmentCount[];
+  neglectedEmployees: NeglectedEmployee[];
   upcomingTasks: UpcomingTask[];
 }
 
@@ -61,8 +61,8 @@ interface EmployeeResponse {
 
 interface TaskResponse {
   id: string;
-  employeeId: string;
-  title: string;
+  individualId: string;
+  description: string;
   status: string;
   dueDate: string | null;
 }
@@ -155,34 +155,47 @@ export class DashboardService {
           .slice(0, 3)
           .map(([name, count]) => ({ name, count }));
 
-        // --- Row 3: Employees by Department ---
-        const deptCounts = new Map<string, number>();
-        employees.filter(e => e.active).forEach(e => {
-          const dept = e.department || 'Unassigned';
-          deptCounts.set(dept, (deptCounts.get(dept) || 0) + 1);
+        // --- Row 3: Engagement Coverage (no interaction in 30+ days) ---
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        const employeesWithRecentInteraction = new Set<string>();
+        interactions.forEach(i => {
+          if (new Date(i.occurredAt) >= thirtyDaysAgo) {
+            employeesWithRecentInteraction.add(i.employeeId);
+          }
         });
-        const departmentCounts: DepartmentCount[] = [...deptCounts.entries()]
-          .sort((a, b) => b[1] - a[1])
-          .slice(0, 3)
-          .map(([department, count]) => ({ department, count }));
 
-        // --- Row 4: Upcoming Tasks ---
+        const neglectedEmployees: NeglectedEmployee[] = employees
+          .filter(e => e.active && !employeesWithRecentInteraction.has(e.id))
+          .map(e => {
+            // Find last interaction date for this employee
+            const lastInteraction = interactions
+              .filter(i => i.employeeId === e.id)
+              .sort((a, b) => new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime())[0];
+            const daysSince = lastInteraction
+              ? Math.floor((now.getTime() - new Date(lastInteraction.occurredAt).getTime()) / (1000 * 60 * 60 * 24))
+              : 999;
+            return { name: `${e.firstName} ${e.lastName}`, daysSince };
+          })
+          .sort((a, b) => b.daysSince - a.daysSince)
+          .slice(0, 5);
+
+        // --- Row 4: Upcoming & Overdue Tasks ---
         const upcomingTasks: UpcomingTask[] = tasks
-          .filter(t => t.status !== 'Done' && t.dueDate && t.dueDate >= today)
+          .filter(t => t.status !== 'Done' && t.dueDate)
           .sort((a, b) => a.dueDate!.localeCompare(b.dueDate!))
-          .slice(0, 3)
+          .slice(0, 5)
           .map(t => {
-            const emp = employeeMap.get(t.employeeId);
+            const emp = employeeMap.get(t.individualId);
             return {
               id: t.id,
-              title: t.title,
+              title: t.description.length > 60 ? t.description.substring(0, 60) + '...' : t.description,
               employeeName: emp ? `${emp.firstName} ${emp.lastName}` : 'Unknown',
               dueDate: t.dueDate!,
               status: t.status
             };
           });
 
-        return { stats, recentInteractions, taskBreakdown, topSkills, departmentCounts, upcomingTasks };
+        return { stats, recentInteractions, taskBreakdown, topSkills, neglectedEmployees, upcomingTasks };
       })
     );
   }
