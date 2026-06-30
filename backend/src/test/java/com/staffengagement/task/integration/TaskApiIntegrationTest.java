@@ -48,7 +48,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Validates: Requirements 1.1, 2.1, 2.6, 6.1, 7.9, 8.1, 9.1, 9.3, 10.3
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @EnabledIf(value = "isDockerAvailable", disabledReason = "Docker is not available")
