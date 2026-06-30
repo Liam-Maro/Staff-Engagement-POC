@@ -351,4 +351,98 @@ describe('InteractionListComponent', () => {
       expect(notesCell?.textContent).toBe(shortNotes);
     });
   });
+
+  describe('Create Task action from list view', () => {
+    it('should render "Create Task" action for each row', () => {
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const rows = compiled.querySelectorAll('tbody tr');
+      expect(rows.length).toBe(2);
+
+      rows.forEach((row) => {
+        const actions = row.querySelectorAll('.actions-cell .btn-link');
+        const createTaskLink = Array.from(actions).find(a => a.textContent?.trim() === 'Create Task');
+        expect(createTaskLink).toBeTruthy();
+      });
+    });
+
+    it('should open modal with correct context when "Create Task" is clicked', () => {
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const rows = compiled.querySelectorAll('tbody tr');
+      // Click "Create Task" on first row (int-1, emp-1, CHECK_IN, 2025-01-15T10:00:00)
+      const firstRowActions = rows[0].querySelectorAll('.actions-cell .btn-link');
+      const createTaskLink = Array.from(firstRowActions).find(a => a.textContent?.trim() === 'Create Task') as HTMLElement;
+      createTaskLink.click();
+      fixture.detectChanges();
+
+      expect(component.showTaskFormModal()).toBe(true);
+      expect(component.taskFormContext()).toEqual({
+        interactionId: 'int-1',
+        employeeId: 'emp-1',
+        interactionType: 'CHECK_IN',
+        interactionDate: '2025-01-15T10:00:00'
+      });
+    });
+
+    it('should open modal with correct context for second row', () => {
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const rows = compiled.querySelectorAll('tbody tr');
+      // Click "Create Task" on second row (int-2, emp-2, MENTORING, 2025-01-14T09:00:00)
+      const secondRowActions = rows[1].querySelectorAll('.actions-cell .btn-link');
+      const createTaskLink = Array.from(secondRowActions).find(a => a.textContent?.trim() === 'Create Task') as HTMLElement;
+      createTaskLink.click();
+      fixture.detectChanges();
+
+      expect(component.showTaskFormModal()).toBe(true);
+      expect(component.taskFormContext()).toEqual({
+        interactionId: 'int-2',
+        employeeId: 'emp-2',
+        interactionType: 'MENTORING',
+        interactionDate: '2025-01-14T09:00:00'
+      });
+    });
+
+    it('should preserve filters and pagination when modal is closed', () => {
+      fixture.detectChanges();
+
+      // Set filters and simulate being on page 1
+      component.selectedEmployeeId = 'emp-1';
+      component.selectedType = 'CHECK_IN';
+      component.currentPage.set(1);
+
+      // Open modal
+      component.openCreateTask(mockInteractions[0]);
+      expect(component.showTaskFormModal()).toBe(true);
+
+      // Close modal
+      component.onModalClose();
+      fixture.detectChanges();
+
+      // Verify filters and pagination preserved
+      expect(component.showTaskFormModal()).toBe(false);
+      expect(component.selectedEmployeeId).toBe('emp-1');
+      expect(component.selectedType).toBe('CHECK_IN');
+      expect(component.currentPage()).toBe(1);
+    });
+
+    it('should show success toast and close modal after task creation', () => {
+      fixture.detectChanges();
+
+      // Open modal
+      component.openCreateTask(mockInteractions[0]);
+      expect(component.showTaskFormModal()).toBe(true);
+
+      // Simulate task created
+      component.onTaskCreated();
+
+      expect(component.showTaskFormModal()).toBe(false);
+      expect(component.toastMessage()).toBe('Follow-up task created successfully');
+      expect(component.toastType()).toBe('success');
+    });
+  });
 });

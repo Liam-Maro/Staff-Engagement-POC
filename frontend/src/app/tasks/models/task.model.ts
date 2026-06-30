@@ -59,3 +59,10 @@ export interface InteractionSummary {
   occurredAt: string;
   createdAt: string;
 }
+
+export interface InteractionContext {
+  interactionId: string;
+  employeeId: string;
+  interactionType?: string;    // for banner display
+  interactionDate?: string;    // for banner display
+}

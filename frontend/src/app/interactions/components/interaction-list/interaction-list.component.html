@@ -69,8 +69,9 @@
               <td>{{ getEmployeeName(interaction.employeeId) }}</td>
               <td>{{ interaction.occurredAt | date:'mediumDate' }}</td>
               <td class="notes-preview">{{ truncateNotes(interaction.notes) }}</td>
-              <td>
+              <td class="actions-cell">
                 <a [routerLink]="['/interactions', interaction.id]" class="btn-link">View</a>
+                <a class="btn-link" (click)="openCreateTask(interaction)">Create Task</a>
               </td>
             </tr>
           }
@@ -92,3 +93,19 @@
     }
   }
 </div>
+
+@if (showTaskFormModal()) {
+  <app-task-form
+    [interactionContext]="taskFormContext()"
+    (closed)="onModalClose()"
+    (taskCreated)="onTaskCreated()"
+  ></app-task-form>
+}
+
+@if (toastMessage()) {
+  <app-toast-notification
+    [message]="toastMessage()!"
+    [type]="toastType()"
+    (dismissed)="onToastDismissed()"
+  />
+}
