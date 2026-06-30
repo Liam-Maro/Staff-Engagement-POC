@@ -89,7 +89,7 @@ class TaskCreationPropertyTest {
         assertThat(response.creatorId()).isEqualTo(creatorId);
         assertThat(response.description()).isEqualTo(request.description());
         assertThat(response.dueDate()).isEqualTo(request.dueDate());
-        assertThat(response.status()).isEqualTo(TaskStatus.TODO.name());
+        assertThat(response.status()).isEqualTo(TaskStatus.TODO.getDisplayName());
         assertThat(response.createdAt()).isNotNull();
     }
 

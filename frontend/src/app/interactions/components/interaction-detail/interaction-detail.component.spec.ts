@@ -269,7 +269,58 @@ describe('InteractionDetailComponent', () => {
     });
   });
 
-  describe('Create Follow-up Task navigation', () => {
+  describe('Create Follow-up Task button visibility', () => {
+    it('should hide button during loading state', () => {
+      interactionServiceMock.getById.mockReturnValue(new Subject());
+      fixture = TestBed.createComponent(InteractionDetailComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const btn = compiled.querySelector('button.btn-primary');
+      // During loading, the detail-card (which contains the button) is not rendered
+      expect(compiled.querySelector('.detail-actions')).toBeNull();
+      expect(btn?.textContent?.includes('Create Follow-up Task')).toBeFalsy();
+    });
+
+    it('should show button after successful load', () => {
+      interactionServiceMock.getById.mockReturnValue(of(mockInteraction));
+      fixture = TestBed.createComponent(InteractionDetailComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      const buttons = compiled.querySelectorAll('.detail-actions button');
+      const followUpBtn = Array.from(buttons).find(b => b.textContent?.includes('Create Follow-up Task'));
+      expect(followUpBtn).toBeTruthy();
+    });
+
+    it('should hide button on error (5xx)', () => {
+      interactionServiceMock.getById.mockReturnValue(
+        throwError(() => ({ status: 500 }))
+      );
+      fixture = TestBed.createComponent(InteractionDetailComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.detail-actions')).toBeNull();
+    });
+
+    it('should hide button on 404 not found', () => {
+      interactionServiceMock.getById.mockReturnValue(
+        throwError(() => ({ status: 404 }))
+      );
+      fixture = TestBed.createComponent(InteractionDetailComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+
+      const compiled = fixture.nativeElement as HTMLElement;
+      expect(compiled.querySelector('.detail-actions')).toBeNull();
+    });
+  });
+
+  describe('Create Follow-up Task modal behavior', () => {
     beforeEach(() => {
       interactionServiceMock.getById.mockReturnValue(of(mockInteraction));
       fixture = TestBed.createComponent(InteractionDetailComponent);
@@ -277,23 +328,61 @@ describe('InteractionDetailComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should navigate to task creation with query params when button is clicked', () => {
+    it('should open modal with correct context when button is clicked', () => {
       component.createFollowUpTask();
 
-      expect(routerMock.navigate).toHaveBeenCalledWith(['/tasks/create'], {
-        queryParams: {
-          interactionId: mockInteraction.id,
-          employeeId: mockInteraction.employeeId,
-          staffId: mockInteraction.staffId
-        }
+      expect(component.showTaskFormModal()).toBe(true);
+      expect(component.taskFormContext()).toEqual({
+        interactionId: mockInteraction.id,
+        employeeId: mockInteraction.employeeId,
+        interactionType: mockInteraction.type,
+        interactionDate: mockInteraction.occurredAt
       });
     });
 
-    it('should not navigate if interaction is null', () => {
+    it('should not open modal if interaction is null', () => {
       component.interaction.set(null);
       component.createFollowUpTask();
 
-      expect(routerMock.navigate).not.toHaveBeenCalled();
+      expect(component.showTaskFormModal()).toBe(false);
+      expect(component.taskFormContext()).toBeNull();
+    });
+
+    it('should close modal and preserve view state on modal close', () => {
+      // Open modal first
+      component.createFollowUpTask();
+      expect(component.showTaskFormModal()).toBe(true);
+
+      // Close modal
+      component.onModalClose();
+
+      expect(component.showTaskFormModal()).toBe(false);
+      // Interaction data should still be loaded
+      expect(component.interaction()).toEqual(mockInteraction);
+      expect(component.isLoading()).toBe(false);
+      expect(component.errorMessage()).toBeNull();
+    });
+
+    it('should show success toast after task creation', () => {
+      // Open modal
+      component.createFollowUpTask();
+      expect(component.showTaskFormModal()).toBe(true);
+
+      // Task created event
+      component.onTaskCreated();
+
+      expect(component.showTaskFormModal()).toBe(false);
+      expect(component.toastMessage()).toBe('Follow-up task created successfully');
+      expect(component.toastType()).toBe('success');
+    });
+
+    it('should clear toast on dismissed', () => {
+      component.onTaskCreated();
+      expect(component.toastMessage()).toBe('Follow-up task created successfully');
+
+      component.onToastDismissed();
+
+      expect(component.toastMessage()).toBeNull();
     });
   });
 });

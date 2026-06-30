@@ -11,7 +11,6 @@ import com.staffengagement.portfolio.repository.PortfolioProjectRepository;
 import com.staffengagement.shared.exception.EntityNotFoundException;
 import com.staffengagement.skills.dto.SkillResponse;
 import com.staffengagement.skills.service.SkillService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,337 +31,468 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class PortfolioServiceImplTest {
 
-    @Mock private PortfolioEducationRepository educationRepository;
-    @Mock private PortfolioProjectRepository projectRepository;
-    @Mock private PortfolioLinkRepository linkRepository;
-    @Mock private EmployeeRepository employeeRepository;
-    @Mock private SkillService skillService;
+    @Mock
+    private PortfolioEducationRepository educationRepository;
+
+    @Mock
+    private PortfolioProjectRepository projectRepository;
+
+    @Mock
+    private PortfolioLinkRepository linkRepository;
+
+    @Mock
+    private EmployeeRepository employeeRepository;
+
+    @Mock
+    private SkillService skillService;
 
     @InjectMocks
-    private PortfolioServiceImpl portfolioService;
+    private PortfolioServiceImpl service;
 
-    private final UUID employeeId = UUID.randomUUID();
+    // --- Helper methods ---
+
+    private PortfolioEducation createEducationEntity(UUID id, UUID employeeId) {
+        var education = new PortfolioEducation();
+        education.setId(id);
+        education.setEmployeeId(employeeId);
+        education.setInstitution("MIT");
+        education.setDegree("BSc");
+        education.setFieldOfStudy("Computer Science");
+        education.setGraduationDate(LocalDate.of(2020, 6, 15));
+        education.setCreatedAt(LocalDateTime.now());
+        return education;
+    }
+
+    private PortfolioProject createProjectEntity(UUID id, UUID employeeId) {
+        var project = new PortfolioProject();
+        project.setId(id);
+        project.setEmployeeId(employeeId);
+        project.setProjectName("Staff Engagement");
+        project.setDescription("A POC project");
+        project.setRole("Developer");
+        project.setTechnologies(List.of("Java", "Angular"));
+        project.setStartDate(LocalDate.of(2023, 1, 1));
+        project.setEndDate(LocalDate.of(2023, 12, 31));
+        project.setCreatedAt(LocalDateTime.now());
+        return project;
+    }
+
+    private PortfolioLink createLinkEntity(UUID id, UUID employeeId) {
+        var link = new PortfolioLink();
+        link.setId(id);
+        link.setEmployeeId(employeeId);
+        link.setUrl("https://github.com/johndoe");
+        link.setLabel("GitHub");
+        link.setCreatedAt(LocalDateTime.now());
+        return link;
+    }
 
     // ==================== Skills ====================
 
     @Test
-    void getSkillsByEmployee_shouldReturnMappedSkills() {
-        var skill = new SkillResponse(UUID.randomUUID(), employeeId, "Java", 5, 3, "ADVANCED", LocalDateTime.now());
-        when(skillService.findByEmployeeId(employeeId)).thenReturn(List.of(skill));
+    void getSkillsByEmployee_mapsSkillResponsesToPortfolioSkillResponses() {
+        UUID employeeId = UUID.randomUUID();
+        UUID skillId = UUID.randomUUID();
+        LocalDateTime createdAt = LocalDateTime.now();
 
-        List<PortfolioSkillResponse> result = portfolioService.getSkillsByEmployee(employeeId);
+        var skillResponse = new SkillResponse(skillId, employeeId, "Java", 5, 3, "Advanced", createdAt);
+        when(skillService.findByEmployeeId(employeeId)).thenReturn(List.of(skillResponse));
+
+        List<PortfolioSkillResponse> result = service.getSkillsByEmployee(employeeId);
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).name()).isEqualTo("Java");
-        assertThat(result.get(0).yearsExperience()).isEqualTo(5);
+        PortfolioSkillResponse mapped = result.get(0);
+        assertThat(mapped.id()).isEqualTo(skillId);
+        assertThat(mapped.employeeId()).isEqualTo(employeeId);
+        assertThat(mapped.name()).isEqualTo("Java");
+        assertThat(mapped.yearsExperience()).isEqualTo(5);
+        assertThat(mapped.projectCount()).isEqualTo(3);
+        assertThat(mapped.proficiency()).isEqualTo("Advanced");
+        assertThat(mapped.createdAt()).isEqualTo(createdAt);
+        verify(skillService).findByEmployeeId(employeeId);
+    }
+
+    @Test
+    void getSkillsByEmployee_returnsEmptyListWhenNoSkills() {
+        UUID employeeId = UUID.randomUUID();
+        when(skillService.findByEmployeeId(employeeId)).thenReturn(List.of());
+
+        List<PortfolioSkillResponse> result = service.getSkillsByEmployee(employeeId);
+
+        assertThat(result).isEmpty();
     }
 
     // ==================== Education ====================
 
     @Test
-    void createEducation_shouldCreateAndReturn_whenEmployeeExists() {
+    void createEducation_happyPath_savesAndReturnsResponse() {
+        UUID employeeId = UUID.randomUUID();
+        UUID educationId = UUID.randomUUID();
+        var request = new CreateEducationRequest("MIT", "BSc", "Computer Science", LocalDate.of(2020, 6, 15));
+
         when(employeeRepository.existsById(employeeId)).thenReturn(true);
-        var request = new CreateEducationRequest("MIT", "BSc", "CS", LocalDate.of(2020, 6, 15));
 
-        PortfolioEducation saved = buildEducation(employeeId, "MIT", "BSc", "CS", LocalDate.of(2020, 6, 15));
-        when(educationRepository.save(any(PortfolioEducation.class))).thenReturn(saved);
+        var savedEntity = createEducationEntity(educationId, employeeId);
+        when(educationRepository.save(any(PortfolioEducation.class))).thenReturn(savedEntity);
 
-        EducationResponse result = portfolioService.createEducation(employeeId, request);
+        EducationResponse response = service.createEducation(employeeId, request);
 
-        assertThat(result.institution()).isEqualTo("MIT");
-        assertThat(result.degree()).isEqualTo("BSc");
+        assertThat(response.id()).isEqualTo(educationId);
+        assertThat(response.employeeId()).isEqualTo(employeeId);
+        assertThat(response.institution()).isEqualTo("MIT");
+        assertThat(response.degree()).isEqualTo("BSc");
+        assertThat(response.fieldOfStudy()).isEqualTo("Computer Science");
+        assertThat(response.graduationDate()).isEqualTo(LocalDate.of(2020, 6, 15));
         verify(educationRepository).save(any(PortfolioEducation.class));
     }
 
     @Test
-    void createEducation_shouldThrow_whenEmployeeNotFound() {
+    void createEducation_employeeNotFound_throwsEntityNotFoundException() {
+        UUID employeeId = UUID.randomUUID();
+        var request = new CreateEducationRequest("MIT", "BSc", "CS", LocalDate.of(2020, 6, 15));
+
         when(employeeRepository.existsById(employeeId)).thenReturn(false);
-        var request = new CreateEducationRequest("MIT", "BSc", "CS", null);
 
-        assertThatThrownBy(() -> portfolioService.createEducation(employeeId, request))
-                .isInstanceOf(EntityNotFoundException.class);
+        assertThatThrownBy(() -> service.createEducation(employeeId, request))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Employee not found");
+
+        verify(educationRepository, never()).save(any());
     }
 
     @Test
-    void getEducationByEmployee_shouldReturnList() {
-        var edu = buildEducation(employeeId, "Harvard", "MBA", "Business", LocalDate.of(2021, 5, 1));
-        when(educationRepository.findByEmployeeIdOrderByGraduationDateDesc(employeeId)).thenReturn(List.of(edu));
+    void getEducationByEmployee_returnsOrderedList() {
+        UUID employeeId = UUID.randomUUID();
+        var ed1 = createEducationEntity(UUID.randomUUID(), employeeId);
+        var ed2 = createEducationEntity(UUID.randomUUID(), employeeId);
+        ed2.setInstitution("Stanford");
 
-        List<EducationResponse> result = portfolioService.getEducationByEmployee(employeeId);
+        when(educationRepository.findByEmployeeIdOrderByGraduationDateDesc(employeeId))
+                .thenReturn(List.of(ed1, ed2));
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).institution()).isEqualTo("Harvard");
+        List<EducationResponse> result = service.getEducationByEmployee(employeeId);
+
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).institution()).isEqualTo("MIT");
+        assertThat(result.get(1).institution()).isEqualTo("Stanford");
+        verify(educationRepository).findByEmployeeIdOrderByGraduationDateDesc(employeeId);
     }
 
     @Test
-    void updateEducation_shouldUpdate_whenExists() {
+    void updateEducation_happyPath_updatesAndReturnsResponse() {
         UUID educationId = UUID.randomUUID();
-        var existing = buildEducation(employeeId, "Old", "Old", null, null);
-        existing.setId(educationId);
+        UUID employeeId = UUID.randomUUID();
+        var existing = createEducationEntity(educationId, employeeId);
+        var request = new UpdateEducationRequest("Harvard", "MSc", "AI", LocalDate.of(2022, 5, 20));
+
         when(educationRepository.findById(educationId)).thenReturn(Optional.of(existing));
-        when(educationRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(educationRepository.save(any(PortfolioEducation.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        var request = new UpdateEducationRequest("New", "New", "Field", LocalDate.now());
-        EducationResponse result = portfolioService.updateEducation(educationId, request);
+        EducationResponse response = service.updateEducation(educationId, request);
 
-        assertThat(result.institution()).isEqualTo("New");
-        assertThat(result.degree()).isEqualTo("New");
+        assertThat(response.institution()).isEqualTo("Harvard");
+        assertThat(response.degree()).isEqualTo("MSc");
+        assertThat(response.fieldOfStudy()).isEqualTo("AI");
+        assertThat(response.graduationDate()).isEqualTo(LocalDate.of(2022, 5, 20));
     }
 
     @Test
-    void updateEducation_shouldThrow_whenNotFound() {
+    void updateEducation_notFound_throwsEntityNotFoundException() {
         UUID educationId = UUID.randomUUID();
+        var request = new UpdateEducationRequest("Harvard", "MSc", "AI", LocalDate.of(2022, 5, 20));
+
         when(educationRepository.findById(educationId)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> portfolioService.updateEducation(educationId,
-                new UpdateEducationRequest("X", "Y", null, null)))
-                .isInstanceOf(EntityNotFoundException.class);
+        assertThatThrownBy(() -> service.updateEducation(educationId, request))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Education not found");
     }
 
     @Test
-    void deleteEducation_shouldDelete_whenExists() {
+    void deleteEducation_happyPath_deletesEntity() {
         UUID educationId = UUID.randomUUID();
-        var existing = buildEducation(employeeId, "MIT", "BSc", null, null);
+        var existing = createEducationEntity(educationId, UUID.randomUUID());
+
         when(educationRepository.findById(educationId)).thenReturn(Optional.of(existing));
 
-        portfolioService.deleteEducation(educationId);
+        service.deleteEducation(educationId);
 
         verify(educationRepository).delete(existing);
     }
 
     @Test
-    void deleteEducation_shouldThrow_whenNotFound() {
+    void deleteEducation_notFound_throwsEntityNotFoundException() {
         UUID educationId = UUID.randomUUID();
+
         when(educationRepository.findById(educationId)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> portfolioService.deleteEducation(educationId))
-                .isInstanceOf(EntityNotFoundException.class);
+        assertThatThrownBy(() -> service.deleteEducation(educationId))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Education not found");
     }
 
     // ==================== Projects ====================
 
     @Test
-    void createProject_shouldCreateAndReturn_whenEmployeeExists() {
+    void createProject_happyPath_savesAndReturnsResponse() {
+        UUID employeeId = UUID.randomUUID();
+        UUID projectId = UUID.randomUUID();
+        var request = new CreateProjectRequest("Staff Engagement", "A POC", "Developer",
+                List.of("Java", "Angular"), LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31));
+
         when(employeeRepository.existsById(employeeId)).thenReturn(true);
-        var request = new CreateProjectRequest("Proj", "Desc", "Dev", List.of("Java"), LocalDate.now(), null);
 
-        var saved = buildProject(employeeId, "Proj", "Desc", "Dev", List.of("Java"), LocalDate.now(), null);
-        when(projectRepository.save(any(PortfolioProject.class))).thenReturn(saved);
+        var savedEntity = createProjectEntity(projectId, employeeId);
+        when(projectRepository.save(any(PortfolioProject.class))).thenReturn(savedEntity);
 
-        ProjectResponse result = portfolioService.createProject(employeeId, request);
+        ProjectResponse response = service.createProject(employeeId, request);
 
-        assertThat(result.projectName()).isEqualTo("Proj");
-        assertThat(result.technologies()).containsExactly("Java");
+        assertThat(response.id()).isEqualTo(projectId);
+        assertThat(response.employeeId()).isEqualTo(employeeId);
+        assertThat(response.projectName()).isEqualTo("Staff Engagement");
+        assertThat(response.role()).isEqualTo("Developer");
+        assertThat(response.technologies()).containsExactly("Java", "Angular");
+        verify(projectRepository).save(any(PortfolioProject.class));
     }
 
     @Test
-    void createProject_shouldThrow_whenEmployeeNotFound() {
+    void createProject_employeeNotFound_throwsEntityNotFoundException() {
+        UUID employeeId = UUID.randomUUID();
+        var request = new CreateProjectRequest("Project", "Desc", "Dev",
+                List.of("Java"), LocalDate.of(2023, 1, 1), null);
+
         when(employeeRepository.existsById(employeeId)).thenReturn(false);
-        var request = new CreateProjectRequest("Proj", "Desc", "Dev", List.of("Java"), LocalDate.now(), null);
 
-        assertThatThrownBy(() -> portfolioService.createProject(employeeId, request))
-                .isInstanceOf(EntityNotFoundException.class);
+        assertThatThrownBy(() -> service.createProject(employeeId, request))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Employee not found");
+
+        verify(projectRepository, never()).save(any());
     }
 
     @Test
-    void getProjectsByEmployee_shouldReturnList() {
-        var proj = buildProject(employeeId, "Proj", "Desc", "Dev", List.of("Java"), LocalDate.now(), null);
-        when(projectRepository.findByEmployeeIdOrderByStartDateDesc(employeeId)).thenReturn(List.of(proj));
+    void getProjectsByEmployee_returnsOrderedList() {
+        UUID employeeId = UUID.randomUUID();
+        var p1 = createProjectEntity(UUID.randomUUID(), employeeId);
+        var p2 = createProjectEntity(UUID.randomUUID(), employeeId);
+        p2.setProjectName("Another Project");
 
-        List<ProjectResponse> result = portfolioService.getProjectsByEmployee(employeeId);
+        when(projectRepository.findByEmployeeIdOrderByStartDateDesc(employeeId))
+                .thenReturn(List.of(p1, p2));
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).projectName()).isEqualTo("Proj");
+        List<ProjectResponse> result = service.getProjectsByEmployee(employeeId);
+
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).projectName()).isEqualTo("Staff Engagement");
+        assertThat(result.get(1).projectName()).isEqualTo("Another Project");
+        verify(projectRepository).findByEmployeeIdOrderByStartDateDesc(employeeId);
     }
 
     @Test
-    void updateProject_shouldUpdate_whenExists() {
+    void updateProject_happyPath_updatesAndReturnsResponse() {
         UUID projectId = UUID.randomUUID();
-        var existing = buildProject(employeeId, "Old", "Old", "Old", List.of(), LocalDate.now(), null);
-        existing.setId(projectId);
+        UUID employeeId = UUID.randomUUID();
+        var existing = createProjectEntity(projectId, employeeId);
+        var request = new UpdateProjectRequest("Updated Project", "New desc", "Lead",
+                List.of("Python"), LocalDate.of(2024, 1, 1), LocalDate.of(2024, 6, 30));
+
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(existing));
-        when(projectRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(projectRepository.save(any(PortfolioProject.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        var request = new UpdateProjectRequest("New", "NewDesc", "NewRole", List.of("Go"), LocalDate.now(), LocalDate.now().plusDays(30));
-        ProjectResponse result = portfolioService.updateProject(projectId, request);
+        ProjectResponse response = service.updateProject(projectId, request);
 
-        assertThat(result.projectName()).isEqualTo("New");
-        assertThat(result.technologies()).containsExactly("Go");
+        assertThat(response.projectName()).isEqualTo("Updated Project");
+        assertThat(response.description()).isEqualTo("New desc");
+        assertThat(response.role()).isEqualTo("Lead");
+        assertThat(response.technologies()).containsExactly("Python");
+        assertThat(response.startDate()).isEqualTo(LocalDate.of(2024, 1, 1));
+        assertThat(response.endDate()).isEqualTo(LocalDate.of(2024, 6, 30));
     }
 
     @Test
-    void updateProject_shouldThrow_whenNotFound() {
+    void updateProject_notFound_throwsEntityNotFoundException() {
         UUID projectId = UUID.randomUUID();
+        var request = new UpdateProjectRequest("Project", "Desc", "Dev",
+                List.of("Java"), LocalDate.of(2023, 1, 1), null);
+
         when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> portfolioService.updateProject(projectId,
-                new UpdateProjectRequest("X", "Y", "Z", List.of(), LocalDate.now(), null)))
-                .isInstanceOf(EntityNotFoundException.class);
+        assertThatThrownBy(() -> service.updateProject(projectId, request))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Project not found");
     }
 
     @Test
-    void deleteProject_shouldDelete_whenExists() {
+    void deleteProject_happyPath_deletesEntity() {
         UUID projectId = UUID.randomUUID();
-        var existing = buildProject(employeeId, "Proj", null, "Dev", List.of(), LocalDate.now(), null);
+        var existing = createProjectEntity(projectId, UUID.randomUUID());
+
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(existing));
 
-        portfolioService.deleteProject(projectId);
+        service.deleteProject(projectId);
 
         verify(projectRepository).delete(existing);
     }
 
     @Test
-    void deleteProject_shouldThrow_whenNotFound() {
+    void deleteProject_notFound_throwsEntityNotFoundException() {
         UUID projectId = UUID.randomUUID();
+
         when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> portfolioService.deleteProject(projectId))
-                .isInstanceOf(EntityNotFoundException.class);
+        assertThatThrownBy(() -> service.deleteProject(projectId))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Project not found");
     }
 
     // ==================== Links ====================
 
     @Test
-    void createLink_shouldCreateAndReturn_whenEmployeeExists() {
+    void createLink_happyPath_savesAndReturnsResponse() {
+        UUID employeeId = UUID.randomUUID();
+        UUID linkId = UUID.randomUUID();
+        var request = new CreateLinkRequest("https://github.com/johndoe", "GitHub");
+
         when(employeeRepository.existsById(employeeId)).thenReturn(true);
-        var request = new CreateLinkRequest("https://github.com", "GitHub");
 
-        var saved = buildLink(employeeId, "https://github.com", "GitHub");
-        when(linkRepository.save(any(PortfolioLink.class))).thenReturn(saved);
+        var savedEntity = createLinkEntity(linkId, employeeId);
+        when(linkRepository.save(any(PortfolioLink.class))).thenReturn(savedEntity);
 
-        LinkResponse result = portfolioService.createLink(employeeId, request);
+        LinkResponse response = service.createLink(employeeId, request);
 
-        assertThat(result.url()).isEqualTo("https://github.com");
-        assertThat(result.label()).isEqualTo("GitHub");
+        assertThat(response.id()).isEqualTo(linkId);
+        assertThat(response.employeeId()).isEqualTo(employeeId);
+        assertThat(response.url()).isEqualTo("https://github.com/johndoe");
+        assertThat(response.label()).isEqualTo("GitHub");
+        verify(linkRepository).save(any(PortfolioLink.class));
     }
 
     @Test
-    void createLink_shouldThrow_whenEmployeeNotFound() {
+    void createLink_employeeNotFound_throwsEntityNotFoundException() {
+        UUID employeeId = UUID.randomUUID();
+        var request = new CreateLinkRequest("https://example.com", "My Site");
+
         when(employeeRepository.existsById(employeeId)).thenReturn(false);
-        var request = new CreateLinkRequest("https://github.com", "GitHub");
 
-        assertThatThrownBy(() -> portfolioService.createLink(employeeId, request))
-                .isInstanceOf(EntityNotFoundException.class);
+        assertThatThrownBy(() -> service.createLink(employeeId, request))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Employee not found");
+
+        verify(linkRepository, never()).save(any());
     }
 
     @Test
-    void getLinksByEmployee_shouldReturnList() {
-        var link = buildLink(employeeId, "https://x.com", "X");
-        when(linkRepository.findByEmployeeId(employeeId)).thenReturn(List.of(link));
+    void getLinksByEmployee_returnsList() {
+        UUID employeeId = UUID.randomUUID();
+        var link1 = createLinkEntity(UUID.randomUUID(), employeeId);
+        var link2 = createLinkEntity(UUID.randomUUID(), employeeId);
+        link2.setLabel("LinkedIn");
+        link2.setUrl("https://linkedin.com/in/johndoe");
 
-        List<LinkResponse> result = portfolioService.getLinksByEmployee(employeeId);
+        when(linkRepository.findByEmployeeId(employeeId)).thenReturn(List.of(link1, link2));
 
-        assertThat(result).hasSize(1);
-        assertThat(result.get(0).url()).isEqualTo("https://x.com");
+        List<LinkResponse> result = service.getLinksByEmployee(employeeId);
+
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).label()).isEqualTo("GitHub");
+        assertThat(result.get(1).label()).isEqualTo("LinkedIn");
+        verify(linkRepository).findByEmployeeId(employeeId);
     }
 
     @Test
-    void updateLink_shouldUpdate_whenExists() {
+    void updateLink_happyPath_updatesAndReturnsResponse() {
         UUID linkId = UUID.randomUUID();
-        var existing = buildLink(employeeId, "https://old.com", "Old");
-        existing.setId(linkId);
+        UUID employeeId = UUID.randomUUID();
+        var existing = createLinkEntity(linkId, employeeId);
+        var request = new UpdateLinkRequest("https://linkedin.com/in/janedoe", "LinkedIn");
+
         when(linkRepository.findById(linkId)).thenReturn(Optional.of(existing));
-        when(linkRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(linkRepository.save(any(PortfolioLink.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        var request = new UpdateLinkRequest("https://new.com", "New");
-        LinkResponse result = portfolioService.updateLink(linkId, request);
+        LinkResponse response = service.updateLink(linkId, request);
 
-        assertThat(result.url()).isEqualTo("https://new.com");
-        assertThat(result.label()).isEqualTo("New");
+        assertThat(response.url()).isEqualTo("https://linkedin.com/in/janedoe");
+        assertThat(response.label()).isEqualTo("LinkedIn");
     }
 
     @Test
-    void updateLink_shouldThrow_whenNotFound() {
+    void updateLink_notFound_throwsEntityNotFoundException() {
         UUID linkId = UUID.randomUUID();
+        var request = new UpdateLinkRequest("https://example.com", "Site");
+
         when(linkRepository.findById(linkId)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> portfolioService.updateLink(linkId,
-                new UpdateLinkRequest("https://x.com", "X")))
-                .isInstanceOf(EntityNotFoundException.class);
+        assertThatThrownBy(() -> service.updateLink(linkId, request))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Link not found");
     }
 
     @Test
-    void deleteLink_shouldDelete_whenExists() {
+    void deleteLink_happyPath_deletesEntity() {
         UUID linkId = UUID.randomUUID();
-        var existing = buildLink(employeeId, "https://x.com", "X");
+        var existing = createLinkEntity(linkId, UUID.randomUUID());
+
         when(linkRepository.findById(linkId)).thenReturn(Optional.of(existing));
 
-        portfolioService.deleteLink(linkId);
+        service.deleteLink(linkId);
 
         verify(linkRepository).delete(existing);
     }
 
     @Test
-    void deleteLink_shouldThrow_whenNotFound() {
+    void deleteLink_notFound_throwsEntityNotFoundException() {
         UUID linkId = UUID.randomUUID();
+
         when(linkRepository.findById(linkId)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> portfolioService.deleteLink(linkId))
-                .isInstanceOf(EntityNotFoundException.class);
+        assertThatThrownBy(() -> service.deleteLink(linkId))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Link not found");
     }
 
     // ==================== Full Portfolio ====================
 
     @Test
-    void getFullPortfolio_shouldReturnAll_whenEmployeeExists() {
+    void getFullPortfolio_aggregatesAllSections() {
+        UUID employeeId = UUID.randomUUID();
+        LocalDateTime now = LocalDateTime.now();
+
         when(employeeRepository.existsById(employeeId)).thenReturn(true);
-        when(skillService.findByEmployeeId(employeeId)).thenReturn(List.of());
-        when(educationRepository.findByEmployeeIdOrderByGraduationDateDesc(employeeId)).thenReturn(List.of());
-        when(projectRepository.findByEmployeeIdOrderByStartDateDesc(employeeId)).thenReturn(List.of());
-        when(linkRepository.findByEmployeeId(employeeId)).thenReturn(List.of());
 
-        FullPortfolioResponse result = portfolioService.getFullPortfolio(employeeId);
+        var skillResponse = new SkillResponse(UUID.randomUUID(), employeeId, "Java", 5, 3, "Advanced", now);
+        when(skillService.findByEmployeeId(employeeId)).thenReturn(List.of(skillResponse));
 
-        assertThat(result.skills()).isEmpty();
-        assertThat(result.education()).isEmpty();
-        assertThat(result.projects()).isEmpty();
-        assertThat(result.links()).isEmpty();
+        var education = createEducationEntity(UUID.randomUUID(), employeeId);
+        when(educationRepository.findByEmployeeIdOrderByGraduationDateDesc(employeeId))
+                .thenReturn(List.of(education));
+
+        var project = createProjectEntity(UUID.randomUUID(), employeeId);
+        when(projectRepository.findByEmployeeIdOrderByStartDateDesc(employeeId))
+                .thenReturn(List.of(project));
+
+        var link = createLinkEntity(UUID.randomUUID(), employeeId);
+        when(linkRepository.findByEmployeeId(employeeId)).thenReturn(List.of(link));
+
+        FullPortfolioResponse response = service.getFullPortfolio(employeeId);
+
+        assertThat(response.skills()).hasSize(1);
+        assertThat(response.skills().get(0).name()).isEqualTo("Java");
+        assertThat(response.education()).hasSize(1);
+        assertThat(response.education().get(0).institution()).isEqualTo("MIT");
+        assertThat(response.projects()).hasSize(1);
+        assertThat(response.projects().get(0).projectName()).isEqualTo("Staff Engagement");
+        assertThat(response.links()).hasSize(1);
+        assertThat(response.links().get(0).label()).isEqualTo("GitHub");
     }
 
     @Test
-    void getFullPortfolio_shouldThrow_whenEmployeeNotFound() {
+    void getFullPortfolio_employeeNotFound_throwsEntityNotFoundException() {
+        UUID employeeId = UUID.randomUUID();
+
         when(employeeRepository.existsById(employeeId)).thenReturn(false);
 
-        assertThatThrownBy(() -> portfolioService.getFullPortfolio(employeeId))
-                .isInstanceOf(EntityNotFoundException.class);
-    }
-
-    // ==================== Helpers ====================
-
-    private PortfolioEducation buildEducation(UUID empId, String inst, String degree, String field, LocalDate grad) {
-        var edu = new PortfolioEducation();
-        edu.setId(UUID.randomUUID());
-        edu.setEmployeeId(empId);
-        edu.setInstitution(inst);
-        edu.setDegree(degree);
-        edu.setFieldOfStudy(field);
-        edu.setGraduationDate(grad);
-        edu.setCreatedAt(LocalDateTime.now());
-        return edu;
-    }
-
-    private PortfolioProject buildProject(UUID empId, String name, String desc, String role,
-                                          List<String> tech, LocalDate start, LocalDate end) {
-        var proj = new PortfolioProject();
-        proj.setId(UUID.randomUUID());
-        proj.setEmployeeId(empId);
-        proj.setProjectName(name);
-        proj.setDescription(desc);
-        proj.setRole(role);
-        proj.setTechnologies(tech);
-        proj.setStartDate(start);
-        proj.setEndDate(end);
-        proj.setCreatedAt(LocalDateTime.now());
-        return proj;
-    }
-
-    private PortfolioLink buildLink(UUID empId, String url, String label) {
-        var link = new PortfolioLink();
-        link.setId(UUID.randomUUID());
-        link.setEmployeeId(empId);
-        link.setUrl(url);
-        link.setLabel(label);
-        link.setCreatedAt(LocalDateTime.now());
-        return link;
+        assertThatThrownBy(() -> service.getFullPortfolio(employeeId))
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessageContaining("Employee not found");
     }
 }

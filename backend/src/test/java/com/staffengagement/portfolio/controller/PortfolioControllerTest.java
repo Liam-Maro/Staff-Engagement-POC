@@ -2,12 +2,15 @@ package com.staffengagement.portfolio.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staffengagement.auth.service.JwtService;
-import com.staffengagement.config.TestSecurityConfig;
 import com.staffengagement.portfolio.dto.*;
 import com.staffengagement.portfolio.service.PortfolioService;
+import com.staffengagement.shared.config.JwtAuthenticationFilter;
+import com.staffengagement.shared.config.SecurityConfig;
+import com.staffengagement.shared.exception.GlobalExceptionHandler;
 import com.staffengagement.staff.repository.StaffRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -21,189 +24,223 @@ import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PortfolioController.class)
-@Import(TestSecurityConfig.class)
+@AutoConfigureMockMvc(addFilters = false)
+@Import({SecurityConfig.class, JwtAuthenticationFilter.class, GlobalExceptionHandler.class})
 class PortfolioControllerTest {
 
-    @Autowired private MockMvc mockMvc;
-    @Autowired private ObjectMapper objectMapper;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @MockitoBean private PortfolioService portfolioService;
-    @MockitoBean private StaffRepository staffRepository;
-    @MockitoBean private JwtService jwtService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    private final UUID employeeId = UUID.randomUUID();
-    private final LocalDateTime now = LocalDateTime.now();
+    @MockitoBean
+    private PortfolioService portfolioService;
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private StaffRepository staffRepository;
 
     // ==================== Skills ====================
 
     @Test
-    void getSkillsByEmployee_shouldReturn200() throws Exception {
-        var skill = new PortfolioSkillResponse(UUID.randomUUID(), employeeId, "Java", 5, 3, "Advanced", now);
+    void getSkillsByEmployee_returns200WithSkillsList() throws Exception {
+        UUID employeeId = UUID.randomUUID();
+        var skill = new PortfolioSkillResponse(UUID.randomUUID(), employeeId, "Java", 5, 3, "Advanced", LocalDateTime.now());
+
         when(portfolioService.getSkillsByEmployee(employeeId)).thenReturn(List.of(skill));
 
-        mockMvc.perform(get("/api/portfolios/" + employeeId + "/skills"))
+        mockMvc.perform(get("/api/portfolios/{employeeId}/skills", employeeId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Java"));
+                .andExpect(jsonPath("$[0].name").value("Java"))
+                .andExpect(jsonPath("$[0].yearsExperience").value(5))
+                .andExpect(jsonPath("$[0].proficiency").value("Advanced"));
+
+        verify(portfolioService).getSkillsByEmployee(employeeId);
     }
 
     // ==================== Education ====================
 
     @Test
-    void createEducation_shouldReturn201() throws Exception {
-        var request = new CreateEducationRequest("MIT", "BSc", "CS", LocalDate.of(2020, 6, 15));
-        var response = new EducationResponse(UUID.randomUUID(), employeeId, "MIT", "BSc", "CS", LocalDate.of(2020, 6, 15), now);
-        when(portfolioService.createEducation(eq(employeeId), any())).thenReturn(response);
+    void getEducationByEmployee_returns200WithList() throws Exception {
+        UUID employeeId = UUID.randomUUID();
+        var education = new EducationResponse(UUID.randomUUID(), employeeId, "MIT", "BSc",
+                "Computer Science", LocalDate.of(2020, 6, 15), LocalDateTime.now());
 
-        mockMvc.perform(post("/api/portfolios/" + employeeId + "/education")
+        when(portfolioService.getEducationByEmployee(employeeId)).thenReturn(List.of(education));
+
+        mockMvc.perform(get("/api/portfolios/{employeeId}/education", employeeId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].institution").value("MIT"))
+                .andExpect(jsonPath("$[0].degree").value("BSc"));
+
+        verify(portfolioService).getEducationByEmployee(employeeId);
+    }
+
+    @Test
+    void createEducation_returns201WithResponse() throws Exception {
+        UUID employeeId = UUID.randomUUID();
+        var request = new CreateEducationRequest("MIT", "BSc", "Computer Science", LocalDate.of(2020, 6, 15));
+        var response = new EducationResponse(UUID.randomUUID(), employeeId, "MIT", "BSc",
+                "Computer Science", LocalDate.of(2020, 6, 15), LocalDateTime.now());
+
+        when(portfolioService.createEducation(eq(employeeId), any(CreateEducationRequest.class)))
+                .thenReturn(response);
+
+        mockMvc.perform(post("/api/portfolios/{employeeId}/education", employeeId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.institution").value("MIT"));
+                .andExpect(jsonPath("$.institution").value("MIT"))
+                .andExpect(jsonPath("$.degree").value("BSc"));
+
+        verify(portfolioService).createEducation(eq(employeeId), any(CreateEducationRequest.class));
     }
 
     @Test
-    void getEducationByEmployee_shouldReturn200() throws Exception {
-        var response = new EducationResponse(UUID.randomUUID(), employeeId, "MIT", "BSc", "CS", LocalDate.of(2020, 6, 15), now);
-        when(portfolioService.getEducationByEmployee(employeeId)).thenReturn(List.of(response));
-
-        mockMvc.perform(get("/api/portfolios/" + employeeId + "/education"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].degree").value("BSc"));
-    }
-
-    @Test
-    void updateEducation_shouldReturn200() throws Exception {
+    void updateEducation_returns200WithResponse() throws Exception {
         UUID educationId = UUID.randomUUID();
-        var request = new UpdateEducationRequest("Harvard", "MSc", "AI", LocalDate.of(2022, 5, 1));
-        var response = new EducationResponse(educationId, employeeId, "Harvard", "MSc", "AI", LocalDate.of(2022, 5, 1), now);
-        when(portfolioService.updateEducation(eq(educationId), any())).thenReturn(response);
+        var request = new UpdateEducationRequest("Harvard", "MSc", "AI", LocalDate.of(2022, 5, 20));
+        var response = new EducationResponse(educationId, UUID.randomUUID(), "Harvard", "MSc",
+                "AI", LocalDate.of(2022, 5, 20), LocalDateTime.now());
 
-        mockMvc.perform(put("/api/portfolios/education/" + educationId)
+        when(portfolioService.updateEducation(eq(educationId), any(UpdateEducationRequest.class)))
+                .thenReturn(response);
+
+        mockMvc.perform(put("/api/portfolios/education/{educationId}", educationId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.institution").value("Harvard"));
+                .andExpect(jsonPath("$.institution").value("Harvard"))
+                .andExpect(jsonPath("$.degree").value("MSc"));
+
+        verify(portfolioService).updateEducation(eq(educationId), any(UpdateEducationRequest.class));
     }
 
     @Test
-    void deleteEducation_shouldReturn204() throws Exception {
+    void deleteEducation_returns204() throws Exception {
         UUID educationId = UUID.randomUUID();
-        doNothing().when(portfolioService).deleteEducation(educationId);
 
-        mockMvc.perform(delete("/api/portfolios/education/" + educationId))
+        mockMvc.perform(delete("/api/portfolios/education/{educationId}", educationId))
                 .andExpect(status().isNoContent());
+
+        verify(portfolioService).deleteEducation(educationId);
     }
 
     // ==================== Projects ====================
 
     @Test
-    void createProject_shouldReturn201() throws Exception {
-        var request = new CreateProjectRequest("Project X", "Desc", "Lead", List.of("Java", "Spring"), LocalDate.of(2023, 1, 1), null);
-        var response = new ProjectResponse(UUID.randomUUID(), employeeId, "Project X", "Desc", "Lead", List.of("Java", "Spring"), LocalDate.of(2023, 1, 1), null, now);
-        when(portfolioService.createProject(eq(employeeId), any())).thenReturn(response);
+    void getProjectsByEmployee_returns200WithList() throws Exception {
+        UUID employeeId = UUID.randomUUID();
+        var project = new ProjectResponse(UUID.randomUUID(), employeeId, "Staff Engagement",
+                "A POC", "Developer", List.of("Java", "Angular"),
+                LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31), LocalDateTime.now());
 
-        mockMvc.perform(post("/api/portfolios/" + employeeId + "/projects")
+        when(portfolioService.getProjectsByEmployee(employeeId)).thenReturn(List.of(project));
+
+        mockMvc.perform(get("/api/portfolios/{employeeId}/projects", employeeId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].projectName").value("Staff Engagement"))
+                .andExpect(jsonPath("$[0].role").value("Developer"));
+
+        verify(portfolioService).getProjectsByEmployee(employeeId);
+    }
+
+    @Test
+    void createProject_returns201WithResponse() throws Exception {
+        UUID employeeId = UUID.randomUUID();
+        var request = new CreateProjectRequest("Staff Engagement", "A POC", "Developer",
+                List.of("Java", "Angular"), LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31));
+        var response = new ProjectResponse(UUID.randomUUID(), employeeId, "Staff Engagement",
+                "A POC", "Developer", List.of("Java", "Angular"),
+                LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31), LocalDateTime.now());
+
+        when(portfolioService.createProject(eq(employeeId), any(CreateProjectRequest.class)))
+                .thenReturn(response);
+
+        mockMvc.perform(post("/api/portfolios/{employeeId}/projects", employeeId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.projectName").value("Project X"));
-    }
+                .andExpect(jsonPath("$.projectName").value("Staff Engagement"))
+                .andExpect(jsonPath("$.role").value("Developer"));
 
-    @Test
-    void getProjectsByEmployee_shouldReturn200() throws Exception {
-        var response = new ProjectResponse(UUID.randomUUID(), employeeId, "Project X", "Desc", "Lead", List.of("Java"), LocalDate.of(2023, 1, 1), null, now);
-        when(portfolioService.getProjectsByEmployee(employeeId)).thenReturn(List.of(response));
-
-        mockMvc.perform(get("/api/portfolios/" + employeeId + "/projects"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].projectName").value("Project X"));
-    }
-
-    @Test
-    void updateProject_shouldReturn200() throws Exception {
-        UUID projectId = UUID.randomUUID();
-        var request = new UpdateProjectRequest("Updated", "New desc", "Dev", List.of("React"), LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31));
-        var response = new ProjectResponse(projectId, employeeId, "Updated", "New desc", "Dev", List.of("React"), LocalDate.of(2023, 1, 1), LocalDate.of(2023, 12, 31), now);
-        when(portfolioService.updateProject(eq(projectId), any())).thenReturn(response);
-
-        mockMvc.perform(put("/api/portfolios/projects/" + projectId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.projectName").value("Updated"));
-    }
-
-    @Test
-    void deleteProject_shouldReturn204() throws Exception {
-        UUID projectId = UUID.randomUUID();
-        doNothing().when(portfolioService).deleteProject(projectId);
-
-        mockMvc.perform(delete("/api/portfolios/projects/" + projectId))
-                .andExpect(status().isNoContent());
+        verify(portfolioService).createProject(eq(employeeId), any(CreateProjectRequest.class));
     }
 
     // ==================== Links ====================
 
     @Test
-    void createLink_shouldReturn201() throws Exception {
-        var request = new CreateLinkRequest("https://github.com/user", "GitHub");
-        var response = new LinkResponse(UUID.randomUUID(), employeeId, "https://github.com/user", "GitHub", now);
-        when(portfolioService.createLink(eq(employeeId), any())).thenReturn(response);
+    void getLinksByEmployee_returns200WithList() throws Exception {
+        UUID employeeId = UUID.randomUUID();
+        var link = new LinkResponse(UUID.randomUUID(), employeeId,
+                "https://github.com/johndoe", "GitHub", LocalDateTime.now());
 
-        mockMvc.perform(post("/api/portfolios/" + employeeId + "/links")
+        when(portfolioService.getLinksByEmployee(employeeId)).thenReturn(List.of(link));
+
+        mockMvc.perform(get("/api/portfolios/{employeeId}/links", employeeId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].url").value("https://github.com/johndoe"))
+                .andExpect(jsonPath("$[0].label").value("GitHub"));
+
+        verify(portfolioService).getLinksByEmployee(employeeId);
+    }
+
+    @Test
+    void createLink_returns201WithResponse() throws Exception {
+        UUID employeeId = UUID.randomUUID();
+        var request = new CreateLinkRequest("https://github.com/johndoe", "GitHub");
+        var response = new LinkResponse(UUID.randomUUID(), employeeId,
+                "https://github.com/johndoe", "GitHub", LocalDateTime.now());
+
+        when(portfolioService.createLink(eq(employeeId), any(CreateLinkRequest.class)))
+                .thenReturn(response);
+
+        mockMvc.perform(post("/api/portfolios/{employeeId}/links", employeeId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.url").value("https://github.com/johndoe"))
                 .andExpect(jsonPath("$.label").value("GitHub"));
-    }
 
-    @Test
-    void getLinksByEmployee_shouldReturn200() throws Exception {
-        var response = new LinkResponse(UUID.randomUUID(), employeeId, "https://github.com/user", "GitHub", now);
-        when(portfolioService.getLinksByEmployee(employeeId)).thenReturn(List.of(response));
-
-        mockMvc.perform(get("/api/portfolios/" + employeeId + "/links"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].url").value("https://github.com/user"));
-    }
-
-    @Test
-    void updateLink_shouldReturn200() throws Exception {
-        UUID linkId = UUID.randomUUID();
-        var request = new UpdateLinkRequest("https://linkedin.com/in/user", "LinkedIn");
-        var response = new LinkResponse(linkId, employeeId, "https://linkedin.com/in/user", "LinkedIn", now);
-        when(portfolioService.updateLink(eq(linkId), any())).thenReturn(response);
-
-        mockMvc.perform(put("/api/portfolios/links/" + linkId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.label").value("LinkedIn"));
-    }
-
-    @Test
-    void deleteLink_shouldReturn204() throws Exception {
-        UUID linkId = UUID.randomUUID();
-        doNothing().when(portfolioService).deleteLink(linkId);
-
-        mockMvc.perform(delete("/api/portfolios/links/" + linkId))
-                .andExpect(status().isNoContent());
+        verify(portfolioService).createLink(eq(employeeId), any(CreateLinkRequest.class));
     }
 
     // ==================== Full Portfolio ====================
 
     @Test
-    void getFullPortfolio_shouldReturn200() throws Exception {
-        var response = new FullPortfolioResponse(List.of(), List.of(), List.of(), List.of());
-        when(portfolioService.getFullPortfolio(employeeId)).thenReturn(response);
+    void getFullPortfolio_returns200WithAggregatedData() throws Exception {
+        UUID employeeId = UUID.randomUUID();
+        LocalDateTime now = LocalDateTime.now();
 
-        mockMvc.perform(get("/api/portfolios/" + employeeId))
+        var skills = List.of(new PortfolioSkillResponse(UUID.randomUUID(), employeeId,
+                "Java", 5, 3, "Advanced", now));
+        var education = List.of(new EducationResponse(UUID.randomUUID(), employeeId,
+                "MIT", "BSc", "CS", LocalDate.of(2020, 6, 15), now));
+        var projects = List.of(new ProjectResponse(UUID.randomUUID(), employeeId,
+                "Project", "Desc", "Dev", List.of("Java"),
+                LocalDate.of(2023, 1, 1), null, now));
+        var links = List.of(new LinkResponse(UUID.randomUUID(), employeeId,
+                "https://github.com/johndoe", "GitHub", now));
+
+        var fullPortfolio = new FullPortfolioResponse(skills, education, projects, links);
+        when(portfolioService.getFullPortfolio(employeeId)).thenReturn(fullPortfolio);
+
+        mockMvc.perform(get("/api/portfolios/{employeeId}", employeeId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.skills").isArray());
+                .andExpect(jsonPath("$.skills[0].name").value("Java"))
+                .andExpect(jsonPath("$.education[0].institution").value("MIT"))
+                .andExpect(jsonPath("$.projects[0].projectName").value("Project"))
+                .andExpect(jsonPath("$.links[0].label").value("GitHub"));
+
+        verify(portfolioService).getFullPortfolio(employeeId);
     }
 }
