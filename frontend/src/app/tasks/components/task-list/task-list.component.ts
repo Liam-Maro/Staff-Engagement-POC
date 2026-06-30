@@ -26,9 +26,9 @@ import { Employee } from '../../../employees/models/employee.models';
             (ngModelChange)="onFilterChange()"
           >
             <option value="">All</option>
-            <option value="TODO">TODO</option>
-            <option value="IN_PROGRESS">IN_PROGRESS</option>
-            <option value="DONE">DONE</option>
+            <option value="To Do">To Do</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Done">Done</option>
           </select>
         </div>
 
@@ -269,17 +269,17 @@ import { Employee } from '../../../employees/models/employee.models';
       text-transform: uppercase;
     }
 
-    .task-status[data-status="TODO"] {
+    .task-status[data-status="To Do"] {
       background: #dbeafe;
       color: #1e40af;
     }
 
-    .task-status[data-status="IN_PROGRESS"] {
+    .task-status[data-status="In Progress"] {
       background: #fef3c7;
       color: #92400e;
     }
 
-    .task-status[data-status="DONE"] {
+    .task-status[data-status="Done"] {
       background: #d1fae5;
       color: #065f46;
     }

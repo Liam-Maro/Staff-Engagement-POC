@@ -64,10 +64,10 @@ class TaskController {
         TaskStatus parsedStatus = null;
         if (status != null) {
             try {
-                parsedStatus = TaskStatus.valueOf(status.toUpperCase());
+                parsedStatus = TaskStatus.fromValue(status);
             } catch (IllegalArgumentException e) {
                 throw new InvalidParameterException(
-                        "Invalid status value: '" + status + "'. Valid values are: TODO, IN_PROGRESS, DONE");
+                        "Invalid status value: '" + status + "'. Valid values are: To Do, In Progress, Done");
             }
         }
 
