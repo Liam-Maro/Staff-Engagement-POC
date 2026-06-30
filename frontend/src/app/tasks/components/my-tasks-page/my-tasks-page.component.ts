@@ -1,14 +1,21 @@
-import { Component, signal } from '@angular/core';
+import { Component, HostListener, OnInit, inject, signal } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { TaskListComponent } from '../task-list/task-list.component';
 import { DelegatedTasksPanelComponent } from '../delegated-tasks-panel/delegated-tasks-panel.component';
 import { TaskFormComponent } from '../task-form/task-form.component';
+import { TaskDetailPopupComponent } from '../task-detail-popup/task-detail-popup.component';
+import { TaskResponse } from '../../models/task.model';
+import { StaffMember } from '../../../staff/models/staff.models';
+import { Employee } from '../../../employees/models/employee.models';
+import { AuthService } from '../../../auth/services/auth.service';
+import { StaffService } from '../../../staff/services/staff.service';
+import { EmployeeService } from '../../../employees/services/employee.service';
 
 @Component({
   selector: 'app-my-tasks-page',
   standalone: true,
-  imports: [TaskListComponent, DelegatedTasksPanelComponent, TaskFormComponent],
+  imports: [TaskListComponent, DelegatedTasksPanelComponent, TaskFormComponent, TaskDetailPopupComponent],
   template: `
     <div class="my-tasks-page">
       <header class="page-header">
@@ -20,7 +27,7 @@ import { TaskFormComponent } from '../task-form/task-form.component';
 
       <div class="page-content">
         <section class="main-panel">
-          <app-task-list [refresh$]="refresh$" />
+          <app-task-list [refresh$]="refresh$" (taskSelected)="onTaskSelected($event)" />
         </section>
 
         <aside class="side-panel">
@@ -32,6 +39,17 @@ import { TaskFormComponent } from '../task-form/task-form.component';
         <app-task-form
           (closed)="closeCreateForm()"
           (taskCreated)="onTaskCreated()"
+        />
+      }
+
+      @if (selectedTask()) {
+        <app-task-detail-popup
+          [task]="selectedTask()!"
+          [staffMembers]="staffMembers()"
+          [employees]="employees()"
+          [currentStaffId]="currentStaffId"
+          (closed)="onPopupClosed()"
+          (taskDeleted)="onTaskDeleted()"
         />
       }
     </div>
@@ -110,9 +128,27 @@ import { TaskFormComponent } from '../task-form/task-form.component';
     }
   `]
 })
-export class MyTasksPageComponent {
+export class MyTasksPageComponent implements OnInit {
+  private readonly authService = inject(AuthService);
+  private readonly staffService = inject(StaffService);
+  private readonly employeeService = inject(EmployeeService);
+
   showTaskForm = signal(false);
+  selectedTask = signal<TaskResponse | null>(null);
+  staffMembers = signal<StaffMember[]>([]);
+  employees = signal<Employee[]>([]);
+  currentStaffId = '';
   refresh$ = new Subject<void>();
+
+  ngOnInit(): void {
+    this.currentStaffId = this.authService.staffId();
+    this.staffService.findAll().subscribe(members => {
+      this.staffMembers.set(members);
+    });
+    this.employeeService.findAll().subscribe(emps => {
+      this.employees.set(emps);
+    });
+  }
 
   openCreateForm(): void {
     this.showTaskForm.set(true);
@@ -125,5 +161,25 @@ export class MyTasksPageComponent {
   onTaskCreated(): void {
     this.showTaskForm.set(false);
     this.refresh$.next();
+  }
+
+  onTaskSelected(task: TaskResponse): void {
+    this.selectedTask.set(task);
+  }
+
+  onPopupClosed(): void {
+    this.selectedTask.set(null);
+  }
+
+  onTaskDeleted(): void {
+    this.selectedTask.set(null);
+    this.refresh$.next();
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapePressed(): void {
+    if (this.selectedTask()) {
+      this.onPopupClosed();
+    }
   }
 }

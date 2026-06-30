@@ -7,6 +7,7 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { StaffService } from '../../../staff/services/staff.service';
 import { TaskResponse } from '../../models/task.model';
 import { StaffMember } from '../../../staff/models/staff.models';
+import { Employee } from '../../../employees/models/employee.models';
 
 @Component({
   selector: 'app-task-detail-popup',
@@ -50,7 +51,7 @@ import { StaffMember } from '../../../staff/models/staff.models';
 
           <div class="detail-field">
             <label>Individual</label>
-            <p class="detail-value individual-name">{{ task.individualId }}</p>
+            <p class="detail-value individual-name">{{ getIndividualName(task.individualId) }}</p>
           </div>
 
           <div class="detail-field">
@@ -338,6 +339,7 @@ import { StaffMember } from '../../../staff/models/staff.models';
 export class TaskDetailPopupComponent {
   @Input({ required: true }) task!: TaskResponse;
   @Input() staffMembers: StaffMember[] = [];
+  @Input() employees: Employee[] = [];
   @Input() currentStaffId: string = '';
 
   @Output() closed = new EventEmitter<void>();
@@ -359,6 +361,11 @@ export class TaskDetailPopupComponent {
   getStaffName(staffId: string): string {
     const staff = this.staffMembers.find(s => s.id === staffId);
     return staff ? staff.email : staffId;
+  }
+
+  getIndividualName(individualId: string): string {
+    const employee = this.employees.find(e => e.id === individualId);
+    return employee ? `${employee.firstName} ${employee.lastName}` : individualId;
   }
 
   navigateToInteraction(interactionId: string): void {

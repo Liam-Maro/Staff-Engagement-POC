@@ -27,6 +27,7 @@ describe('MyTasksPageComponent', () => {
   const mockAuthService = {
     userEmail: vi.fn().mockReturnValue('staff@example.com'),
     userRole: vi.fn().mockReturnValue('STAFF'),
+    staffId: vi.fn().mockReturnValue('staff-1'),
     isAuthenticated: vi.fn().mockReturnValue(true),
     getAccessToken: () => 'valid-token'
   };

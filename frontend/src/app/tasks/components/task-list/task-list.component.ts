@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, Subscription, finalize } from 'rxjs';
@@ -6,7 +6,9 @@ import { Subject, Subscription, finalize } from 'rxjs';
 import { TaskService } from '../../services/task.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { StaffService } from '../../../staff/services/staff.service';
+import { EmployeeService } from '../../../employees/services/employee.service';
 import { TaskResponse, TaskStatus, TaskQueryParams } from '../../models/task.model';
+import { Employee } from '../../../employees/models/employee.models';
 
 @Component({
   selector: 'app-task-list',
@@ -99,7 +101,7 @@ import { TaskResponse, TaskStatus, TaskQueryParams } from '../../models/task.mod
                 <div class="task-meta">
                   <span class="task-status" [attr.data-status]="task.status">{{ task.status }}</span>
                   <span class="task-due-date">{{ task.dueDate || 'No due date' }}</span>
-                  <span class="task-individual">{{ task.individualId }}</span>
+                  <span class="task-individual">{{ getIndividualName(task.individualId) }}</span>
                 </div>
               </li>
             }
@@ -289,9 +291,11 @@ export class TaskListComponent implements OnInit, OnDestroy {
   private readonly taskService = inject(TaskService);
   private readonly authService = inject(AuthService);
   private readonly staffService = inject(StaffService);
+  private readonly employeeService = inject(EmployeeService);
 
   private refreshSubscription?: Subscription;
   private currentStaffId: string | null = null;
+  private employeeMap = new Map<string, Employee>();
 
   // State signals
   tasks = signal<TaskResponse[]>([]);
@@ -305,11 +309,17 @@ export class TaskListComponent implements OnInit, OnDestroy {
   createdFrom = '';
   createdTo = '';
 
-  // Event for task click (placeholder until TaskDetailPopup exists)
+  // Output emitter for parent to handle task selection
+  @Output() taskSelected = new EventEmitter<TaskResponse>();
+
+  // Internal signal for local state tracking
   selectedTask = signal<TaskResponse | null>(null);
 
   ngOnInit(): void {
     this.resolveCurrentStaffAndLoad();
+    this.employeeService.findAll().subscribe(employees => {
+      employees.forEach(e => this.employeeMap.set(e.id, e));
+    });
 
     if (this.refresh$) {
       this.refreshSubscription = this.refresh$.subscribe(() => {
@@ -328,6 +338,7 @@ export class TaskListComponent implements OnInit, OnDestroy {
 
   onTaskClick(task: TaskResponse): void {
     this.selectedTask.set(task);
+    this.taskSelected.emit(task);
   }
 
   loadTasks(): void {
@@ -377,6 +388,11 @@ export class TaskListComponent implements OnInit, OnDestroy {
       return description;
     }
     return description.substring(0, 100) + '...';
+  }
+
+  getIndividualName(individualId: string): string {
+    const employee = this.employeeMap.get(individualId);
+    return employee ? `${employee.firstName} ${employee.lastName}` : individualId;
   }
 
   private resolveCurrentStaffAndLoad(): void {
