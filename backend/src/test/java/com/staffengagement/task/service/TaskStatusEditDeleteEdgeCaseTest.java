@@ -105,6 +105,11 @@ class TaskStatusEditDeleteEdgeCaseTest {
         Task task = createTask(TaskStatus.TODO);
         when(repository.findById(taskId)).thenReturn(Optional.of(task));
 
+        // Requester (creator) is active
+        var activeRequester = new StaffResponse(creatorId,
+                "creator@example.com", StaffRole.STAFF, true, LocalDateTime.now());
+        when(staffService.findById(creatorId)).thenReturn(activeRequester);
+
         var activeAssignee = new StaffResponse(assigneeId,
                 "assignee@example.com", StaffRole.STAFF, true, LocalDateTime.now());
         when(staffService.findById(assigneeId)).thenReturn(activeAssignee);

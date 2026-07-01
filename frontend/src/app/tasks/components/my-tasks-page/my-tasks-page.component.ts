@@ -37,8 +37,10 @@ import { EmployeeService } from '../../../employees/services/employee.service';
 
       @if (showTaskForm()) {
         <app-task-form
+          [editTask]="editingTask()"
           (closed)="closeCreateForm()"
           (taskCreated)="onTaskCreated()"
+          (taskUpdated)="onTaskUpdated()"
         />
       }
 
@@ -49,6 +51,7 @@ import { EmployeeService } from '../../../employees/services/employee.service';
           [employees]="employees()"
           [currentStaffId]="currentStaffId"
           (closed)="onPopupClosed()"
+          (editRequested)="onEditRequested($event)"
           (taskDeleted)="onTaskDeleted()"
         />
       }
@@ -135,6 +138,7 @@ export class MyTasksPageComponent implements OnInit {
 
   showTaskForm = signal(false);
   selectedTask = signal<TaskResponse | null>(null);
+  editingTask = signal<TaskResponse | null>(null);
   staffMembers = signal<StaffMember[]>([]);
   employees = signal<Employee[]>([]);
   currentStaffId = '';
@@ -151,15 +155,30 @@ export class MyTasksPageComponent implements OnInit {
   }
 
   openCreateForm(): void {
+    this.editingTask.set(null);
     this.showTaskForm.set(true);
   }
 
   closeCreateForm(): void {
     this.showTaskForm.set(false);
+    this.editingTask.set(null);
   }
 
   onTaskCreated(): void {
     this.showTaskForm.set(false);
+    this.editingTask.set(null);
+    this.refresh$.next();
+  }
+
+  onEditRequested(task: TaskResponse): void {
+    this.selectedTask.set(null);
+    this.editingTask.set(task);
+    this.showTaskForm.set(true);
+  }
+
+  onTaskUpdated(): void {
+    this.showTaskForm.set(false);
+    this.editingTask.set(null);
     this.refresh$.next();
   }
 

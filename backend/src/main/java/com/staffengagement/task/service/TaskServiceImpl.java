@@ -169,9 +169,10 @@ class TaskServiceImpl implements TaskService {
         Task task = repository.findById(taskId)
                 .orElseThrow(() -> new EntityNotFoundException("Task not found with id: " + taskId));
 
-        // 2. Validate requester is the creator (403 if not)
-        if (!task.getCreatorId().equals(requesterId)) {
-            throw new TaskAssignmentForbiddenException("Only the creator can edit the task");
+        // 2. Validate requester is an active staff member (403 if not)
+        StaffResponse requester = findStaffOrForbidden(requesterId);
+        if (!requester.active()) {
+            throw new TaskAssignmentForbiddenException("Requester is not active");
         }
 
         // 3. Validate new assignee exists (404 if not found) and is active (400 if inactive)
