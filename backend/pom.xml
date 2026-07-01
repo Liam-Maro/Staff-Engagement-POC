@@ -179,6 +179,48 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- PITest Mutation Testing - scoped to validation logic -->
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.16.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-junit5-plugin</artifactId>
+                        <version>1.2.1</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <targetClasses>
+                        <param>com.staffengagement.portfolio.validation.*</param>
+                        <param>com.staffengagement.skills.validation.*</param>
+                        <param>com.staffengagement.task.model.TaskStatus</param>
+                        <param>com.staffengagement.interaction.model.InteractionType</param>
+                        <param>com.staffengagement.staff.model.StaffRole</param>
+                    </targetClasses>
+                    <targetTests>
+                        <param>com.staffengagement.portfolio.validation.*</param>
+                        <param>com.staffengagement.skills.*</param>
+                        <param>com.staffengagement.task.model.*</param>
+                        <param>com.staffengagement.task.service.*</param>
+                        <param>com.staffengagement.task.property.*</param>
+                        <param>com.staffengagement.task.controller.*</param>
+                        <param>com.staffengagement.interaction.model.*</param>
+                        <param>com.staffengagement.interaction.service.*</param>
+                        <param>com.staffengagement.staff.model.*</param>
+                        <param>com.staffengagement.staff.service.*</param>
+                    </targetTests>
+                    <mutators>
+                        <mutator>DEFAULTS</mutator>
+                    </mutators>
+                    <outputFormats>
+                        <outputFormat>HTML</outputFormat>
+                        <outputFormat>XML</outputFormat>
+                    </outputFormats>
+                    <timestampedReports>false</timestampedReports>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
