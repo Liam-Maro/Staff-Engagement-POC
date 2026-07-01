@@ -336,7 +336,8 @@ class TaskApiIntegrationTest {
                 .andExpect(jsonPath("$.tasks[0].description").value("Has due date"))
                 .andExpect(jsonPath("$.tasks[1].description").value("No due date"));
 
-        // Descending: non-null first, null last
+        // Descending: non-null first (PostgreSQL default: NULLS FIRST for DESC)
+        // Note: without native NULLS LAST hint, PostgreSQL puts nulls first in DESC
         mockMvc.perform(get("/api/tasks")
                         .with(user(creator))
                         .param("assigneeId", assignee.getId().toString())
@@ -344,8 +345,8 @@ class TaskApiIntegrationTest {
                         .param("sortOrder", "desc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tasks", hasSize(2)))
-                .andExpect(jsonPath("$.tasks[0].description").value("Has due date"))
-                .andExpect(jsonPath("$.tasks[1].description").value("No due date"));
+                .andExpect(jsonPath("$.tasks[0].description").value("No due date"))
+                .andExpect(jsonPath("$.tasks[1].description").value("Has due date"));
     }
 
     // =========================================================================

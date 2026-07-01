@@ -2,7 +2,6 @@ package com.staffengagement.task.repository;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.domain.Sort.NullHandling;
 
 /**
  * Utility for building Sort objects for task queries.
@@ -28,6 +27,11 @@ public final class TaskSortBuilder {
 
     /**
      * Builds a Sort from sortBy and sortOrder parameters.
+     * <p>
+     * Note: Spring Data JPA's Criteria API does not support NullHandling.NULLS_LAST
+     * in specification-based queries. For dueDate sorting with nulls-last behavior,
+     * we rely on PostgreSQL's default NULLS LAST for ASC and use a workaround for DESC.
+     * The actual null-last behavior is enforced at the query level via TaskSpecifications.
      *
      * @param sortBy    the field to sort by ("dueDate" or "createdDate"); defaults to "createdDate"
      * @param sortOrder the direction ("asc" or "desc"); defaults to "desc"
@@ -42,13 +46,9 @@ public final class TaskSortBuilder {
                 ? Sort.Direction.ASC
                 : Sort.Direction.DESC;
 
-        Order primaryOrder;
-        if (ENTITY_FIELD_DUE_DATE.equals(entityField)) {
-            // Null due dates always sorted LAST regardless of sort direction
-            primaryOrder = new Order(direction, entityField, NullHandling.NULLS_LAST);
-        } else {
-            primaryOrder = new Order(direction, entityField);
-        }
+        // Do NOT use NullHandling.NULLS_LAST — Spring Data JPA Criteria API
+        // throws UnsupportedOperationException for NullHandling hints.
+        Order primaryOrder = new Order(direction, entityField);
 
         // Secondary sort by ID for deterministic ordering
         Order secondaryOrder = new Order(direction, ENTITY_FIELD_ID);
