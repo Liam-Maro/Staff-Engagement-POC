@@ -30,9 +30,20 @@ jobs:
         working-directory: backend
         run: mvn test -B
 
+      - name: Run mutation tests
+        working-directory: backend
+        run: mvn test-compile org.pitest:pitest-maven:mutationCoverage -B
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: backend-test-results
           path: backend/target/surefire-reports/
+
+      - name: Upload mutation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mutation-report
+          path: backend/target/pit-reports/

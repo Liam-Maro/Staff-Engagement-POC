@@ -219,6 +219,7 @@
                         <outputFormat>XML</outputFormat>
                     </outputFormats>
                     <timestampedReports>false</timestampedReports>
+                    <mutationThreshold>80</mutationThreshold>
                 </configuration>
             </plugin>
         </plugins>
