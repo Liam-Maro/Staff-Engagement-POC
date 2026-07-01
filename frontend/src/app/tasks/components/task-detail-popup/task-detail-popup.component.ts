@@ -72,8 +72,8 @@ import { Employee } from '../../../employees/models/employee.models';
         </div>
 
         <div class="popup-actions">
+          <button class="edit-btn" (click)="onEdit()">Edit</button>
           @if (isCreator()) {
-            <button class="edit-btn" (click)="onEdit()">Edit</button>
             <button class="delete-btn" (click)="onDeleteClick()">Delete</button>
           }
         </div>

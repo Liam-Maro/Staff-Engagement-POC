@@ -123,13 +123,13 @@ This feature provides a complete end-to-end staff task management system within 
 
 ### Requirement 8: Edit a Task
 
-**User Story:** As a staff member, I want to edit a task I created, so that I can update its details as circumstances change.
+**User Story:** As a staff member, I want to edit any task, so that I can update its details as circumstances change.
 
 #### Acceptance Criteria
 
-1. WHEN a Staff_Member submits an edit request for a Task they created with a valid description (not blank, maximum 2000 characters), a valid due date (today or in the future, or null), and valid assignee, individual, and interaction link values, THE Task_Service SHALL update the Task fields (description, assignee, individual, due date, interaction link) with the provided values and return the updated Task with HTTP 200.
+1. WHEN any active Staff_Member submits an edit request for a Task with a valid description (not blank, maximum 2000 characters), a valid due date (today or in the future, or null), and valid assignee, individual, and interaction link values, THE Task_Service SHALL update the Task fields (description, assignee, individual, due date, interaction link) with the provided values and return the updated Task with HTTP 200.
 2. IF an edit request targets a non-existent task ID, THEN THE Task_Service SHALL reject the request with HTTP 404 and an error indicating the task was not found.
-3. IF a Staff_Member submits an edit request for a Task they did not create, THEN THE Task_Service SHALL reject the request with HTTP 403 and an error indicating only the creator can edit the task.
+3. IF the requester is not an active Staff_Member, THEN THE Task_Service SHALL reject the edit request with HTTP 403 and an error indicating the requester is not active. Any active staff member may edit any task regardless of whether they created it.
 4. WHEN an edit request changes the assignee, THE Task_Service SHALL explicitly validate that the new assignee exists and is active (even when the new assignee appears valid), rejecting with HTTP 400 if the new assignee is invalid or inactive.
 5. WHEN an edit request includes an interaction ID, THE Task_Service SHALL validate that the interaction exists and belongs to the specified individual, rejecting with HTTP 400 and an error indicating the interaction does not match the individual if validation fails; WHEN the interaction ID is valid and belongs to the specified individual, THE Task_Service SHALL continue processing the edit request normally; WHEN no interaction ID is provided in the edit request, THE Task_Service SHALL skip interaction validation entirely.
 6. IF an edit request specifies an individual ID that does not correspond to an existing employee or staff member, THEN THE Task_Service SHALL reject the request with HTTP 400 and an error indicating the individual was not found.
@@ -222,9 +222,9 @@ This feature provides a complete end-to-end staff task management system within 
 1. WHEN a Staff_Member clicks on a task in the Task_List_Component, THE Task_Detail_Popup SHALL open and display the task's description, status, assignee name, creator name, individual name, due date (or a "No due date" indicator if not set), and linked interaction summary (or a "No linked interaction" indicator if not present).
 2. WHEN a linked interaction is displayed in the Task_Detail_Popup, THE Task_Detail_Popup SHALL render it as a clickable link showing the interaction date and type.
 3. WHEN a Staff_Member clicks the linked interaction link in the Task_Detail_Popup, THE Angular Router SHALL navigate to the interaction detail view for that interaction.
-4. IF the current Staff_Member is the creator of the displayed task, THEN THE Task_Detail_Popup SHALL display an enabled "Edit" action that opens the Task_Form_Component pre-populated with the task's current data.
+4. THE Task_Detail_Popup SHALL always display an enabled "Edit" action for any authenticated Staff_Member that opens the Task_Form_Component pre-populated with the task's current data.
 5. IF the current Staff_Member is the creator of the displayed task, THEN THE Task_Detail_Popup SHALL display an enabled "Delete" action that, when clicked, presents a confirmation dialog with "Confirm" and "Cancel" options before calling the backend DELETE endpoint.
-6. IF the current Staff_Member is not the creator of the displayed task, THEN THE Task_Detail_Popup SHALL hide the "Edit" and "Delete" actions.
+6. IF the current Staff_Member is not the creator of the displayed task, THEN THE Task_Detail_Popup SHALL hide the "Delete" action but SHALL still display the "Edit" action.
 7. WHEN deletion is confirmed and the backend returns HTTP 204, THE Task_Detail_Popup SHALL close and the Task_List_Component SHALL refresh to remove the deleted task.
 8. THE Task_Detail_Popup SHALL provide a close control (e.g., close button or backdrop click) that dismisses the popup without performing any action and returns focus to the Task_List_Component.
 
@@ -237,7 +237,7 @@ This feature provides a complete end-to-end staff task management system within 
 1. WHEN a Staff_Member opens the edit form from the Task_Detail_Popup, THE Task_Form_Component SHALL pre-populate the description, assignee, individual, due date, and linked interaction fields with the existing task data.
 2. WHEN the Staff_Member submits the edited form with valid data, THE Task_Form_Component SHALL call the backend PUT `/api/tasks/{id}` endpoint with the updated fields.
 3. WHEN the backend returns a successful response, THE Task_Form_Component SHALL close and the Task_List_Component SHALL refresh to display the updated task.
-4. WHEN the backend returns a 403 error (not the creator), THE Task_Form_Component SHALL display an error message indicating the user does not have permission to edit the task; the system SHALL show this error only after backend rejection, allowing users to attempt edits regardless of predicted permission status.
+4. WHEN the backend returns a 403 error (requester not active), THE Task_Form_Component SHALL display an error message indicating the user does not have permission to edit the task; the system SHALL show this error only after backend rejection, allowing users to attempt edits regardless of predicted permission status.
 5. WHEN the backend returns validation errors with HTTP 400, THE Task_Form_Component SHALL display all error messages inline next to the corresponding form fields.
 6. IF the backend returns a 404 error during edit submission, THEN THE Task_Form_Component SHALL close, display an error message indicating the task no longer exists, and the Task_List_Component SHALL refresh to remove the stale task.
 

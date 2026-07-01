@@ -251,15 +251,15 @@ class TaskUpdateDeletePropertyTest {
     // ========================================================================
 
     /**
-     * Property 16a: Non-creator edit is rejected with 403.
+     * Property 16a: Any active staff member can edit a task (not restricted to creator).
      *
-     * For any task and a requester who is NOT the creator,
-     * the edit SHALL be rejected with TaskAssignmentForbiddenException (HTTP 403).
+     * For any task and a requester who is NOT the creator but IS an active staff member,
+     * the edit SHALL succeed.
      *
      * **Validates: Requirements 8.3**
      */
     @Property(tries = 100)
-    void editByNonCreatorRejectedWith403(
+    void editByNonCreatorSucceedsWhenRequesterIsActive(
             @ForAll("randomUUIDs") UUID taskId,
             @ForAll("randomUUIDs") UUID creatorId,
             @ForAll("randomUUIDs") UUID nonCreatorRequesterId,
@@ -271,13 +271,27 @@ class TaskUpdateDeletePropertyTest {
         Task existingTask = createMockTask(taskId, creatorId, assigneeId, individualId);
         when(repository.findById(taskId)).thenReturn(Optional.of(existingTask));
 
+        // Non-creator requester is active
+        StaffResponse activeRequester = new StaffResponse(
+                nonCreatorRequesterId, "requester@test.com", StaffRole.STAFF, true, LocalDateTime.now());
+        when(staffService.findById(nonCreatorRequesterId)).thenReturn(activeRequester);
+
+        // Assignee is active
+        StaffResponse activeAssignee = new StaffResponse(
+                assigneeId, "assignee@test.com", StaffRole.STAFF, true, LocalDateTime.now());
+        when(staffService.findById(assigneeId)).thenReturn(activeAssignee);
+
+        when(employeeService.existsById(individualId)).thenReturn(true);
+        when(repository.save(any(Task.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
         UpdateTaskRequest request = new UpdateTaskRequest(
                 individualId, null, assigneeId, "Updated desc", LocalDate.now().plusDays(1));
 
-        assertThatThrownBy(() -> taskService.update(taskId, request, nonCreatorRequesterId))
-                .isInstanceOf(TaskAssignmentForbiddenException.class);
+        TaskResponse result = taskService.update(taskId, request, nonCreatorRequesterId);
 
-        verify(repository, never()).save(any(Task.class));
+        assertThat(result).isNotNull();
+        assertThat(result.description()).isEqualTo("Updated desc");
+        verify(repository).save(any(Task.class));
     }
 
     /**
@@ -304,9 +318,9 @@ class TaskUpdateDeletePropertyTest {
     }
 
     /**
-     * Property 16c: Edit round-trip — when requester IS creator, all fields are updated correctly.
+     * Property 16c: Edit round-trip — any active staff member can update all fields correctly.
      *
-     * For any valid edit request by the creator, the returned TaskResponse SHALL reflect
+     * For any valid edit request by an active staff member, the returned TaskResponse SHALL reflect
      * all updated field values.
      *
      * **Validates: Requirements 8.1, 8.2, 8.3**
@@ -323,6 +337,11 @@ class TaskUpdateDeletePropertyTest {
         // Existing task with creator as owner
         Task existingTask = createMockTask(taskId, creatorId, UUID.randomUUID(), UUID.randomUUID());
         when(repository.findById(taskId)).thenReturn(Optional.of(existingTask));
+
+        // Requester (creator) is active
+        StaffResponse activeCreator = new StaffResponse(
+                creatorId, "creator@test.com", StaffRole.STAFF, true, LocalDateTime.now());
+        when(staffService.findById(creatorId)).thenReturn(activeCreator);
 
         // New assignee is active
         StaffResponse activeAssignee = new StaffResponse(
@@ -368,6 +387,10 @@ class TaskUpdateDeletePropertyTest {
         Task existingTask = createMockTask(taskId, creatorId, assigneeId, individualId);
         when(repository.findById(taskId)).thenReturn(Optional.of(existingTask));
 
+        StaffResponse activeRequester = new StaffResponse(
+                creatorId, "creator@test.com", StaffRole.STAFF, true, LocalDateTime.now());
+        when(staffService.findById(creatorId)).thenReturn(activeRequester);
+
         StaffResponse activeAssignee = new StaffResponse(
                 assigneeId, "assignee@test.com", StaffRole.STAFF, true, LocalDateTime.now());
         when(staffService.findById(assigneeId)).thenReturn(activeAssignee);
@@ -404,6 +427,10 @@ class TaskUpdateDeletePropertyTest {
     ) {
         Task existingTask = createMockTask(taskId, creatorId, assigneeId, individualId);
         when(repository.findById(taskId)).thenReturn(Optional.of(existingTask));
+
+        StaffResponse activeRequester = new StaffResponse(
+                creatorId, "creator@test.com", StaffRole.STAFF, true, LocalDateTime.now());
+        when(staffService.findById(creatorId)).thenReturn(activeRequester);
 
         StaffResponse activeAssignee = new StaffResponse(
                 assigneeId, "assignee@test.com", StaffRole.STAFF, true, LocalDateTime.now());
