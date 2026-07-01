@@ -36,25 +36,25 @@ class TaskSortBuilderTest {
     }
 
     @Test
-    void buildSort_dueDateDesc_nullsLast() {
+    void buildSort_dueDateDesc_nativeNullHandling() {
         Sort sort = TaskSortBuilder.buildSort("dueDate", "desc");
         List<Order> orders = sort.toList();
 
         assertThat(orders).hasSize(2);
         assertThat(orders.get(0).getProperty()).isEqualTo("dueDate");
         assertThat(orders.get(0).getDirection()).isEqualTo(Sort.Direction.DESC);
-        assertThat(orders.get(0).getNullHandling()).isEqualTo(NullHandling.NULLS_LAST);
+        assertThat(orders.get(0).getNullHandling()).isEqualTo(NullHandling.NATIVE);
         assertThat(orders.get(1).getProperty()).isEqualTo("id");
     }
 
     @Test
-    void buildSort_dueDateAsc_nullsLastRegardlessOfDirection() {
+    void buildSort_dueDateAsc_nativeNullHandling() {
         Sort sort = TaskSortBuilder.buildSort("dueDate", "asc");
         List<Order> orders = sort.toList();
 
         assertThat(orders.get(0).getProperty()).isEqualTo("dueDate");
         assertThat(orders.get(0).getDirection()).isEqualTo(Sort.Direction.ASC);
-        assertThat(orders.get(0).getNullHandling()).isEqualTo(NullHandling.NULLS_LAST);
+        assertThat(orders.get(0).getNullHandling()).isEqualTo(NullHandling.NATIVE);
     }
 
     @Test

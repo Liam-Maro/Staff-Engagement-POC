@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Coverage Check After Task",
+  "description": "After a spec task completes, runs JaCoCo coverage check on the backend. If line coverage is below 90%, invokes the backend-test-writer agent to write missing tests.",
+  "version": "1",
+  "when": {
+    "type": "postTaskExecution"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Run `mvn test jacoco:report -B` in the backend/ directory. Check the JaCoCo CSV report at backend/target/site/jacoco/jacoco.csv to calculate overall line coverage. If line coverage is below 90%, analyze uncovered classes and write tests to bring coverage to at least 90%. Follow the patterns established in existing test files. Use Mockito for unit tests, MockMvc for controller tests, and Testcontainers for integration tests. Verify all new tests pass before finishing."
+  }
+}

@@ -12,18 +12,26 @@
                       columnDataType="uuid"/>
     </changeSet>
 
-    <!-- Add creator_id column -->
+    <!-- Add creator_id column (NOT NULL for new tasks; existing rows backfilled below) -->
     <changeSet id="010-add-creator-id" author="staffengagement">
         <addColumn tableName="tsk_tasks">
             <column name="creator_id" type="uuid"/>
         </addColumn>
     </changeSet>
 
-    <!-- Add assignee_id column -->
+    <!-- Add assignee_id column (NOT NULL for new tasks; existing rows backfilled below) -->
     <changeSet id="010-add-assignee-id" author="staffengagement">
         <addColumn tableName="tsk_tasks">
             <column name="assignee_id" type="uuid"/>
         </addColumn>
+    </changeSet>
+
+    <!-- Backfill and enforce NOT NULL on creator_id and assignee_id -->
+    <changeSet id="010-enforce-not-null-creator-assignee" author="staffengagement">
+        <sql>UPDATE tsk_tasks SET creator_id = (SELECT id FROM stf_staff LIMIT 1) WHERE creator_id IS NULL</sql>
+        <sql>UPDATE tsk_tasks SET assignee_id = (SELECT id FROM stf_staff LIMIT 1) WHERE assignee_id IS NULL</sql>
+        <addNotNullConstraint tableName="tsk_tasks" columnName="creator_id" columnDataType="uuid"/>
+        <addNotNullConstraint tableName="tsk_tasks" columnName="assignee_id" columnDataType="uuid"/>
     </changeSet>
 
     <!-- Drop title column -->

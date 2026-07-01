@@ -134,17 +134,9 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!-- Temporarily exclude broken test files from other modules (task, auth) 
-                 that have pre-existing compilation errors unrelated to the interaction module -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <testExcludes>
-                        <testExclude>**/task/**/*.java</testExclude>
-                        <testExclude>**/auth/**/*.java</testExclude>
-                    </testExcludes>
-                </configuration>
             </plugin>
             <!-- JaCoCo for test coverage -->
             <plugin>
