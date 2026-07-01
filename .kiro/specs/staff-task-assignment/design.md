@@ -14,8 +14,9 @@ The design modifies the `Task` entity by adding `creatorId` and `assigneeId` fie
 4. **Deterministic ordering** — secondary sort by task ID ensures stable pagination when primary sort values collide.
 5. **UUID validation is unconditional** — invalid UUID format on path/query params always returns HTTP 400 regardless of any system validation configuration settings.
 6. **Individual existence returns 404 on interactions endpoint** — `/api/tasks/interactions` returns 404 for non-existent individuals, not an empty list.
-7. **Strict delete authorization** — authorization checks execute before any deletion logic; no data modification occurs on unauthorized attempts.
-8. **Description-centric model** — tasks use `description` as the primary required text field (not `title`). The `title` field is removed from the new task flow.
+7. **Strict delete authorization** — authorization checks execute before any deletion logic; no data modification occurs on unauthorized attempts. Only the creator can delete.
+8. **Open edit authorization** — any active staff member can edit any task; no creator restriction on edits.
+9. **Description-centric model** — tasks use `description` as the primary required text field (not `title`). The `title` field is removed from the new task flow.
 
 ## Architecture
 
@@ -262,7 +263,8 @@ Validation and behavior rules:
 - **Interaction validation on edit**: Only validates when interactionId is provided in the edit request; skips entirely when field is omitted
 - **Due date validation**: Rejects dates strictly before current server-local date with 400
 - **InteractionId in response**: Validates that non-null interactionId values correspond to actual linked interactions before including in response; returns null if the linked interaction no longer exists
-- **Delete authorization**: Strict checks before any deletion logic — no data modification occurs on unauthorized attempts
+- **Edit authorization**: Any active staff member can edit any task; inactive or non-existent requesters are rejected with 403
+- **Delete authorization**: Strict checks before any deletion logic — only creator can delete; no data modification occurs on unauthorized attempts
 - **Assignee edit validation**: Explicitly validates new assignee exists and is active on edit, even when the new assignee appears valid
 - **Null due dates sorted last**: When sorting by dueDate, tasks with null due dates appear last regardless of sort direction
 - **Delegated tasks filter**: When `creatorId` and `excludeSelfAssigned=true` are combined, returns only tasks where creator = specified user AND assignee ≠ creator (both constraints enforced together)
@@ -435,7 +437,7 @@ public enum TaskStatus {
 |-----------|-------------|-------------|
 | `EntityNotFoundException` (existing) | 404 | Assignee not found, Task ID not found, Individual not found |
 | `InactiveStaffException` (existing) | 400 | Assignee is inactive |
-| `TaskAssignmentForbiddenException` (existing) | 403 | Non-assignee status update, non-creator edit/delete, inactive creator |
+| `TaskAssignmentForbiddenException` (existing) | 403 | Non-assignee status update, non-creator delete, inactive requester on edit, inactive creator on create |
 | `InvalidParameterException` (existing) | 400 | Invalid UUID format, invalid sortOrder/sortBy/status param, past due date, invalid date format |
 
 ### Frontend Components
@@ -554,7 +556,7 @@ export interface InteractionSummary {
 - Shows full task details: description, status, assignee name, creator name, individual name, due date (or "No due date"), linked interaction (or "No linked interaction")
 - Linked interaction rendered as clickable link (date + type) navigating to interaction detail
 - If current user is creator: shows Edit and Delete actions
-- If current user is NOT creator: hides Edit and Delete actions
+- If current user is NOT creator: shows Edit action, hides Delete action
 - Delete action: confirmation dialog → backend DELETE → refresh list on 204
 - Close control dismisses popup, returns focus to task list
 
@@ -776,7 +778,7 @@ erDiagram
 
 ### Property 16: Edit authorization and round-trip
 
-*For any* task and its creator, an edit request with valid data SHALL update the task and return the updated representation with HTTP 200. *For any* task and a requester who is not the creator, the edit SHALL be rejected with HTTP 403. *For any* non-existent task ID, the edit SHALL be rejected with HTTP 404.
+*For any* task and any active Staff_Member (regardless of whether they are the creator), an edit request with valid data SHALL update the task and return the updated representation with HTTP 200. *For any* requester who is not an active Staff_Member, the edit SHALL be rejected with HTTP 403. *For any* non-existent task ID, the edit SHALL be rejected with HTTP 404.
 
 **Validates: Requirements 8.1, 8.2, 8.3**
 
@@ -824,7 +826,7 @@ erDiagram
 |-----------|-------------|-------------|
 | `EntityNotFoundException` (existing) | 404 | Assignee not found, Task ID not found, Individual not found |
 | `InactiveStaffException` (existing) | 400 | Assignee is inactive |
-| `TaskAssignmentForbiddenException` (existing) | 403 | Non-assignee status update, non-creator edit/delete, inactive creator |
+| `TaskAssignmentForbiddenException` (existing) | 403 | Non-assignee status update, non-creator delete, inactive requester on edit, inactive creator on create |
 | `InvalidParameterException` (existing) | 400 | Invalid UUID format, invalid sortOrder/sortBy/status, past due date, invalid date format, interaction doesn't belong to individual |
 | `MethodArgumentNotValidException` (framework) | 400 | Jakarta Bean Validation failures (blank description, null assigneeId, null individualId, description too long) |
 
@@ -923,7 +925,7 @@ Each correctness property maps to one or more property-based tests:
 | P13: Past due dates | `TaskValidationPropertyTest` | Random dates before today |
 | P14: Status update validation order | `TaskStatusPropertyTest` | Requests failing at different validation stages |
 | P15: Status transitions | `TaskStatusPropertyTest` | All status pairs including same-to-same |
-| P16: Edit auth + round-trip | `TaskEditPropertyTest` | Creator vs non-creator edits |
+| P16: Edit auth + round-trip | `TaskEditPropertyTest` | Active staff edits, inactive staff rejected |
 | P17: Interaction validation conditional | `TaskEditPropertyTest` | Edits with/without interactionId field |
 | P18: Delete authorization strict | `TaskDeletePropertyTest` | Creator vs non-creator deletes, verify task unchanged |
 | P19: Interactions endpoint 404 | `TaskInteractionPropertyTest` | Non-existent individual UUIDs |
@@ -940,6 +942,7 @@ Each correctness property maps to one or more property-based tests:
 - UUID format rejection at controller level
 - `/api/tasks/interactions` returns 404 for non-existent individual (not empty list)
 - Delete authorization: verify task persists unchanged after 403
+- Edit authorization: verify any active staff can edit regardless of creator
 
 ### API Tests (MockMvc)
 
