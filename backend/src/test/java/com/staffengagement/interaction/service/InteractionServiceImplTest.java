@@ -12,6 +12,7 @@ import com.staffengagement.interaction.exception.TaskCreationFailedException;
 import com.staffengagement.interaction.model.Interaction;
 import com.staffengagement.interaction.model.InteractionType;
 import com.staffengagement.interaction.repository.InteractionRepository;
+import com.staffengagement.interaction.repository.InteractionSpecifications;
 import com.staffengagement.task.dto.CreateTaskRequest;
 import com.staffengagement.task.dto.TaskResponse;
 import com.staffengagement.task.service.TaskService;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -106,6 +108,35 @@ class InteractionServiceImplTest {
         assertThat(response.type()).isEqualTo(InteractionType.CHECK_IN);
         assertThat(response.notes()).isEqualTo("Test notes");
         assertThat(response.occurredAt()).isEqualTo(occurredAt);
+    }
+
+    @Test
+    void create_shouldSetAllFieldsOnEntity() {
+        UUID employeeId = UUID.randomUUID();
+        UUID staffId = UUID.randomUUID();
+        UUID interactionId = UUID.randomUUID();
+        LocalDateTime occurredAt = LocalDateTime.of(2024, 6, 15, 10, 30);
+
+        var request = new CreateInteractionRequest(employeeId, staffId,
+                InteractionType.MENTORING, "Mentoring session notes", occurredAt);
+
+        when(employeeService.findById(employeeId)).thenReturn(createEmployeeResponse(employeeId));
+
+        var savedEntity = createInteractionEntity(interactionId, employeeId, staffId,
+                InteractionType.MENTORING, "Mentoring session notes", occurredAt);
+        when(repository.save(any(Interaction.class))).thenReturn(savedEntity);
+
+        service.create(request);
+
+        ArgumentCaptor<Interaction> captor = ArgumentCaptor.forClass(Interaction.class);
+        verify(repository).save(captor.capture());
+
+        Interaction captured = captor.getValue();
+        assertThat(captured.getEmployeeId()).isEqualTo(employeeId);
+        assertThat(captured.getStaffId()).isEqualTo(staffId);
+        assertThat(captured.getType()).isEqualTo(InteractionType.MENTORING);
+        assertThat(captured.getNotes()).isEqualTo("Mentoring session notes");
+        assertThat(captured.getOccurredAt()).isEqualTo(occurredAt);
     }
 
     @Test
@@ -354,5 +385,155 @@ class InteractionServiceImplTest {
         assertThatThrownBy(() -> service.createFollowUpTask(interactionId, followUpRequest))
                 .isInstanceOf(TaskCreationFailedException.class)
                 .hasMessageContaining("Service unavailable");
+    }
+
+    // --- Test: findAll filter specifications ---
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findAll_withTypeFilter_callsHasTypeSpecification() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "occurredAt"));
+        Page<Interaction> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<InteractionSpecifications> specs = mockStatic(InteractionSpecifications.class)) {
+            Specification<Interaction> mockSpec = mock(Specification.class);
+            specs.when(() -> InteractionSpecifications.hasType(InteractionType.MENTORING)).thenReturn(mockSpec);
+
+            service.findAll(null, InteractionType.MENTORING, null, null, pageable);
+
+            specs.verify(() -> InteractionSpecifications.hasType(InteractionType.MENTORING));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findAll_withEmployeeIdFilter_callsHasEmployeeIdSpecification() {
+        UUID employeeId = UUID.randomUUID();
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "occurredAt"));
+        Page<Interaction> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<InteractionSpecifications> specs = mockStatic(InteractionSpecifications.class)) {
+            Specification<Interaction> mockSpec = mock(Specification.class);
+            specs.when(() -> InteractionSpecifications.hasEmployeeId(employeeId)).thenReturn(mockSpec);
+
+            service.findAll(employeeId, null, null, null, pageable);
+
+            specs.verify(() -> InteractionSpecifications.hasEmployeeId(employeeId));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findAll_withDateFromFilter_callsOccurredAfterSpecification() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "occurredAt"));
+        LocalDateTime fromDate = LocalDateTime.of(2024, 1, 1, 0, 0);
+        Page<Interaction> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<InteractionSpecifications> specs = mockStatic(InteractionSpecifications.class)) {
+            Specification<Interaction> mockSpec = mock(Specification.class);
+            specs.when(() -> InteractionSpecifications.occurredAfter(fromDate)).thenReturn(mockSpec);
+
+            service.findAll(null, null, fromDate, null, pageable);
+
+            specs.verify(() -> InteractionSpecifications.occurredAfter(fromDate));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findAll_withDateToFilter_callsOccurredBeforeSpecification() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "occurredAt"));
+        LocalDateTime toDate = LocalDateTime.of(2024, 12, 31, 23, 59);
+        Page<Interaction> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<InteractionSpecifications> specs = mockStatic(InteractionSpecifications.class)) {
+            Specification<Interaction> mockSpec = mock(Specification.class);
+            specs.when(() -> InteractionSpecifications.occurredBefore(toDate)).thenReturn(mockSpec);
+
+            service.findAll(null, null, null, toDate, pageable);
+
+            specs.verify(() -> InteractionSpecifications.occurredBefore(toDate));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findAll_withNoFilters_doesNotCallAnySpecificationBuilder() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "occurredAt"));
+        Page<Interaction> emptyPage = new PageImpl<>(List.of(), pageable, 0);
+
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<InteractionSpecifications> specs = mockStatic(InteractionSpecifications.class)) {
+            service.findAll(null, null, null, null, pageable);
+
+            specs.verify(() -> InteractionSpecifications.hasEmployeeId(any()), never());
+            specs.verify(() -> InteractionSpecifications.hasType(any()), never());
+            specs.verify(() -> InteractionSpecifications.occurredAfter(any()), never());
+            specs.verify(() -> InteractionSpecifications.occurredBefore(any()), never());
+        }
+    }
+
+    // --- Test: createFollowUpTask description conditional (line 129) ---
+
+    @Test
+    void createFollowUpTask_withNullDescription_buildsTaskTitleWithoutDescription() {
+        UUID interactionId = UUID.randomUUID();
+        UUID employeeId = UUID.randomUUID();
+        UUID staffId = UUID.randomUUID();
+        LocalDate dueDate = LocalDate.now().plusDays(7);
+
+        var entity = createInteractionEntity(interactionId, employeeId, staffId,
+                InteractionType.MENTORING, "Notes", LocalDateTime.now().minusDays(1));
+
+        var followUpRequest = new CreateFollowUpTaskRequest("Follow up", null, dueDate);
+
+        var taskResponse = new TaskResponse(UUID.randomUUID(), employeeId, interactionId,
+                staffId, staffId, "Follow up", "To Do", dueDate, LocalDateTime.now());
+
+        when(repository.findById(interactionId)).thenReturn(Optional.of(entity));
+        when(taskService.create(any(CreateTaskRequest.class), any(UUID.class))).thenReturn(taskResponse);
+
+        service.createFollowUpTask(interactionId, followUpRequest);
+
+        ArgumentCaptor<CreateTaskRequest> taskCaptor = ArgumentCaptor.forClass(CreateTaskRequest.class);
+        verify(taskService).create(taskCaptor.capture(), eq(staffId));
+        // When description is null, task description should be just the title without " - "
+        assertThat(taskCaptor.getValue().description()).isEqualTo("Follow up");
+        assertThat(taskCaptor.getValue().description()).doesNotContain(" - ");
+    }
+
+    @Test
+    void createFollowUpTask_withDescription_buildsTaskTitleWithDescription() {
+        UUID interactionId = UUID.randomUUID();
+        UUID employeeId = UUID.randomUUID();
+        UUID staffId = UUID.randomUUID();
+        LocalDate dueDate = LocalDate.now().plusDays(7);
+
+        var entity = createInteractionEntity(interactionId, employeeId, staffId,
+                InteractionType.CHECK_IN, "Notes", LocalDateTime.now().minusDays(1));
+
+        var followUpRequest = new CreateFollowUpTaskRequest("Follow up", "Some details", dueDate);
+
+        var taskResponse = new TaskResponse(UUID.randomUUID(), employeeId, interactionId,
+                staffId, staffId, "Follow up - Some details", "To Do", dueDate, LocalDateTime.now());
+
+        when(repository.findById(interactionId)).thenReturn(Optional.of(entity));
+        when(taskService.create(any(CreateTaskRequest.class), any(UUID.class))).thenReturn(taskResponse);
+
+        service.createFollowUpTask(interactionId, followUpRequest);
+
+        ArgumentCaptor<CreateTaskRequest> taskCaptor = ArgumentCaptor.forClass(CreateTaskRequest.class);
+        verify(taskService).create(taskCaptor.capture(), eq(staffId));
+        // When description is provided, task description should be "title - description"
+        assertThat(taskCaptor.getValue().description()).isEqualTo("Follow up - Some details");
     }
 }

@@ -25,6 +25,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import org.mockito.ArgumentCaptor;
+
 @ExtendWith(MockitoExtension.class)
 class SkillServiceTest {
 
@@ -131,6 +133,26 @@ class SkillServiceTest {
     }
 
     @Test
+    void create_shouldSetAllFieldsOnEntity() {
+        var request = new CreateSkillRequest(employeeId, "Rust", 3, 7, "Intermediate");
+        Skill saved = buildSkill(employeeId, "Rust", 3, 7);
+        when(employeeRepository.existsById(employeeId)).thenReturn(true);
+        when(skillRepository.save(any())).thenReturn(saved);
+
+        service.create(request);
+
+        ArgumentCaptor<Skill> captor = ArgumentCaptor.forClass(Skill.class);
+        verify(skillRepository).save(captor.capture());
+
+        Skill captured = captor.getValue();
+        assertThat(captured.getEmployeeId()).isEqualTo(employeeId);
+        assertThat(captured.getName()).isEqualTo("Rust");
+        assertThat(captured.getYearsExperience()).isEqualTo(3);
+        assertThat(captured.getProjectCount()).isEqualTo(7);
+        assertThat(captured.getProficiency()).isEqualTo("Intermediate");
+    }
+
+    @Test
     void update_shouldModifyExistingSkill() {
         UUID skillId = UUID.randomUUID();
         Skill existing = buildSkill(employeeId, "Java", 3, 4);
@@ -144,6 +166,28 @@ class SkillServiceTest {
 
         assertThat(result.yearsExperience()).isEqualTo(5);
         assertThat(result.projectCount()).isEqualTo(8);
+    }
+
+    @Test
+    void update_shouldSetAllFieldsOnEntity() {
+        UUID skillId = UUID.randomUUID();
+        Skill existing = buildSkill(employeeId, "Java", 3, 4);
+        ReflectionTestUtils.setField(existing, "id", skillId);
+
+        when(skillRepository.findById(skillId)).thenReturn(Optional.of(existing));
+        when(skillRepository.save(any(Skill.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        var request = new UpdateSkillRequest("Kotlin", 6, 10, "Expert");
+        service.update(skillId, request);
+
+        ArgumentCaptor<Skill> captor = ArgumentCaptor.forClass(Skill.class);
+        verify(skillRepository).save(captor.capture());
+
+        Skill captured = captor.getValue();
+        assertThat(captured.getName()).isEqualTo("Kotlin");
+        assertThat(captured.getYearsExperience()).isEqualTo(6);
+        assertThat(captured.getProjectCount()).isEqualTo(10);
+        assertThat(captured.getProficiency()).isEqualTo("Expert");
     }
 
     @Test
