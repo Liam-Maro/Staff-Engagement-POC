@@ -90,3 +90,20 @@ export interface UpdateLinkRequest {
   url: string;
   label: string;
 }
+
+// GitHub Import interfaces
+
+export interface ImportedSkill {
+  id: string;
+  name: string;
+  projectCount: number;
+  proficiency: string;
+  source: string;
+}
+
+export interface ImportResult {
+  skills: ImportedSkill[];
+  githubProfileUrl: string;
+  repositoriesAnalysed: number;
+  skippedRepositories: string[];
+}

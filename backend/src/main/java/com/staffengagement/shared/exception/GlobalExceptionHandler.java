@@ -4,6 +4,13 @@ import com.staffengagement.auth.exception.TokenRefreshException;
 import com.staffengagement.interaction.exception.InteractionNotFoundException;
 import com.staffengagement.interaction.exception.InvalidDateRangeException;
 import com.staffengagement.interaction.exception.TaskCreationFailedException;
+import com.staffengagement.portfolio.github.EmployeeNotActiveException;
+import com.staffengagement.portfolio.github.GitHubApiUnavailableException;
+import com.staffengagement.portfolio.github.GitHubNotConfiguredException;
+import com.staffengagement.portfolio.github.GitHubRateLimitException;
+import com.staffengagement.portfolio.github.GitHubTimeoutException;
+import com.staffengagement.portfolio.github.GitHubUserNotFoundException;
+import com.staffengagement.portfolio.github.InvalidGitHubUrlException;
 import com.staffengagement.shared.dto.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -33,6 +40,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(new ErrorResponse(403, "Access denied: insufficient permissions", List.of(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(InvalidGitHubUrlException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidGitHubUrl(InvalidGitHubUrlException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(400, ex.getMessage(), List.of(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -119,6 +132,48 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleInvalidParameter(InvalidParameterException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(400, ex.getMessage(), List.of(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(GitHubUserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleGitHubUserNotFound(GitHubUserNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(404, ex.getMessage(), List.of(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(GitHubRateLimitException.class)
+    public ResponseEntity<ErrorResponse> handleGitHubRateLimit(GitHubRateLimitException ex) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .body(new ErrorResponse(429, ex.getMessage(), List.of(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(GitHubApiUnavailableException.class)
+    public ResponseEntity<ErrorResponse> handleGitHubApiUnavailable(GitHubApiUnavailableException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                .body(new ErrorResponse(502, ex.getMessage(), List.of(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(GitHubTimeoutException.class)
+    public ResponseEntity<ErrorResponse> handleGitHubTimeout(GitHubTimeoutException ex) {
+        return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT)
+                .body(new ErrorResponse(504, ex.getMessage(), List.of(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(GitHubNotConfiguredException.class)
+    public ResponseEntity<ErrorResponse> handleGitHubNotConfigured(GitHubNotConfiguredException ex) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(new ErrorResponse(503, ex.getMessage(), List.of(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(EmployeeNotActiveException.class)
+    public ResponseEntity<ErrorResponse> handleEmployeeNotActive(EmployeeNotActiveException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(409, ex.getMessage(), List.of(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(jakarta.persistence.EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleJpaEntityNotFound(jakarta.persistence.EntityNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(404, ex.getMessage(), List.of(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(Exception.class)

@@ -3,6 +3,7 @@ package com.staffengagement.portfolio.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staffengagement.auth.service.JwtService;
 import com.staffengagement.portfolio.dto.*;
+import com.staffengagement.portfolio.github.GitHubImportService;
 import com.staffengagement.portfolio.service.PortfolioService;
 import com.staffengagement.shared.config.JwtAuthenticationFilter;
 import com.staffengagement.shared.config.SecurityConfig;
@@ -48,6 +49,9 @@ class PortfolioControllerTest {
 
     @MockitoBean
     private StaffRepository staffRepository;
+
+    @MockitoBean
+    private GitHubImportService gitHubImportService;
 
     // ==================== Skills ====================
 
