@@ -349,11 +349,17 @@ export class TaskListComponent implements OnInit, OnDestroy {
     this.loading.set(true);
     this.error.set(null);
 
+    const isAdmin = this.authService.userRole().toLowerCase() === 'admin';
+
     const params: TaskQueryParams = {
-      assigneeId: this.currentStaffId,
       sortBy: 'createdDate',
       sortOrder: 'desc'
     };
+
+    // Admin sees all tasks; staff sees only their assigned tasks
+    if (!isAdmin) {
+      params.assigneeId = this.currentStaffId;
+    }
 
     if (this.statusFilter) {
       params.status = this.statusFilter as TaskStatus;
@@ -375,7 +381,16 @@ export class TaskListComponent implements OnInit, OnDestroy {
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
         next: (result) => {
-          this.tasks.set(result.tasks);
+          let taskList = result.tasks;
+          // For admin: sort own tasks (assigned to me) to the top
+          if (this.authService.userRole() === 'Admin' && this.currentStaffId) {
+            const myId = this.currentStaffId;
+            taskList = [
+              ...taskList.filter(t => t.assigneeId === myId || t.creatorId === myId),
+              ...taskList.filter(t => t.assigneeId !== myId && t.creatorId !== myId)
+            ];
+          }
+          this.tasks.set(taskList);
         },
         error: (err) => {
           this.error.set('Failed to load tasks. Please try again.');
