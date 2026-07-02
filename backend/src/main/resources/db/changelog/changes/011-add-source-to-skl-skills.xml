@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                       https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="011-add-source-to-skl-skills" author="staffengagement">
+        <addColumn tableName="skl_skills">
+            <column name="source" type="varchar(20)" defaultValue="MANUAL">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <createIndex tableName="skl_skills" indexName="idx_skl_skills_employee_name_source">
+            <column name="employee_id"/>
+            <column name="name"/>
+            <column name="source"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

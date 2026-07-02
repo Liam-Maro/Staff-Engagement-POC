@@ -25,6 +25,9 @@ public class Skill {
     @Column(nullable = false)
     private String proficiency;
 
+    @Column(nullable = false, length = 20)
+    private String source = "MANUAL";
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -39,6 +42,7 @@ public class Skill {
     public int getYearsExperience() { return yearsExperience; }
     public int getProjectCount() { return projectCount; }
     public String getProficiency() { return proficiency; }
+    public String getSource() { return source; }
     public LocalDateTime getCreatedAt() { return createdAt; }
 
     public void setEmployeeId(UUID employeeId) { this.employeeId = employeeId; }
@@ -46,4 +50,5 @@ public class Skill {
     public void setYearsExperience(int yearsExperience) { this.yearsExperience = yearsExperience; }
     public void setProjectCount(int projectCount) { this.projectCount = projectCount; }
     public void setProficiency(String proficiency) { this.proficiency = proficiency; }
+    public void setSource(String source) { this.source = source; }
 }

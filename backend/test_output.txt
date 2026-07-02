@@ -1,0 +1,100 @@
+﻿[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.staffengagement:staff-engagement-backend:jar:0.0.1-SNAPSHOT
+[WARNING] 'dependencies.dependency.(groupId:artifactId:type:classifier)' must be unique: net.jqwik:jqwik:jar -> duplicate declaration of version 1.9.2 @ line 116, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] 
+[INFO] ------------< com.staffengagement:staff-engagement-backend >------------
+[INFO] Building Staff Engagement Backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ staff-engagement-backend ---
+[INFO] argLine set to -javaagent:C:\\Users\\liam.maroney\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.12\\org.jacoco.agent-0.8.12-runtime.jar=destfile=C:\\myworkbench\\ai_training\\Staff-Engagement-POC\\backend\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ staff-engagement-backend ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 13 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ staff-engagement-backend ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ staff-engagement-backend ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ staff-engagement-backend ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 57 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] /C:/myworkbench/ai_training/Staff-Engagement-POC/backend/src/test/java/com/staffengagement/task/property/TaskQueryPropertyTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/myworkbench/ai_training/Staff-Engagement-POC/backend/src/test/java/com/staffengagement/task/property/TaskQueryPropertyTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.5.2:test (default-test) @ staff-engagement-backend ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.staffengagement.portfolio.controller.PortfolioControllerGitHubImportTest
+08:02:34.252 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.staffengagement.portfolio.controller.PortfolioControllerGitHubImportTest]: PortfolioControllerGitHubImportTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+08:02:34.630 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.portfolio.controller.PortfolioControllerGitHubImportTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.1)
+
+2026-07-02T08:02:35.266+02:00  INFO 45160 --- [           main] .p.c.PortfolioControllerGitHubImportTest : Starting PortfolioControllerGitHubImportTest using Java 21.0.7 with PID 45160 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
+2026-07-02T08:02:35.268+02:00  INFO 45160 --- [           main] .p.c.PortfolioControllerGitHubImportTest : No active profile set, falling back to 1 default profile: "default"
+mvn : Mockito is currently self-attaching to enable the inline-mock-maker. 
+This will no longer work in future releases of the JDK. Please add Mockito as 
+an agent to your build what is described in Mockito's documentation: https://ja
+vadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+At line:1 char:64
++ ... \backend" ; mvn test "-Dtest=PortfolioControllerGitHubImportTest" "-D ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Mockito is curr...ockito.html#0.3 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot 
+loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\liam.maroney\.m2\re
+pository\net\bytebuddy\byte-buddy-agent\1.15.11\byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with 
+-XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with 
+-Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future 
+release
+2026-07-02T08:02:38.601+02:00  INFO 45160 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-07-02T08:02:38.602+02:00  WARN 45160 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-07-02T08:02:39.386+02:00  WARN 45160 --- [           main] o.s.aop.framework.CglibAopProxy          : Unable to proxy interface-implementing method [public final void org.springframework.web.filter.OncePerRequestFilter.doFilter(jakarta.servlet.ServletRequest,jakarta.servlet.ServletResponse,jakarta.servlet.FilterChain) throws jakarta.servlet.ServletException,java.io.IOException] because it is marked as final, consider using interface-based JDK proxies instead.
+2026-07-02T08:02:39.387+02:00  WARN 45160 --- [           main] o.s.aop.framework.CglibAopProxy          : Unable to proxy interface-implementing method [public final void org.springframework.web.filter.GenericFilterBean.init(jakarta.servlet.FilterConfig) throws jakarta.servlet.ServletException] because it is marked as final, consider using interface-based JDK proxies instead.
+2026-07-02T08:02:40.081+02:00  INFO 45160 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-02T08:02:40.082+02:00  INFO 45160 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-02T08:02:40.084+02:00  INFO 45160 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-07-02T08:02:40.139+02:00  INFO 45160 --- [           main] .p.c.PortfolioControllerGitHubImportTest : Started PortfolioControllerGitHubImportTest in 5.397 seconds (process running for 7.337)
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 7.150 s -- in com.staffengagement.portfolio.controller.PortfolioControllerGitHubImportTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ staff-engagement-backend ---
+[INFO] Loading execution data file C:\myworkbench\ai_training\Staff-Engagement-POC\backend\target\jacoco.exec
+[INFO] Analyzed bundle 'Staff Engagement Backend' with 116 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  15.019 s
+[INFO] Finished at: 2026-07-02T08:02:41+02:00
+[INFO] ------------------------------------------------------------------------

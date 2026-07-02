@@ -1,0 +1,59 @@
+<div class="import-skills-container">
+  <div class="import-form">
+    <div class="input-row">
+      <input
+        type="text"
+        [formControl]="urlControl"
+        placeholder="https://github.com/username"
+        maxlength="2048"
+        [attr.disabled]="loading() ? '' : null"
+        class="url-input"
+        aria-label="GitHub profile URL"
+      />
+      <button
+        class="btn btn-primary import-btn"
+        (click)="importSkills()"
+        [disabled]="loading()"
+      >
+        Import Skills
+      </button>
+    </div>
+
+    @if (validationError()) {
+      <p class="validation-error">{{ validationError() }}</p>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p class="loading-message">Import in progress</p>
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-state">
+      <p class="error-message">{{ error() }}</p>
+    </div>
+  }
+
+  @if (result()) {
+    <div class="success-state">
+      <p class="repos-analysed">Repositories analysed: {{ result()!.repositoriesAnalysed }}</p>
+
+      @if (result()!.skills.length === 0) {
+        <p class="text-muted">No skills detected from repositories.</p>
+      } @else {
+        <div class="skills-list">
+          @for (skill of result()!.skills; track skill.name) {
+            <div class="skill-item">
+              <span class="skill-name">{{ skill.name }}</span>
+              <span class="badge" [attr.data-level]="skill.proficiency.toLowerCase()">{{ skill.proficiency }}</span>
+              <span class="skill-meta text-muted">{{ skill.projectCount }} projects</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

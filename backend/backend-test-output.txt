@@ -18,7 +18,7 @@
 [INFO] 
 [INFO] --- resources:3.3.1:resources (default-resources) @ staff-engagement-backend ---
 [INFO] Copying 1 resource from src\main\resources to target\classes
-[INFO] Copying 12 resources from src\main\resources to target\classes
+[INFO] Copying 13 resources from src\main\resources to target\classes
 [INFO] 
 [INFO] --- compiler:3.13.0:compile (default-compile) @ staff-engagement-backend ---
 [INFO] Nothing to compile - all classes are up to date.
@@ -35,12 +35,12 @@
 [INFO] -------------------------------------------------------
 [INFO]  T E S T S
 [INFO] -------------------------------------------------------
-mvn : Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+mvn : Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
-At line:1 char:113
-+ ... :JAVA_HOME = "C:\Program Files\Java\jdk-21"; mvn test -B 2>&1 | Out-F ...
-+                                                  ~~~~~~~~~~~~~~~~
-    + CategoryInfo          : NotSpecified: (Jul 01, 2026 9:...$findTestTags$0 
+At line:1 char:64
++ ... taff-Engagement-POC\backend" ; mvn test jacoco:report -B 2>&1 | Out-F ...
++                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Jul 02, 2026 8:...$findTestTags$0 
    :String) [], RemoteException
     + FullyQualifiedErrorId : NativeCommandError
  
@@ -49,148 +49,148 @@ employeeId and staffId immutability on update") on [void com.staffengagement.in
 teraction.service.InteractionServicePropertyTest.updatePreservesOriginalEmploye
 eIdAndStaffId(java.util.UUID,java.util.UUID,com.staffengagement.interaction.mod
 el.InteractionType,java.time.LocalDateTime)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 15: 
 createdAt equals updatedAt on fresh creation") on [void com.staffengagement.int
 eraction.service.InteractionServicePropertyTest.createdAtEqualsUpdatedAtOnFresh
 Creation(java.util.UUID,java.util.UUID,com.staffengagement.interaction.model.In
 teractionType,java.time.LocalDateTime)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 9: 
 Page size capped at 100") on [void com.staffengagement.interaction.service.Inte
 ractionServicePropertyTest.pageSizeCappedAt100(int)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 2: 
 Invalid interaction type rejection") on [void com.staffengagement.interaction.s
 ervice.InteractionServicePropertyTest.invalidInteractionTypeIsRejected(java.lan
 g.String)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 5: 
 createdAt immutability and updatedAt advancement") on [void com.staffengagement
 .interaction.service.InteractionServicePropertyTest.createdAtImmutableAndUpdate
 dAtAdvances(java.util.UUID,java.util.UUID,int,com.staffengagement.interaction.m
 odel.InteractionType,java.time.LocalDateTime)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 11: 
 List ordering by occurredAt descending") on [void com.staffengagement.interacti
 on.service.InteractionServicePropertyTest.listOrderedByOccurredAtDescending(int
 )]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 14: 
 Notes preview truncation") on [void com.staffengagement.interaction.service.Int
 eractionServicePropertyTest.notesPreviewTruncation(java.lang.String)]. Tag 
 will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 10: 
 Combined filter AND semantics") on [void com.staffengagement.interaction.servic
 e.InteractionServicePropertyTest.combinedFiltersUseAndSemantics(java.util.UUID,
 com.staffengagement.interaction.model.InteractionType,java.time.LocalDateTime,j
 ava.time.LocalDateTime)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 3: 
 Future occurredAt rejection") on [void com.staffengagement.interaction.service.
 InteractionServicePropertyTest.futureOccurredAtIsRejected(java.time.LocalDateTi
 me)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 8: 
 Pagination metadata consistency") on [void com.staffengagement.interaction.serv
 ice.InteractionServicePropertyTest.paginationMetadataIsConsistent(int,int)]. 
 Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 7: 
 Field length limit enforcement") on [void com.staffengagement.interaction.servi
 ce.InteractionServicePropertyTest.fieldLengthLimitsEnforced(java.lang.String,ja
 va.lang.String,java.lang.String)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 4: 
 employeeId and staffId immutability on update") on [void com.staffengagement.in
 teraction.service.InteractionServicePropertyTest.updatePreservesOriginalEmploye
 eIdAndStaffId(java.util.UUID,java.util.UUID,com.staffengagement.interaction.mod
 el.InteractionType,java.time.LocalDateTime)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 15: 
 createdAt equals updatedAt on fresh creation") on [void com.staffengagement.int
 eraction.service.InteractionServicePropertyTest.createdAtEqualsUpdatedAtOnFresh
 Creation(java.util.UUID,java.util.UUID,com.staffengagement.interaction.model.In
 teractionType,java.time.LocalDateTime)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 9: 
 Page size capped at 100") on [void com.staffengagement.interaction.service.Inte
 ractionServicePropertyTest.pageSizeCappedAt100(int)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 2: 
 Invalid interaction type rejection") on [void com.staffengagement.interaction.s
 ervice.InteractionServicePropertyTest.invalidInteractionTypeIsRejected(java.lan
 g.String)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 5: 
 createdAt immutability and updatedAt advancement") on [void com.staffengagement
 .interaction.service.InteractionServicePropertyTest.createdAtImmutableAndUpdate
 dAtAdvances(java.util.UUID,java.util.UUID,int,com.staffengagement.interaction.m
 odel.InteractionType,java.time.LocalDateTime)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 11: 
 List ordering by occurredAt descending") on [void com.staffengagement.interacti
 on.service.InteractionServicePropertyTest.listOrderedByOccurredAtDescending(int
 )]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 14: 
 Notes preview truncation") on [void com.staffengagement.interaction.service.Int
 eractionServicePropertyTest.notesPreviewTruncation(java.lang.String)]. Tag 
 will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 10: 
 Combined filter AND semantics") on [void com.staffengagement.interaction.servic
 e.InteractionServicePropertyTest.combinedFiltersUseAndSemantics(java.util.UUID,
 com.staffengagement.interaction.model.InteractionType,java.time.LocalDateTime,j
 ava.time.LocalDateTime)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 3: 
 Future occurredAt rejection") on [void com.staffengagement.interaction.service.
 InteractionServicePropertyTest.futureOccurredAtIsRejected(java.time.LocalDateTi
 me)]. Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 8: 
 Pagination metadata consistency") on [void com.staffengagement.interaction.serv
 ice.InteractionServicePropertyTest.paginationMetadataIsConsistent(int,int)]. 
 Tag will be ignored
-Jul 01, 2026 9:36:31 AM net.jqwik.engine.descriptor.DiscoverySupport 
+Jul 02, 2026 8:41:35 AM net.jqwik.engine.descriptor.DiscoverySupport 
 lambda$findTestTags$0
 WARNING: Invalid tag format in @Tag("Feature: interaction-module, Property 7: 
 Field length limit enforcement") on [void com.staffengagement.interaction.servi
 ce.InteractionServicePropertyTest.fieldLengthLimitsEnforced(java.lang.String,ja
 va.lang.String,java.lang.String)]. Tag will be ignored
-09:36:31.861 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.20.4
-09:36:32.386 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Loaded org.testcontainers.dockerclient.NpipeSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
-09:36:32.403 [main] INFO org.testcontainers.dockerclient.DockerMachineClientProviderStrategy -- docker-machine executable was not found on PATH ([C:\Program Files\Common Files\Oracle\Java\javapath, C:\myprograms\Java\java_version_11\bin, C:\WINDOWS\system32, C:\WINDOWS, C:\WINDOWS\System32\Wbem, C:\WINDOWS\System32\WindowsPowerShell\v1.0\, C:\WINDOWS\System32\OpenSSH\, C:\myprograms\PostgreSQL\15\bin, C:\myprograms\PostgreSQL\15\lib, C:\myprograms\Ant\apache-ant-1.10.14\bin, C:\myprograms\Nvm\nvm, C:\myprograms\node, C:\myprograms\Terraform, C:\Program Files\Docker\Docker\resources\bin, C:\myprograms\Git\cmd, C:\myprograms\ClaudeCode\, C:\myprograms\Spring\spring-4.0.6\bin, C:\Program Files\GitHub CLI\, C:\myprograms\IntelliJ IDEA Community Edition 2023.3.3\plugins\maven\lib\maven3\bin, C:\Users\liam.maroney\AppData\Local\Programs\Python\Python313\Scripts\, C:\Users\liam.maroney\AppData\Local\Programs\Python\Python313\, C:\Users\liam.maroney\AppData\Local\Programs\Python\Launcher\, C:\Users\liam.maroney\.local\bin, C:\Users\liam.maroney\AppData\Local\Microsoft\WindowsApps, C:\Users\liam.maroney\AppData\Local\JetBrains\Toolbox\scripts, C:\myprograms\Nvm\nvm, C:\myprograms\node, C:\Users\liam.maroney\AppData\Local\Programs\Microsoft VS Code\bin, C:\Users\liam.maroney\.dotnet\tools, C:\Users\liam.maroney\AppData\Local\Microsoft\WindowsApps, C:\myprograms\Kiro\bin, C:\Users\liam.maroney\AppData\Local\Kiro-Cli\])
-09:36:32.404 [main] ERROR org.testcontainers.dockerclient.DockerClientProviderStrategy -- Could not find a valid Docker environment. Please check configuration. Attempted configurations were:
+08:41:35.816 [main] INFO org.testcontainers.DockerClientFactory -- Testcontainers version: 1.20.4
+08:41:36.284 [main] INFO org.testcontainers.dockerclient.DockerClientProviderStrategy -- Loaded org.testcontainers.dockerclient.NpipeSocketClientProviderStrategy from ~/.testcontainers.properties, will try it first
+08:41:36.296 [main] INFO org.testcontainers.dockerclient.DockerMachineClientProviderStrategy -- docker-machine executable was not found on PATH ([C:\Program Files\Common Files\Oracle\Java\javapath, C:\myprograms\Java\java_version_11\bin, C:\WINDOWS\system32, C:\WINDOWS, C:\WINDOWS\System32\Wbem, C:\WINDOWS\System32\WindowsPowerShell\v1.0\, C:\WINDOWS\System32\OpenSSH\, C:\myprograms\PostgreSQL\15\bin, C:\myprograms\PostgreSQL\15\lib, C:\myprograms\Ant\apache-ant-1.10.14\bin, C:\myprograms\Nvm\nvm, C:\myprograms\node, C:\myprograms\Terraform, C:\Program Files\Docker\Docker\resources\bin, C:\myprograms\Git\cmd, C:\myprograms\ClaudeCode\, C:\myprograms\Spring\spring-4.0.6\bin, C:\Program Files\GitHub CLI\, C:\myprograms\IntelliJ IDEA Community Edition 2023.3.3\plugins\maven\lib\maven3\bin, C:\Users\liam.maroney\AppData\Local\Programs\Python\Python313\Scripts\, C:\Users\liam.maroney\AppData\Local\Programs\Python\Python313\, C:\Users\liam.maroney\AppData\Local\Programs\Python\Launcher\, C:\Users\liam.maroney\.local\bin, C:\Users\liam.maroney\AppData\Local\Microsoft\WindowsApps, C:\Users\liam.maroney\AppData\Local\JetBrains\Toolbox\scripts, C:\myprograms\Nvm\nvm, C:\myprograms\node, C:\Users\liam.maroney\AppData\Local\Programs\Microsoft VS Code\bin, C:\Users\liam.maroney\.dotnet\tools, C:\Users\liam.maroney\AppData\Local\Microsoft\WindowsApps, C:\myprograms\Kiro\bin, C:\Users\liam.maroney\AppData\Local\Kiro-Cli\])
+08:41:36.297 [main] ERROR org.testcontainers.dockerclient.DockerClientProviderStrategy -- Could not find a valid Docker environment. Please check configuration. Attempted configurations were:
 As no valid configuration was found, execution cannot continue.
 See https://java.testcontainers.org/on_failure.html for more details.
 [INFO] Running com.staffengagement.ApplicationContextTest
-[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.005 s -- in com.staffengagement.ApplicationContextTest
+[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.008 s -- in com.staffengagement.ApplicationContextTest
 [INFO] Running com.staffengagement.auth.controller.AuthControllerTest
-09:36:32.622 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.staffengagement.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-09:36:32.915 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.auth.controller.AuthControllerTest
+08:41:36.479 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.staffengagement.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+08:41:36.734 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.auth.controller.AuthControllerTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -201,8 +201,8 @@ See https://java.testcontainers.org/on_failure.html for more details.
 
  :: Spring Boot ::                (v3.4.1)
 
-2026-07-01T09:36:33.583+02:00  INFO 36692 --- [           main] c.s.auth.controller.AuthControllerTest   : Starting AuthControllerTest using Java 21.0.7 with PID 36692 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
-2026-07-01T09:36:33.585+02:00  INFO 36692 --- [           main] c.s.auth.controller.AuthControllerTest   : No active profile set, falling back to 1 default profile: "default"
+2026-07-02T08:41:38.232+02:00  INFO 44144 --- [           main] c.s.auth.controller.AuthControllerTest   : Starting AuthControllerTest using Java 21.0.7 with PID 44144 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
+2026-07-02T08:41:38.236+02:00  INFO 44144 --- [           main] c.s.auth.controller.AuthControllerTest   : No active profile set, falling back to 1 default profile: "default"
 Mockito is currently self-attaching to enable the inline-mock-maker. This will 
 no longer work in future releases of the JDK. Please add Mockito as an agent 
 to your build what is described in Mockito's documentation: https://javadoc.io/
@@ -217,24 +217,24 @@ WARNING: If a serviceability tool is not in use, please run with
 -Djdk.instrument.traceUsage for more information
 WARNING: Dynamic loading of agents will be disallowed by default in a future 
 release
-2026-07-01T09:36:36.383+02:00  INFO 36692 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-07-01T09:36:36.384+02:00  WARN 36692 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
-2026-07-01T09:36:37.226+02:00  WARN 36692 --- [           main] o.s.aop.framework.CglibAopProxy          : Unable to proxy interface-implementing method [public final void org.springframework.web.filter.OncePerRequestFilter.doFilter(jakarta.servlet.ServletRequest,jakarta.servlet.ServletResponse,jakarta.servlet.FilterChain) throws jakarta.servlet.ServletException,java.io.IOException] because it is marked as final, consider using interface-based JDK proxies instead.
-2026-07-01T09:36:37.226+02:00  WARN 36692 --- [           main] o.s.aop.framework.CglibAopProxy          : Unable to proxy interface-implementing method [public final void org.springframework.web.filter.GenericFilterBean.init(jakarta.servlet.FilterConfig) throws jakarta.servlet.ServletException] because it is marked as final, consider using interface-based JDK proxies instead.
-2026-07-01T09:36:37.970+02:00  INFO 36692 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-07-01T09:36:37.971+02:00  INFO 36692 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-07-01T09:36:37.972+02:00  INFO 36692 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
-2026-07-01T09:36:38.028+02:00  INFO 36692 --- [           main] c.s.auth.controller.AuthControllerTest   : Started AuthControllerTest in 4.98 seconds (process running for 7.986)
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.557 s -- in com.staffengagement.auth.controller.AuthControllerTest
+2026-07-02T08:41:53.685+02:00  INFO 44144 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-07-02T08:41:53.689+02:00  WARN 44144 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-07-02T08:41:55.934+02:00  WARN 44144 --- [           main] o.s.aop.framework.CglibAopProxy          : Unable to proxy interface-implementing method [public final void org.springframework.web.filter.OncePerRequestFilter.doFilter(jakarta.servlet.ServletRequest,jakarta.servlet.ServletResponse,jakarta.servlet.FilterChain) throws jakarta.servlet.ServletException,java.io.IOException] because it is marked as final, consider using interface-based JDK proxies instead.
+2026-07-02T08:41:55.934+02:00  WARN 44144 --- [           main] o.s.aop.framework.CglibAopProxy          : Unable to proxy interface-implementing method [public final void org.springframework.web.filter.GenericFilterBean.init(jakarta.servlet.FilterConfig) throws jakarta.servlet.ServletException] because it is marked as final, consider using interface-based JDK proxies instead.
+2026-07-02T08:41:57.748+02:00  INFO 44144 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-02T08:41:57.751+02:00  INFO 44144 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-02T08:41:57.760+02:00  INFO 44144 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 7 ms
+2026-07-02T08:41:57.856+02:00  INFO 44144 --- [           main] c.s.auth.controller.AuthControllerTest   : Started AuthControllerTest in 21.031 seconds (process running for 23.824)
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 23.65 s -- in com.staffengagement.auth.controller.AuthControllerTest
 [INFO] Running com.staffengagement.auth.service.AuthServiceTest
-[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.408 s -- in com.staffengagement.auth.service.AuthServiceTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.797 s -- in com.staffengagement.auth.service.AuthServiceTest
 [INFO] Running com.staffengagement.auth.service.JwtServiceTest
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.180 s -- in com.staffengagement.auth.service.JwtServiceTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.488 s -- in com.staffengagement.auth.service.JwtServiceTest
 [INFO] Running com.staffengagement.auth.service.RefreshTokenServiceTest
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.118 s -- in com.staffengagement.auth.service.RefreshTokenServiceTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.432 s -- in com.staffengagement.auth.service.RefreshTokenServiceTest
 [INFO] Running com.staffengagement.employee.controller.EmployeeControllerTest
-2026-07-01T09:36:39.759+02:00  INFO 36692 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.staffengagement.employee.controller.EmployeeControllerTest]: EmployeeControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-01T09:36:39.800+02:00  INFO 36692 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.employee.controller.EmployeeControllerTest
+2026-07-02T08:42:01.932+02:00  INFO 44144 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.staffengagement.employee.controller.EmployeeControllerTest]: EmployeeControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-02T08:42:02.078+02:00  INFO 44144 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.employee.controller.EmployeeControllerTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -245,28 +245,28 @@ release
 
  :: Spring Boot ::                (v3.4.1)
 
-2026-07-01T09:36:39.833+02:00  INFO 36692 --- [           main] c.s.e.controller.EmployeeControllerTest  : Starting EmployeeControllerTest using Java 21.0.7 with PID 36692 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
-2026-07-01T09:36:39.833+02:00  INFO 36692 --- [           main] c.s.e.controller.EmployeeControllerTest  : No active profile set, falling back to 1 default profile: "default"
-2026-07-01T09:36:40.143+02:00  WARN 36692 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+2026-07-02T08:42:02.206+02:00  INFO 44144 --- [           main] c.s.e.controller.EmployeeControllerTest  : Starting EmployeeControllerTest using Java 21.0.7 with PID 44144 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
+2026-07-02T08:42:02.209+02:00  INFO 44144 --- [           main] c.s.e.controller.EmployeeControllerTest  : No active profile set, falling back to 1 default profile: "default"
+2026-07-02T08:42:03.961+02:00  WARN 44144 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
 
-Using generated security password: d2859cb8-7807-42e0-8004-840895dc2bfb
+Using generated security password: f285e3a4-c574-4527-85ef-2e20d16fde9b
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
-2026-07-01T09:36:40.169+02:00  INFO 36692 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
-2026-07-01T09:36:40.288+02:00  INFO 36692 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-07-01T09:36:40.288+02:00  INFO 36692 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-07-01T09:36:40.289+02:00  INFO 36692 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
-2026-07-01T09:36:40.297+02:00  INFO 36692 --- [           main] c.s.e.controller.EmployeeControllerTest  : Started EmployeeControllerTest in 0.493 seconds (process running for 10.254)
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.653 s -- in com.staffengagement.employee.controller.EmployeeControllerTest
+2026-07-02T08:42:04.041+02:00  INFO 44144 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-07-02T08:42:04.789+02:00  INFO 44144 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-02T08:42:04.789+02:00  INFO 44144 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-02T08:42:04.793+02:00  INFO 44144 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 2 ms
+2026-07-02T08:42:04.830+02:00  INFO 44144 --- [           main] c.s.e.controller.EmployeeControllerTest  : Started EmployeeControllerTest in 2.742 seconds (process running for 30.799)
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.636 s -- in com.staffengagement.employee.controller.EmployeeControllerTest
 [INFO] Running com.staffengagement.employee.service.EmployeeServiceImplTest
-[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.072 s -- in com.staffengagement.employee.service.EmployeeServiceImplTest
-2026-07-01T09:36:40.501+02:00  INFO 36692 --- [           main] org.testcontainers.DockerClientFactory   : Testcontainers version: 1.20.4
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.422 s -- in com.staffengagement.employee.service.EmployeeServiceImplTest
+2026-07-02T08:42:06.107+02:00  INFO 44144 --- [           main] org.testcontainers.DockerClientFactory   : Testcontainers version: 1.20.4
 [INFO] Running com.staffengagement.interaction.controller.InteractionControllerIntegrationTest
-[WARNING] Tests run: 18, Failures: 0, Errors: 0, Skipped: 18, Time elapsed: 0.001 s -- in com.staffengagement.interaction.controller.InteractionControllerIntegrationTest
+[WARNING] Tests run: 18, Failures: 0, Errors: 0, Skipped: 18, Time elapsed: 0.029 s -- in com.staffengagement.interaction.controller.InteractionControllerIntegrationTest
 [INFO] Running com.staffengagement.interaction.controller.InteractionControllerTest
-2026-07-01T09:36:40.523+02:00  INFO 36692 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.staffengagement.interaction.controller.InteractionControllerTest]: InteractionControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-01T09:36:40.565+02:00  INFO 36692 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.interaction.controller.InteractionControllerTest
+2026-07-02T08:42:06.265+02:00  INFO 44144 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.staffengagement.interaction.controller.InteractionControllerTest]: InteractionControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-02T08:42:06.437+02:00  INFO 44144 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.interaction.controller.InteractionControllerTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -277,67 +277,86 @@ This generated password is for development use only. Your security configuration
 
  :: Spring Boot ::                (v3.4.1)
 
-2026-07-01T09:36:40.593+02:00  INFO 36692 --- [           main] c.s.i.c.InteractionControllerTest        : Starting InteractionControllerTest using Java 21.0.7 with PID 36692 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
-2026-07-01T09:36:40.593+02:00  INFO 36692 --- [           main] c.s.i.c.InteractionControllerTest        : No active profile set, falling back to 1 default profile: "default"
-2026-07-01T09:36:40.818+02:00  WARN 36692 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
+2026-07-02T08:42:06.613+02:00  INFO 44144 --- [           main] c.s.i.c.InteractionControllerTest        : Starting InteractionControllerTest using Java 21.0.7 with PID 44144 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
+2026-07-02T08:42:06.615+02:00  INFO 44144 --- [           main] c.s.i.c.InteractionControllerTest        : No active profile set, falling back to 1 default profile: "default"
+2026-07-02T08:42:07.472+02:00  WARN 44144 --- [           main] .s.s.UserDetailsServiceAutoConfiguration : 
 
-Using generated security password: 23967e40-e383-4e00-8b15-a169343b3216
+Using generated security password: d2cf133b-e404-4a8a-bf86-800200855b4a
 
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 
-2026-07-01T09:36:40.849+02:00  INFO 36692 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
-2026-07-01T09:36:40.937+02:00  INFO 36692 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-07-01T09:36:40.937+02:00  INFO 36692 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-07-01T09:36:40.937+02:00  INFO 36692 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
-2026-07-01T09:36:40.942+02:00  INFO 36692 --- [           main] c.s.i.c.InteractionControllerTest        : Started InteractionControllerTest in 0.373 seconds (process running for 10.9)
-2026-07-01T09:36:41.044+02:00  WARN 36692 --- [           main] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
+2026-07-02T08:42:07.548+02:00  INFO 44144 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-07-02T08:42:07.828+02:00  INFO 44144 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-02T08:42:07.829+02:00  INFO 44144 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-02T08:42:07.830+02:00  INFO 44144 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-07-02T08:42:07.861+02:00  INFO 44144 --- [           main] c.s.i.c.InteractionControllerTest        : Started InteractionControllerTest in 1.395 seconds (process running for 33.831)
+2026-07-02T08:42:08.030+02:00  WARN 44144 --- [           main] ration$PageModule$WarningLoggingModifier : Serializing PageImpl instances as-is is not supported, meaning that there is no guarantee about the stability of the resulting JSON structure!
 	For a stable JSON structure, please use Spring Data's PagedModel (globally via @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO))
 	or Spring HATEOAS and Spring Data's PagedResourcesAssembler as documented in https://docs.spring.io/spring-data/commons/reference/repositories/core-extensions.html#core.web.pageables.
 
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.596 s -- in com.staffengagement.interaction.controller.InteractionControllerTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.985 s -- in com.staffengagement.interaction.controller.InteractionControllerTest
 [INFO] Running com.staffengagement.interaction.repository.InteractionSpecificationsTest
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.staffengagement.interaction.repository.InteractionSpecificationsTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.051 s -- in com.staffengagement.interaction.repository.InteractionSpecificationsTest
 [INFO] Running com.staffengagement.interaction.service.InteractionServiceImplTest
-[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.241 s -- in com.staffengagement.interaction.service.InteractionServiceImplTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.165 s -- in com.staffengagement.interaction.service.InteractionServiceImplTest
+[INFO] Running com.staffengagement.portfolio.controller.PortfolioControllerGitHubImportTest
+2026-07-02T08:42:09.475+02:00  INFO 44144 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.staffengagement.portfolio.controller.PortfolioControllerGitHubImportTest]: PortfolioControllerGitHubImportTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-02T08:42:09.628+02:00  INFO 44144 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.portfolio.controller.PortfolioControllerGitHubImportTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.1)
+
+2026-07-02T08:42:09.751+02:00  INFO 44144 --- [           main] .p.c.PortfolioControllerGitHubImportTest : Starting PortfolioControllerGitHubImportTest using Java 21.0.7 with PID 44144 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
+2026-07-02T08:42:09.753+02:00  INFO 44144 --- [           main] .p.c.PortfolioControllerGitHubImportTest : No active profile set, falling back to 1 default profile: "default"
+2026-07-02T08:42:10.830+02:00  INFO 44144 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-07-02T08:42:10.831+02:00  WARN 44144 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-07-02T08:42:11.400+02:00  INFO 44144 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-02T08:42:11.400+02:00  INFO 44144 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-02T08:42:11.403+02:00  INFO 44144 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 3 ms
+2026-07-02T08:42:11.428+02:00  INFO 44144 --- [           main] .p.c.PortfolioControllerGitHubImportTest : Started PortfolioControllerGitHubImportTest in 1.788 seconds (process running for 37.397)
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.326 s -- in com.staffengagement.portfolio.controller.PortfolioControllerGitHubImportTest
 [INFO] Running com.staffengagement.portfolio.controller.PortfolioControllerTest
-2026-07-01T09:36:41.394+02:00  INFO 36692 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.staffengagement.portfolio.controller.PortfolioControllerTest]: PortfolioControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-01T09:36:41.430+02:00  INFO 36692 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.portfolio.controller.PortfolioControllerTest
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::                (v3.4.1)
-
-2026-07-01T09:36:41.451+02:00  INFO 36692 --- [           main] c.s.p.c.PortfolioControllerTest          : Starting PortfolioControllerTest using Java 21.0.7 with PID 36692 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
-2026-07-01T09:36:41.451+02:00  INFO 36692 --- [           main] c.s.p.c.PortfolioControllerTest          : No active profile set, falling back to 1 default profile: "default"
-2026-07-01T09:36:41.701+02:00  INFO 36692 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-07-01T09:36:41.701+02:00  WARN 36692 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
-2026-07-01T09:36:41.835+02:00  INFO 36692 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-07-01T09:36:41.835+02:00  INFO 36692 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-07-01T09:36:41.836+02:00  INFO 36692 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
-2026-07-01T09:36:41.844+02:00  INFO 36692 --- [           main] c.s.p.c.PortfolioControllerTest          : Started PortfolioControllerTest in 0.41 seconds (process running for 11.801)
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.621 s -- in com.staffengagement.portfolio.controller.PortfolioControllerTest
+2026-07-02T08:42:11.809+02:00  INFO 44144 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.staffengagement.portfolio.controller.PortfolioControllerTest]: PortfolioControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-02T08:42:11.843+02:00  INFO 44144 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.portfolio.controller.PortfolioControllerTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.449 s -- in com.staffengagement.portfolio.controller.PortfolioControllerTest
+[INFO] Running com.staffengagement.portfolio.github.GitHubApiClientImplTest
+[INFO] Tests run: 18, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.521 s -- in com.staffengagement.portfolio.github.GitHubApiClientImplTest
+2026-07-02T08:42:13.815+02:00  INFO 44144 --- [           main] org.testcontainers.DockerClientFactory   : Testcontainers version: 1.20.4
+[INFO] Running com.staffengagement.portfolio.github.GitHubImportIntegrationTest
+[WARNING] Tests run: 5, Failures: 0, Errors: 0, Skipped: 5, Time elapsed: 0.001 s -- in com.staffengagement.portfolio.github.GitHubImportIntegrationTest
+[INFO] Running com.staffengagement.portfolio.github.GitHubImportServiceImplTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.792 s -- in com.staffengagement.portfolio.github.GitHubImportServiceImplTest
+[INFO] Running com.staffengagement.portfolio.github.GitHubUrlParserTest
+[INFO] Tests run: 21, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.181 s -- in com.staffengagement.portfolio.github.GitHubUrlParserTest
+[INFO] Running com.staffengagement.portfolio.github.LanguageAggregatorTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.staffengagement.portfolio.github.LanguageAggregatorTest
+[INFO] Running com.staffengagement.portfolio.github.LanguageSkillMapperTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.041 s -- in com.staffengagement.portfolio.github.LanguageSkillMapperTest
+[INFO] Running com.staffengagement.portfolio.github.ProficiencyRankerTest
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.040 s -- in com.staffengagement.portfolio.github.ProficiencyRankerTest
 [INFO] Running com.staffengagement.portfolio.model.StringListConverterTest
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.020 s -- in com.staffengagement.portfolio.model.StringListConverterTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.027 s -- in com.staffengagement.portfolio.model.StringListConverterTest
 [INFO] Running com.staffengagement.portfolio.service.PortfolioServiceImplTest
-[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.348 s -- in com.staffengagement.portfolio.service.PortfolioServiceImplTest
+[INFO] Tests run: 25, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.986 s -- in com.staffengagement.portfolio.service.PortfolioServiceImplTest
 [INFO] Running com.staffengagement.portfolio.validation.DateRangeValidatorTest
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.053 s -- in com.staffengagement.portfolio.validation.DateRangeValidatorTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.142 s -- in com.staffengagement.portfolio.validation.DateRangeValidatorTest
 [INFO] Running com.staffengagement.portfolio.validation.ProficiencyValidatorTest
-[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.105 s -- in com.staffengagement.portfolio.validation.ProficiencyValidatorTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.063 s -- in com.staffengagement.portfolio.validation.ProficiencyValidatorTest
 [INFO] Running com.staffengagement.portfolio.validation.UrlValidatorTest
-[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.staffengagement.portfolio.validation.UrlValidatorTest
+[INFO] Tests run: 15, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.076 s -- in com.staffengagement.portfolio.validation.UrlValidatorTest
 [INFO] Running com.staffengagement.shared.config.JwtAuthenticationFilterTest
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.251 s -- in com.staffengagement.shared.config.JwtAuthenticationFilterTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.868 s -- in com.staffengagement.shared.config.JwtAuthenticationFilterTest
 [INFO] Running com.staffengagement.shared.exception.GlobalExceptionHandlerTest
-[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.242 s -- in com.staffengagement.shared.exception.GlobalExceptionHandlerTest
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.574 s -- in com.staffengagement.shared.exception.GlobalExceptionHandlerTest
 [INFO] Running com.staffengagement.skills.controller.SkillControllerTest
-2026-07-01T09:36:43.079+02:00  INFO 36692 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.staffengagement.skills.controller.SkillControllerTest]: SkillControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-01T09:36:43.132+02:00  INFO 36692 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.skills.controller.SkillControllerTest
+2026-07-02T08:42:17.733+02:00  INFO 44144 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.staffengagement.skills.controller.SkillControllerTest]: SkillControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-02T08:42:17.876+02:00  INFO 44144 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.skills.controller.SkillControllerTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -348,23 +367,23 @@ This generated password is for development use only. Your security configuration
 
  :: Spring Boot ::                (v3.4.1)
 
-2026-07-01T09:36:43.165+02:00  INFO 36692 --- [           main] c.s.s.controller.SkillControllerTest     : Starting SkillControllerTest using Java 21.0.7 with PID 36692 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
-2026-07-01T09:36:43.165+02:00  INFO 36692 --- [           main] c.s.s.controller.SkillControllerTest     : No active profile set, falling back to 1 default profile: "default"
-2026-07-01T09:36:43.428+02:00  INFO 36692 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-07-01T09:36:43.428+02:00  WARN 36692 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
-2026-07-01T09:36:43.633+02:00  INFO 36692 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-07-01T09:36:43.633+02:00  INFO 36692 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-07-01T09:36:43.634+02:00  INFO 36692 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
-2026-07-01T09:36:43.641+02:00  INFO 36692 --- [           main] c.s.s.controller.SkillControllerTest     : Started SkillControllerTest in 0.505 seconds (process running for 13.599)
-[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.786 s -- in com.staffengagement.skills.controller.SkillControllerTest
+2026-07-02T08:42:17.995+02:00  INFO 44144 --- [           main] c.s.s.controller.SkillControllerTest     : Starting SkillControllerTest using Java 21.0.7 with PID 44144 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
+2026-07-02T08:42:18.002+02:00  INFO 44144 --- [           main] c.s.s.controller.SkillControllerTest     : No active profile set, falling back to 1 default profile: "default"
+2026-07-02T08:42:18.645+02:00  INFO 44144 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-07-02T08:42:18.645+02:00  WARN 44144 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-07-02T08:42:19.122+02:00  INFO 44144 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-02T08:42:19.122+02:00  INFO 44144 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-02T08:42:19.125+02:00  INFO 44144 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
+2026-07-02T08:42:19.156+02:00  INFO 44144 --- [           main] c.s.s.controller.SkillControllerTest     : Started SkillControllerTest in 1.273 seconds (process running for 45.125)
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.890 s -- in com.staffengagement.skills.controller.SkillControllerTest
 [INFO] Running com.staffengagement.skills.service.SkillServiceTest
-[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.155 s -- in com.staffengagement.skills.service.SkillServiceTest
-2026-07-01T09:36:44.026+02:00  INFO 36692 --- [           main] org.testcontainers.DockerClientFactory   : Testcontainers version: 1.20.4
+[INFO] Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.126 s -- in com.staffengagement.skills.service.SkillServiceTest
+2026-07-02T08:42:19.765+02:00  INFO 44144 --- [           main] org.testcontainers.DockerClientFactory   : Testcontainers version: 1.20.4
 [INFO] Running com.staffengagement.skills.SkillIntegrationTest
-[WARNING] Tests run: 5, Failures: 0, Errors: 0, Skipped: 5, Time elapsed: 0.001 s -- in com.staffengagement.skills.SkillIntegrationTest
+[WARNING] Tests run: 5, Failures: 0, Errors: 0, Skipped: 5, Time elapsed: 0.006 s -- in com.staffengagement.skills.SkillIntegrationTest
 [INFO] Running com.staffengagement.staff.controller.StaffControllerTest
-2026-07-01T09:36:44.041+02:00  INFO 36692 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.staffengagement.staff.controller.StaffControllerTest]: StaffControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2026-07-01T09:36:44.078+02:00  INFO 36692 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.staff.controller.StaffControllerTest
+2026-07-02T08:42:19.903+02:00  INFO 44144 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.staffengagement.staff.controller.StaffControllerTest]: StaffControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-07-02T08:42:20.038+02:00  INFO 44144 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.staffengagement.Application for test class com.staffengagement.staff.controller.StaffControllerTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -375,38 +394,42 @@ This generated password is for development use only. Your security configuration
 
  :: Spring Boot ::                (v3.4.1)
 
-2026-07-01T09:36:44.105+02:00  INFO 36692 --- [           main] c.s.s.controller.StaffControllerTest     : Starting StaffControllerTest using Java 21.0.7 with PID 36692 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
-2026-07-01T09:36:44.105+02:00  INFO 36692 --- [           main] c.s.s.controller.StaffControllerTest     : No active profile set, falling back to 1 default profile: "default"
-2026-07-01T09:36:44.353+02:00  INFO 36692 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
-2026-07-01T09:36:44.353+02:00  WARN 36692 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
-2026-07-01T09:36:44.492+02:00  INFO 36692 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-07-01T09:36:44.492+02:00  INFO 36692 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-07-01T09:36:44.493+02:00  INFO 36692 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
-2026-07-01T09:36:44.498+02:00  INFO 36692 --- [           main] c.s.s.controller.StaffControllerTest     : Started StaffControllerTest in 0.415 seconds (process running for 14.456)
-[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.651 s -- in com.staffengagement.staff.controller.StaffControllerTest
+2026-07-02T08:42:20.162+02:00  INFO 44144 --- [           main] c.s.s.controller.StaffControllerTest     : Starting StaffControllerTest using Java 21.0.7 with PID 44144 (started by liam.maroney in C:\myworkbench\ai_training\Staff-Engagement-POC\backend)
+2026-07-02T08:42:20.162+02:00  INFO 44144 --- [           main] c.s.s.controller.StaffControllerTest     : No active profile set, falling back to 1 default profile: "default"
+2026-07-02T08:42:20.918+02:00  INFO 44144 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-07-02T08:42:20.919+02:00  WARN 44144 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-07-02T08:42:21.242+02:00  INFO 44144 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-07-02T08:42:21.244+02:00  INFO 44144 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-07-02T08:42:21.245+02:00  INFO 44144 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-07-02T08:42:21.259+02:00  INFO 44144 --- [           main] c.s.s.controller.StaffControllerTest     : Started StaffControllerTest in 1.211 seconds (process running for 47.228)
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.876 s -- in com.staffengagement.staff.controller.StaffControllerTest
 [INFO] Running com.staffengagement.staff.service.StaffServiceTest
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.081 s -- in com.staffengagement.staff.service.StaffServiceTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.202 s -- in com.staffengagement.staff.service.StaffServiceTest
+[INFO] Running com.staffengagement.task.controller.TaskControllerTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.031 s -- in com.staffengagement.task.controller.TaskControllerTest
 [INFO] Running com.staffengagement.task.dto.CreateTaskRequestValidationTest
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 s -- in com.staffengagement.task.dto.CreateTaskRequestValidationTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.057 s -- in com.staffengagement.task.dto.CreateTaskRequestValidationTest
 [INFO] Running com.staffengagement.task.dto.UpdateTaskRequestValidationTest
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.019 s -- in com.staffengagement.task.dto.UpdateTaskRequestValidationTest
-2026-07-01T09:36:44.828+02:00  INFO 36692 --- [           main] org.testcontainers.DockerClientFactory   : Testcontainers version: 1.20.4
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.092 s -- in com.staffengagement.task.dto.UpdateTaskRequestValidationTest
+2026-07-02T08:42:22.205+02:00  INFO 44144 --- [           main] org.testcontainers.DockerClientFactory   : Testcontainers version: 1.20.4
 [INFO] Running com.staffengagement.task.integration.TaskApiIntegrationTest
-[WARNING] Tests run: 11, Failures: 0, Errors: 0, Skipped: 11, Time elapsed: 0.001 s -- in com.staffengagement.task.integration.TaskApiIntegrationTest
+[WARNING] Tests run: 11, Failures: 0, Errors: 0, Skipped: 11, Time elapsed: 0.002 s -- in com.staffengagement.task.integration.TaskApiIntegrationTest
 [INFO] Running com.staffengagement.task.repository.TaskSortBuilderTest
-[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.012 s -- in com.staffengagement.task.repository.TaskSortBuilderTest
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.034 s -- in com.staffengagement.task.repository.TaskSortBuilderTest
 [INFO] Running com.staffengagement.task.repository.TaskSpecificationsTest
-[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.421 s -- in com.staffengagement.task.repository.TaskSpecificationsTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.589 s -- in com.staffengagement.task.repository.TaskSpecificationsTest
 [INFO] Running com.staffengagement.task.service.TaskCreationEdgeCaseTest
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.079 s -- in com.staffengagement.task.service.TaskCreationEdgeCaseTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.305 s -- in com.staffengagement.task.service.TaskCreationEdgeCaseTest
 [INFO] Running com.staffengagement.task.service.TaskQueryEdgeCaseTest
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.013 s -- in com.staffengagement.task.service.TaskQueryEdgeCaseTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.077 s -- in com.staffengagement.task.service.TaskQueryEdgeCaseTest
+[INFO] Running com.staffengagement.task.service.TaskServiceImplAdditionalTest
+[INFO] Tests run: 24, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.282 s -- in com.staffengagement.task.service.TaskServiceImplAdditionalTest
 [INFO] Running com.staffengagement.task.service.TaskServiceImplTest
-[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.045 s -- in com.staffengagement.task.service.TaskServiceImplTest
+[INFO] Tests run: 10, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.122 s -- in com.staffengagement.task.service.TaskServiceImplTest
 [INFO] Running com.staffengagement.task.service.TaskStatusEditDeleteEdgeCaseTest
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.022 s -- in com.staffengagement.task.service.TaskStatusEditDeleteEdgeCaseTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.107 s -- in com.staffengagement.task.service.TaskStatusEditDeleteEdgeCaseTest
 [INFO] Running com.staffengagement.interaction.service.InteractionServicePropertyTest
-timestamp = 2026-07-01T09:36:45.927650500, InteractionServicePropertyTest:updatePreservesOriginalEmployeeIdAndStaffId = 
+timestamp = 2026-07-02T08:42:25.812760600, InteractionServicePropertyTest:updatePreservesOriginalEmployeeIdAndStaffId = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -415,11 +438,11 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 8          | # of all combined edge cases
-edge-cases#tried = 5          | # of edge cases tried in current run
-seed = -3506032339770081235   | random seed to reproduce generated values
+edge-cases#tried = 8          | # of edge cases tried in current run
+seed = 7577324978525710658    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:45.962606800, InteractionServicePropertyTest:createdAtEqualsUpdatedAtOnFreshCreation = 
+timestamp = 2026-07-02T08:42:25.920125100, InteractionServicePropertyTest:createdAtEqualsUpdatedAtOnFreshCreation = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -428,11 +451,11 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 8          | # of all combined edge cases
-edge-cases#tried = 5          | # of edge cases tried in current run
-seed = 7225488495828841510    | random seed to reproduce generated values
+edge-cases#tried = 7          | # of edge cases tried in current run
+seed = 6769040016093402843    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.014708600, InteractionServicePropertyTest:pageSizeCappedAt100 = 
+timestamp = 2026-07-02T08:42:26.071233300, InteractionServicePropertyTest:pageSizeCappedAt100 = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -441,11 +464,11 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 4          | # of all combined edge cases
-edge-cases#tried = 4          | # of edge cases tried in current run
-seed = -1256717898910405692   | random seed to reproduce generated values
+edge-cases#tried = 2          | # of edge cases tried in current run
+seed = 6404452701693836121    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.070747, InteractionServicePropertyTest:invalidInteractionTypeIsRejected = 
+timestamp = 2026-07-02T08:42:26.207637600, InteractionServicePropertyTest:invalidInteractionTypeIsRejected = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -455,10 +478,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 2          | # of all combined edge cases
 edge-cases#tried = 2          | # of edge cases tried in current run
-seed = 5921345153101804245    | random seed to reproduce generated values
+seed = 7254066721178393870    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.128808200, InteractionServicePropertyTest:createdAtImmutableAndUpdatedAtAdvances = 
+timestamp = 2026-07-02T08:42:26.401329100, InteractionServicePropertyTest:createdAtImmutableAndUpdatedAtAdvances = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -467,11 +490,11 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 32         | # of all combined edge cases
-edge-cases#tried = 15         | # of edge cases tried in current run
-seed = -8046977261902047523   | random seed to reproduce generated values
+edge-cases#tried = 11         | # of edge cases tried in current run
+seed = 8783813078018462004    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.154628400, InteractionServicePropertyTest:listOrderedByOccurredAtDescending = 
+timestamp = 2026-07-02T08:42:26.477351400, InteractionServicePropertyTest:listOrderedByOccurredAtDescending = 
                               |-----------------------jqwik-----------------------
 tries = 19                    | # of calls to property
 checks = 19                   | # of not rejected calls
@@ -481,10 +504,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = -8892989738048127282   | random seed to reproduce generated values
+seed = -1778150613402540170   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.160932800, InteractionServicePropertyTest:notesPreviewTruncation = 
+timestamp = 2026-07-02T08:42:26.504370800, InteractionServicePropertyTest:notesPreviewTruncation = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -494,11 +517,11 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 4          | # of all combined edge cases
 edge-cases#tried = 4          | # of edge cases tried in current run
-seed = -959620713517609586    | random seed to reproduce generated values
+seed = 5028557442648704649    | random seed to reproduce generated values
 
 
-2026-07-01T09:36:46.178+02:00  INFO 36692 --- [           main] n.j.e.p.RandomizedShrinkablesGenerator   : Edge case generation exceeds number of tries. Stopped after 120 generated cases.
-timestamp = 2026-07-01T09:36:46.215610200, InteractionServicePropertyTest:combinedFiltersUseAndSemantics = 
+2026-07-02T08:42:26.529+02:00  INFO 44144 --- [           main] n.j.e.p.RandomizedShrinkablesGenerator   : Edge case generation exceeds number of tries. Stopped after 120 generated cases.
+timestamp = 2026-07-02T08:42:26.663931, InteractionServicePropertyTest:combinedFiltersUseAndSemantics = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -507,11 +530,11 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 120        | # of all combined edge cases
-edge-cases#tried = 15         | # of edge cases tried in current run
-seed = -6431815846583610507   | random seed to reproduce generated values
+edge-cases#tried = 14         | # of edge cases tried in current run
+seed = 1119666158007114165    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.249586300, InteractionServicePropertyTest:futureOccurredAtIsRejected = 
+timestamp = 2026-07-02T08:42:26.766481900, InteractionServicePropertyTest:futureOccurredAtIsRejected = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -521,10 +544,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 4          | # of all combined edge cases
 edge-cases#tried = 4          | # of edge cases tried in current run
-seed = -2964985992824417576   | random seed to reproduce generated values
+seed = -9180735326308853907   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.288449, InteractionServicePropertyTest:paginationMetadataIsConsistent = 
+timestamp = 2026-07-02T08:42:26.930074300, InteractionServicePropertyTest:paginationMetadataIsConsistent = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -533,11 +556,11 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 20         | # of all combined edge cases
-edge-cases#tried = 15         | # of edge cases tried in current run
-seed = 2666915135154946493    | random seed to reproduce generated values
+edge-cases#tried = 10         | # of edge cases tried in current run
+seed = 1910568092245714385    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.338471800, InteractionServicePropertyTest:fieldLengthLimitsEnforced = 
+timestamp = 2026-07-02T08:42:27.202442700, InteractionServicePropertyTest:fieldLengthLimitsEnforced = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -546,13 +569,13 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 64         | # of all combined edge cases
-edge-cases#tried = 13         | # of edge cases tried in current run
-seed = -8101765776824272380   | random seed to reproduce generated values
+edge-cases#tried = 14         | # of edge cases tried in current run
+seed = 2949054393711535451    | random seed to reproduce generated values
 
 
-[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.811 s -- in com.staffengagement.interaction.service.InteractionServicePropertyTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.098 s -- in com.staffengagement.interaction.service.InteractionServicePropertyTest
 [INFO] Running com.staffengagement.task.controller.TaskControllerPropertyTest
-timestamp = 2026-07-01T09:36:46.369797900, TaskControllerPropertyTest:invalidUuidAsCreatorIdReturns400 = 
+timestamp = 2026-07-02T08:42:27.283376100, TaskControllerPropertyTest:invalidUuidAsCreatorIdReturns400 = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -562,10 +585,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 9          | # of all combined edge cases
 edge-cases#tried = 9          | # of edge cases tried in current run
-seed = -8642236649341885312   | random seed to reproduce generated values
+seed = 4737200533389393917    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.374387300, TaskControllerPropertyTest:invalidSortByValueReturns400 = 
+timestamp = 2026-07-02T08:42:27.292505100, TaskControllerPropertyTest:invalidSortByValueReturns400 = 
                               |-----------------------jqwik-----------------------
 tries = 14                    | # of calls to property
 checks = 14                   | # of not rejected calls
@@ -575,10 +598,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = -2809892135105057403   | random seed to reproduce generated values
+seed = 2981392454725713773    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.378387600, TaskControllerPropertyTest:validUuidNonExistentStaffAsAssigneeReturnsEmptyList = 
+timestamp = 2026-07-02T08:42:27.301659200, TaskControllerPropertyTest:validUuidNonExistentStaffAsAssigneeReturnsEmptyList = 
                               |-----------------------jqwik-----------------------
 tries = 1                     | # of calls to property
 checks = 1                    | # of not rejected calls
@@ -588,10 +611,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 4359716956531042181    | random seed to reproduce generated values
+seed = -6801988626140033409   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.381434500, TaskControllerPropertyTest:invalidSortOrderValueReturns400 = 
+timestamp = 2026-07-02T08:42:27.314028900, TaskControllerPropertyTest:invalidSortOrderValueReturns400 = 
                               |-----------------------jqwik-----------------------
 tries = 12                    | # of calls to property
 checks = 12                   | # of not rejected calls
@@ -601,10 +624,36 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 2013780029068478285    | random seed to reproduce generated values
+seed = -5601074819386316429   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.393556600, TaskControllerPropertyTest:invalidUuidAsIndividualIdOnInteractionsReturns400 = 
+timestamp = 2026-07-02T08:42:27.403324800, TaskControllerPropertyTest:invalidUuidAsIndividualIdOnInteractionsReturns400 = 
+                              |-----------------------jqwik-----------------------
+tries = 100                   | # of calls to property
+checks = 100                  | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 9          | # of all combined edge cases
+edge-cases#tried = 9          | # of edge cases tried in current run
+seed = -9194775447825653566   | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:27.410595500, TaskControllerPropertyTest:interactionsEndpointReturnsListForExistingIndividual = 
+                              |-----------------------jqwik-----------------------
+tries = 1                     | # of calls to property
+checks = 1                    | # of not rejected calls
+generation = EXHAUSTIVE       | parameters are exhaustively generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 0          | # of all combined edge cases
+edge-cases#tried = 0          | # of edge cases tried in current run
+seed = -1015631625982985754   | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:27.462354300, TaskControllerPropertyTest:invalidUuidAsTaskIdPathVariableReturns400 = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -614,10 +663,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 9          | # of all combined edge cases
 edge-cases#tried = 5          | # of edge cases tried in current run
-seed = -3002491950089349919   | random seed to reproduce generated values
+seed = -5700680738832153548   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.398568700, TaskControllerPropertyTest:interactionsEndpointReturnsListForExistingIndividual = 
+timestamp = 2026-07-02T08:42:27.484833100, TaskControllerPropertyTest:taskResponseWithNonNullInteractionIdIsValidated = 
                               |-----------------------jqwik-----------------------
 tries = 1                     | # of calls to property
 checks = 1                    | # of not rejected calls
@@ -627,23 +676,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = -8878830403854739203   | random seed to reproduce generated values
+seed = 7513481245121505816    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.409584200, TaskControllerPropertyTest:invalidUuidAsTaskIdPathVariableReturns400 = 
-                              |-----------------------jqwik-----------------------
-tries = 100                   | # of calls to property
-checks = 100                  | # of not rejected calls
-generation = RANDOMIZED       | parameters are randomly generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 9          | # of all combined edge cases
-edge-cases#tried = 9          | # of edge cases tried in current run
-seed = -8224612770133158599   | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:46.417158200, TaskControllerPropertyTest:taskResponseWithNonNullInteractionIdIsValidated = 
+timestamp = 2026-07-02T08:42:27.500180800, TaskControllerPropertyTest:taskResponseReturnsNullWhenInteractionNoLongerExists = 
                               |-----------------------jqwik-----------------------
 tries = 1                     | # of calls to property
 checks = 1                    | # of not rejected calls
@@ -653,23 +689,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = -4403568113556671494   | random seed to reproduce generated values
+seed = 5315498378951816781    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.423682, TaskControllerPropertyTest:taskResponseReturnsNullWhenInteractionNoLongerExists = 
-                              |-----------------------jqwik-----------------------
-tries = 1                     | # of calls to property
-checks = 1                    | # of not rejected calls
-generation = EXHAUSTIVE       | parameters are exhaustively generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 0          | # of all combined edge cases
-edge-cases#tried = 0          | # of edge cases tried in current run
-seed = -5836374387589627704   | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:46.428820, TaskControllerPropertyTest:invalidDateFormatCreatedFromReturns400 = 
+timestamp = 2026-07-02T08:42:27.515874600, TaskControllerPropertyTest:invalidDateFormatCreatedFromReturns400 = 
                               |-----------------------jqwik-----------------------
 tries = 14                    | # of calls to property
 checks = 14                   | # of not rejected calls
@@ -679,10 +702,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = -6632348075184301796   | random seed to reproduce generated values
+seed = -5260147800379303931   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.431882800, TaskControllerPropertyTest:invalidDateFormatDueDateToReturns400 = 
+timestamp = 2026-07-02T08:42:27.531428700, TaskControllerPropertyTest:invalidDateFormatDueDateToReturns400 = 
                               |-----------------------jqwik-----------------------
 tries = 14                    | # of calls to property
 checks = 14                   | # of not rejected calls
@@ -692,10 +715,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = -3793779537201928676   | random seed to reproduce generated values
+seed = -3887530576066282522   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.442694900, TaskControllerPropertyTest:invalidUuidAsAssigneeIdReturns400 = 
+timestamp = 2026-07-02T08:42:27.675912600, TaskControllerPropertyTest:invalidUuidAsAssigneeIdReturns400 = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -704,11 +727,11 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 9          | # of all combined edge cases
-edge-cases#tried = 6          | # of edge cases tried in current run
-seed = 8120717981397027253    | random seed to reproduce generated values
+edge-cases#tried = 3          | # of edge cases tried in current run
+seed = 7653530007654873197    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.446925900, TaskControllerPropertyTest:invalidStatusValueReturns400 = 
+timestamp = 2026-07-02T08:42:27.700993900, TaskControllerPropertyTest:invalidStatusValueReturns400 = 
                               |-----------------------jqwik-----------------------
 tries = 12                    | # of calls to property
 checks = 12                   | # of not rejected calls
@@ -718,10 +741,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 7651611800071887307    | random seed to reproduce generated values
+seed = -8666457884661334008   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.450457100, TaskControllerPropertyTest:invalidDateFormatReturns400 = 
+timestamp = 2026-07-02T08:42:27.723458900, TaskControllerPropertyTest:invalidDateFormatReturns400 = 
                               |-----------------------jqwik-----------------------
 tries = 14                    | # of calls to property
 checks = 14                   | # of not rejected calls
@@ -731,10 +754,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 8552185957168718427    | random seed to reproduce generated values
+seed = -3222328052866844343   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.455718400, TaskControllerPropertyTest:interactionsEndpointReturns404ForNonExistentIndividual = 
+timestamp = 2026-07-02T08:42:27.740240500, TaskControllerPropertyTest:interactionsEndpointReturns404ForNonExistentIndividual = 
                               |-----------------------jqwik-----------------------
 tries = 1                     | # of calls to property
 checks = 1                    | # of not rejected calls
@@ -744,10 +767,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 5043914308366679465    | random seed to reproduce generated values
+seed = -7251153641256771797   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.457719, TaskControllerPropertyTest:validUuidNonExistentStaffAsCreatorReturnsEmptyList = 
+timestamp = 2026-07-02T08:42:27.750236800, TaskControllerPropertyTest:validUuidNonExistentStaffAsCreatorReturnsEmptyList = 
                               |-----------------------jqwik-----------------------
 tries = 1                     | # of calls to property
 checks = 1                    | # of not rejected calls
@@ -757,25 +780,12 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 4546851159717540457    | random seed to reproduce generated values
+seed = 4313272334860401670    | random seed to reproduce generated values
 
 
-[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.114 s -- in com.staffengagement.task.controller.TaskControllerPropertyTest
+[INFO] Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.545 s -- in com.staffengagement.task.controller.TaskControllerPropertyTest
 [INFO] Running com.staffengagement.task.property.TaskAssignmentPropertyTest
-timestamp = 2026-07-01T09:36:46.632612400, TaskAssignmentPropertyTest:inactiveAssigneeIsRejectedWith400 = 
-                              |-----------------------jqwik-----------------------
-tries = 100                   | # of calls to property
-checks = 100                  | # of not rejected calls
-generation = RANDOMIZED       | parameters are randomly generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 12         | # of all combined edge cases
-edge-cases#tried = 11         | # of edge cases tried in current run
-seed = 3490858154377903976    | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:46.809616100, TaskAssignmentPropertyTest:nonExistentAssigneeIsRejectedWith404 = 
+timestamp = 2026-07-02T08:42:28.503776900, TaskAssignmentPropertyTest:inactiveAssigneeIsRejectedWith400 = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -785,10 +795,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 12         | # of all combined edge cases
 edge-cases#tried = 12         | # of edge cases tried in current run
-seed = 9223200554849957350    | random seed to reproduce generated values
+seed = -5588259088966501037   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.857389200, TaskAssignmentPropertyTest:inactiveCreatorIsRejectedWith403 = 
+timestamp = 2026-07-02T08:42:28.724443600, TaskAssignmentPropertyTest:nonExistentAssigneeIsRejectedWith404 = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -798,12 +808,25 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 12         | # of all combined edge cases
 edge-cases#tried = 12         | # of edge cases tried in current run
-seed = 3355148599263312064    | random seed to reproduce generated values
+seed = 3370251290429519021    | random seed to reproduce generated values
 
 
-[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.400 s -- in com.staffengagement.task.property.TaskAssignmentPropertyTest
+timestamp = 2026-07-02T08:42:28.913177900, TaskAssignmentPropertyTest:inactiveCreatorIsRejectedWith403 = 
+                              |-----------------------jqwik-----------------------
+tries = 100                   | # of calls to property
+checks = 100                  | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 12         | # of all combined edge cases
+edge-cases#tried = 8          | # of edge cases tried in current run
+seed = 160336442855618918     | random seed to reproduce generated values
+
+
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.160 s -- in com.staffengagement.task.property.TaskAssignmentPropertyTest
 [INFO] Running com.staffengagement.task.property.TaskCreationPropertyTest
-timestamp = 2026-07-01T09:36:46.929531200, TaskCreationPropertyTest:taskCreationRoundTripPreservesAllInputData = 
+timestamp = 2026-07-02T08:42:29.106308800, TaskCreationPropertyTest:taskCreationRoundTripPreservesAllInputData = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -812,13 +835,13 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 42         | # of all combined edge cases
-edge-cases#tried = 13         | # of edge cases tried in current run
-seed = -1508277720415778522   | random seed to reproduce generated values
+edge-cases#tried = 17         | # of edge cases tried in current run
+seed = -2313080591977273370   | random seed to reproduce generated values
 
 
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 s -- in com.staffengagement.task.property.TaskCreationPropertyTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.190 s -- in com.staffengagement.task.property.TaskCreationPropertyTest
 [INFO] Running com.staffengagement.task.property.TaskQueryPropertyTest
-timestamp = 2026-07-01T09:36:46.936999800, TaskQueryPropertyTest:filterByCreatorWithExcludeSelfAssignedEnforcesBothConstraints = 
+timestamp = 2026-07-02T08:42:29.133300800, TaskQueryPropertyTest:filterByCreatorWithExcludeSelfAssignedEnforcesBothConstraints = 
                               |-----------------------jqwik-----------------------
 tries = 1                     | # of calls to property
 checks = 1                    | # of not rejected calls
@@ -828,10 +851,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 88770386769609359      | random seed to reproduce generated values
+seed = -2791050430562843812   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.956635100, TaskQueryPropertyTest:filterByAssigneeReturnsExactlyMatchingTasks = 
+timestamp = 2026-07-02T08:42:29.165934, TaskQueryPropertyTest:filterByAssigneeReturnsExactlyMatchingTasks = 
                               |-----------------------jqwik-----------------------
 tries = 20                    | # of calls to property
 checks = 20                   | # of not rejected calls
@@ -841,10 +864,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 3461040738366072129    | random seed to reproduce generated values
+seed = -8103465201376089537   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.962766100, TaskQueryPropertyTest:sortOrderingInvariantDueDateNullsLast = 
+timestamp = 2026-07-02T08:42:29.175256300, TaskQueryPropertyTest:sortOrderingInvariantDueDateNullsLast = 
                               |-----------------------jqwik-----------------------
 tries = 1                     | # of calls to property
 checks = 1                    | # of not rejected calls
@@ -854,10 +877,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 1758004754915509375    | random seed to reproduce generated values
+seed = 6382008324846992258    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.968773, TaskQueryPropertyTest:filterCombinationAppliesAllConstraintsAsAnd = 
+timestamp = 2026-07-02T08:42:29.184423300, TaskQueryPropertyTest:filterCombinationAppliesAllConstraintsAsAnd = 
                               |-----------------------jqwik-----------------------
 tries = 1                     | # of calls to property
 checks = 1                    | # of not rejected calls
@@ -867,10 +890,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 7482633807069646017    | random seed to reproduce generated values
+seed = -7076244449303001646   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.989552100, TaskQueryPropertyTest:paginationEnforcedAtFiftyTasksPerPage = 
+timestamp = 2026-07-02T08:42:29.260196700, TaskQueryPropertyTest:paginationEnforcedAtFiftyTasksPerPage = 
                               |-----------------------jqwik-----------------------
 tries = 20                    | # of calls to property
 checks = 20                   | # of not rejected calls
@@ -879,11 +902,11 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 4          | # of all combined edge cases
-edge-cases#tried = 4          | # of edge cases tried in current run
-seed = 8178721283641640717    | random seed to reproduce generated values
+edge-cases#tried = 0          | # of edge cases tried in current run
+seed = 8599636541911317927    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:46.994748400, TaskQueryPropertyTest:sortOrderingInvariantCreatedDateDesc = 
+timestamp = 2026-07-02T08:42:29.277496300, TaskQueryPropertyTest:sortOrderingInvariantCreatedDateDesc = 
                               |-----------------------jqwik-----------------------
 tries = 1                     | # of calls to property
 checks = 1                    | # of not rejected calls
@@ -893,12 +916,12 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = -104520620426182099    | random seed to reproduce generated values
+seed = -2529612910220204004   | random seed to reproduce generated values
 
 
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in com.staffengagement.task.property.TaskQueryPropertyTest
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.169 s -- in com.staffengagement.task.property.TaskQueryPropertyTest
 [INFO] Running com.staffengagement.task.property.TaskValidationPropertyTest
-timestamp = 2026-07-01T09:36:47.242764800, TaskValidationPropertyTest:longDescriptionsAreRejected = 
+timestamp = 2026-07-02T08:42:29.818259, TaskValidationPropertyTest:longDescriptionsAreRejected = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -907,11 +930,11 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 4          | # of all combined edge cases
-edge-cases#tried = 3          | # of edge cases tried in current run
-seed = 4213490531244891084    | random seed to reproduce generated values
+edge-cases#tried = 4          | # of edge cases tried in current run
+seed = -5322229231628654451   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:47.250487400, TaskValidationPropertyTest:blankDescriptionsAreRejected = 
+timestamp = 2026-07-02T08:42:29.835873100, TaskValidationPropertyTest:blankDescriptionsAreRejected = 
                               |-----------------------jqwik-----------------------
 tries = 5                     | # of calls to property
 checks = 5                    | # of not rejected calls
@@ -921,10 +944,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = -1835329591661414416   | random seed to reproduce generated values
+seed = 1784369397245206381    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:47.259977800, TaskValidationPropertyTest:multipleInvalidFieldsReturnAllErrors = 
+timestamp = 2026-07-02T08:42:29.856666200, TaskValidationPropertyTest:multipleInvalidFieldsReturnAllErrors = 
                               |-----------------------jqwik-----------------------
 tries = 2                     | # of calls to property
 checks = 2                    | # of not rejected calls
@@ -934,10 +957,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 663088652935268739     | random seed to reproduce generated values
+seed = -8225304761673145870   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:47.292125900, TaskValidationPropertyTest:nullAssigneeIdIsRejected = 
+timestamp = 2026-07-02T08:42:29.944380, TaskValidationPropertyTest:nullAssigneeIdIsRejected = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -946,11 +969,11 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 4          | # of all combined edge cases
-edge-cases#tried = 4          | # of edge cases tried in current run
-seed = 8273040156099909503    | random seed to reproduce generated values
+edge-cases#tried = 2          | # of edge cases tried in current run
+seed = 2121106807459650906    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:47.323791500, TaskValidationPropertyTest:nullIndividualIdIsRejected = 
+timestamp = 2026-07-02T08:42:30.051397200, TaskValidationPropertyTest:nullIndividualIdIsRejected = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -959,171 +982,11 @@ after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
 when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 4          | # of all combined edge cases
-edge-cases#tried = 4          | # of edge cases tried in current run
-seed = -3955844538194965861   | random seed to reproduce generated values
+edge-cases#tried = 1          | # of edge cases tried in current run
+seed = -1413029461681610219   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:47.362190100, TaskValidationPropertyTest:pastDueDatesAreRejected = 
-                              |-----------------------jqwik-----------------------
-tries = 100                   | # of calls to property
-checks = 100                  | # of not rejected calls
-generation = RANDOMIZED       | parameters are randomly generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 4          | # of all combined edge cases
-edge-cases#tried = 4          | # of edge cases tried in current run
-seed = -6403877324552364951   | random seed to reproduce generated values
-
-
-[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.368 s -- in com.staffengagement.task.property.TaskValidationPropertyTest
-[INFO] Running com.staffengagement.task.service.TaskCreationPropertyTest
-timestamp = 2026-07-01T09:36:47.374924400, TaskCreationPropertyTest:multiFieldValidationReturnsAllErrorsSimultaneously = 
-                              |-----------------------jqwik-----------------------
-tries = 2                     | # of calls to property
-checks = 2                    | # of not rejected calls
-generation = EXHAUSTIVE       | parameters are exhaustively generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 0          | # of all combined edge cases
-edge-cases#tried = 0          | # of edge cases tried in current run
-seed = -8944786997157977498   | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.440675600, TaskCreationPropertyTest:taskCreationRoundTripPreservesAllInputData = 
-                              |-----------------------jqwik-----------------------
-tries = 100                   | # of calls to property
-checks = 100                  | # of not rejected calls
-generation = RANDOMIZED       | parameters are randomly generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 42         | # of all combined edge cases
-edge-cases#tried = 18         | # of edge cases tried in current run
-seed = -628687583673262217    | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.535720300, TaskCreationPropertyTest:nonExistentAssigneeRejectedWith404 = 
-                              |-----------------------jqwik-----------------------
-tries = 100                   | # of calls to property
-checks = 100                  | # of not rejected calls
-generation = RANDOMIZED       | parameters are randomly generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 42         | # of all combined edge cases
-edge-cases#tried = 16         | # of edge cases tried in current run
-seed = 7147692377605540511    | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.541522500, TaskCreationPropertyTest:blankDescriptionsAreRejectedByValidator = 
-                              |-----------------------jqwik-----------------------
-tries = 6                     | # of calls to property
-checks = 6                    | # of not rejected calls
-generation = EXHAUSTIVE       | parameters are exhaustively generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 0          | # of all combined edge cases
-edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 1727666942294996652    | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.568798700, TaskCreationPropertyTest:inactiveCreatorRejectedWith403 = 
-                              |-----------------------jqwik-----------------------
-tries = 100                   | # of calls to property
-checks = 100                  | # of not rejected calls
-generation = RANDOMIZED       | parameters are randomly generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 42         | # of all combined edge cases
-edge-cases#tried = 20         | # of edge cases tried in current run
-seed = -6775474960919676755   | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.680048600, TaskCreationPropertyTest:oversizedDescriptionsAreRejectedByValidator = 
-                              |-----------------------jqwik-----------------------
-tries = 50                    | # of calls to property
-checks = 50                   | # of not rejected calls
-generation = RANDOMIZED       | parameters are randomly generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 4          | # of all combined edge cases
-edge-cases#tried = 4          | # of edge cases tried in current run
-seed = -6917566665397462196   | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.722120600, TaskCreationPropertyTest:inactiveAssigneeRejectedWith400 = 
-                              |-----------------------jqwik-----------------------
-tries = 100                   | # of calls to property
-checks = 100                  | # of not rejected calls
-generation = RANDOMIZED       | parameters are randomly generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 42         | # of all combined edge cases
-edge-cases#tried = 14         | # of edge cases tried in current run
-seed = -9201931593266484743   | random seed to reproduce generated values
-
-
-[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.360 s -- in com.staffengagement.task.service.TaskCreationPropertyTest
-[INFO] Running com.staffengagement.task.service.TaskUpdateDeletePropertyTest
-timestamp = 2026-07-01T09:36:47.740427500, TaskUpdateDeletePropertyTest:statusUpdateNonAssigneeRejectedWith403 = 
-                              |-----------------------jqwik-----------------------
-tries = 3                     | # of calls to property
-checks = 3                    | # of not rejected calls
-generation = EXHAUSTIVE       | parameters are exhaustively generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 0          | # of all combined edge cases
-edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 5719649471634791703    | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.748528200, TaskUpdateDeletePropertyTest:statusUpdateNonExistentTaskReturns404 = 
-                              |-----------------------jqwik-----------------------
-tries = 3                     | # of calls to property
-checks = 3                    | # of not rejected calls
-generation = EXHAUSTIVE       | parameters are exhaustively generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 0          | # of all combined edge cases
-edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 8470875667208958638    | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.757544900, TaskUpdateDeletePropertyTest:statusUpdateInvalidStatusRejectedWith400 = 
-                              |-----------------------jqwik-----------------------
-tries = 10                    | # of calls to property
-checks = 10                   | # of not rejected calls
-generation = EXHAUSTIVE       | parameters are exhaustively generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 0          | # of all combined edge cases
-edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 7801524719445539269    | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.763586900, TaskUpdateDeletePropertyTest:deleteByCreatorSucceeds = 
-                              |-----------------------jqwik-----------------------
-tries = 1                     | # of calls to property
-checks = 1                    | # of not rejected calls
-generation = EXHAUSTIVE       | parameters are exhaustively generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 0          | # of all combined edge cases
-edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 8579720464161890579    | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.807495500, TaskUpdateDeletePropertyTest:pastDueDatesAreRejectedOnEdit = 
+timestamp = 2026-07-02T08:42:30.171085500, TaskValidationPropertyTest:pastDueDatesAreRejected = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -1133,10 +996,144 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 4          | # of all combined edge cases
 edge-cases#tried = 3          | # of edge cases tried in current run
-seed = 6295488067941433724    | random seed to reproduce generated values
+seed = -6587364091434322224   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:47.812644300, TaskUpdateDeletePropertyTest:deleteNonExistentTaskReturns404 = 
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.891 s -- in com.staffengagement.task.property.TaskValidationPropertyTest
+[INFO] Running com.staffengagement.task.service.TaskCreationPropertyTest
+timestamp = 2026-07-02T08:42:30.208283900, TaskCreationPropertyTest:multiFieldValidationReturnsAllErrorsSimultaneously = 
+                              |-----------------------jqwik-----------------------
+tries = 2                     | # of calls to property
+checks = 2                    | # of not rejected calls
+generation = EXHAUSTIVE       | parameters are exhaustively generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 0          | # of all combined edge cases
+edge-cases#tried = 0          | # of edge cases tried in current run
+seed = -1689191227644139277   | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:30.413273200, TaskCreationPropertyTest:taskCreationRoundTripPreservesAllInputData = 
+                              |-----------------------jqwik-----------------------
+tries = 100                   | # of calls to property
+checks = 100                  | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 42         | # of all combined edge cases
+edge-cases#tried = 15         | # of edge cases tried in current run
+seed = 5033233260084971666    | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:30.589205800, TaskCreationPropertyTest:nonExistentAssigneeRejectedWith404 = 
+                              |-----------------------jqwik-----------------------
+tries = 100                   | # of calls to property
+checks = 100                  | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 42         | # of all combined edge cases
+edge-cases#tried = 13         | # of edge cases tried in current run
+seed = 2593410820306044516    | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:30.605789300, TaskCreationPropertyTest:blankDescriptionsAreRejectedByValidator = 
+                              |-----------------------jqwik-----------------------
+tries = 6                     | # of calls to property
+checks = 6                    | # of not rejected calls
+generation = EXHAUSTIVE       | parameters are exhaustively generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 0          | # of all combined edge cases
+edge-cases#tried = 0          | # of edge cases tried in current run
+seed = 3316887997694121284    | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:30.704418600, TaskCreationPropertyTest:inactiveCreatorRejectedWith403 = 
+                              |-----------------------jqwik-----------------------
+tries = 100                   | # of calls to property
+checks = 100                  | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 42         | # of all combined edge cases
+edge-cases#tried = 16         | # of edge cases tried in current run
+seed = -402335726422625215    | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:31.173845, TaskCreationPropertyTest:oversizedDescriptionsAreRejectedByValidator = 
+                              |-----------------------jqwik-----------------------
+tries = 50                    | # of calls to property
+checks = 50                   | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 4          | # of all combined edge cases
+edge-cases#tried = 4          | # of edge cases tried in current run
+seed = -2905691675331248852   | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:31.501204900, TaskCreationPropertyTest:inactiveAssigneeRejectedWith400 = 
+                              |-----------------------jqwik-----------------------
+tries = 100                   | # of calls to property
+checks = 100                  | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 42         | # of all combined edge cases
+edge-cases#tried = 18         | # of edge cases tried in current run
+seed = 1128746029051336883    | random seed to reproduce generated values
+
+
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.333 s -- in com.staffengagement.task.service.TaskCreationPropertyTest
+[INFO] Running com.staffengagement.task.service.TaskUpdateDeletePropertyTest
+timestamp = 2026-07-02T08:42:31.552789600, TaskUpdateDeletePropertyTest:statusUpdateNonAssigneeRejectedWith403 = 
+                              |-----------------------jqwik-----------------------
+tries = 3                     | # of calls to property
+checks = 3                    | # of not rejected calls
+generation = EXHAUSTIVE       | parameters are exhaustively generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 0          | # of all combined edge cases
+edge-cases#tried = 0          | # of edge cases tried in current run
+seed = 4169884022820156853    | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:31.569017600, TaskUpdateDeletePropertyTest:statusUpdateNonExistentTaskReturns404 = 
+                              |-----------------------jqwik-----------------------
+tries = 3                     | # of calls to property
+checks = 3                    | # of not rejected calls
+generation = EXHAUSTIVE       | parameters are exhaustively generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 0          | # of all combined edge cases
+edge-cases#tried = 0          | # of edge cases tried in current run
+seed = 7373329818518690638    | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:31.590254800, TaskUpdateDeletePropertyTest:statusUpdateInvalidStatusRejectedWith400 = 
+                              |-----------------------jqwik-----------------------
+tries = 10                    | # of calls to property
+checks = 10                   | # of not rejected calls
+generation = EXHAUSTIVE       | parameters are exhaustively generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 0          | # of all combined edge cases
+edge-cases#tried = 0          | # of edge cases tried in current run
+seed = -3908735555317252063   | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:31.607973800, TaskUpdateDeletePropertyTest:deleteByCreatorSucceeds = 
                               |-----------------------jqwik-----------------------
 tries = 1                     | # of calls to property
 checks = 1                    | # of not rejected calls
@@ -1146,75 +1143,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = -4953251032857110843   | random seed to reproduce generated values
+seed = 4882632389208248771    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:47.864471900, TaskUpdateDeletePropertyTest:editRoundTripPreservesAllUpdatedFields = 
-                              |-----------------------jqwik-----------------------
-tries = 100                   | # of calls to property
-checks = 100                  | # of not rejected calls
-generation = RANDOMIZED       | parameters are randomly generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 35         | # of all combined edge cases
-edge-cases#tried = 20         | # of edge cases tried in current run
-seed = -5026955871155464936   | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.873515200, TaskUpdateDeletePropertyTest:anyValidStatusCanTransitionToAnyOtherValidStatus = 
-                              |-----------------------jqwik-----------------------
-tries = 9                     | # of calls to property
-checks = 9                    | # of not rejected calls
-generation = EXHAUSTIVE       | parameters are exhaustively generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 0          | # of all combined edge cases
-edge-cases#tried = 0          | # of edge cases tried in current run
-seed = -1959869694812953438   | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.932231100, TaskUpdateDeletePropertyTest:editWithNullInteractionIdSkipsValidation = 
-                              |-----------------------jqwik-----------------------
-tries = 100                   | # of calls to property
-checks = 100                  | # of not rejected calls
-generation = RANDOMIZED       | parameters are randomly generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 7          | # of all combined edge cases
-edge-cases#tried = 6          | # of edge cases tried in current run
-seed = 7302092451391698150    | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.936750100, TaskUpdateDeletePropertyTest:editNonExistentTaskReturns404 = 
-                              |-----------------------jqwik-----------------------
-tries = 1                     | # of calls to property
-checks = 1                    | # of not rejected calls
-generation = EXHAUSTIVE       | parameters are exhaustively generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 0          | # of all combined edge cases
-edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 3944902191593354618    | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:47.993487, TaskUpdateDeletePropertyTest:editWithProvidedInteractionIdIsValidated = 
-                              |-----------------------jqwik-----------------------
-tries = 100                   | # of calls to property
-checks = 100                  | # of not rejected calls
-generation = RANDOMIZED       | parameters are randomly generated
-after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
-when-fixed-seed = ALLOW       | fixing the random seed is allowed
-edge-cases#mode = MIXIN       | edge cases are mixed in
-edge-cases#total = 7          | # of all combined edge cases
-edge-cases#tried = 7          | # of edge cases tried in current run
-seed = 4577575472582168000    | random seed to reproduce generated values
-
-
-timestamp = 2026-07-01T09:36:48.021886600, TaskUpdateDeletePropertyTest:pastDueDatesAreRejectedOnCreate = 
+timestamp = 2026-07-02T08:42:31.829516900, TaskUpdateDeletePropertyTest:pastDueDatesAreRejectedOnEdit = 
                               |-----------------------jqwik-----------------------
 tries = 100                   | # of calls to property
 checks = 100                  | # of not rejected calls
@@ -1224,10 +1156,10 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 4          | # of all combined edge cases
 edge-cases#tried = 4          | # of edge cases tried in current run
-seed = -5023958934157636087   | random seed to reproduce generated values
+seed = 2842613296152570345    | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:48.029426200, TaskUpdateDeletePropertyTest:editByNonCreatorSucceedsWhenRequesterIsActive = 
+timestamp = 2026-07-02T08:42:31.836516300, TaskUpdateDeletePropertyTest:deleteNonExistentTaskReturns404 = 
                               |-----------------------jqwik-----------------------
 tries = 1                     | # of calls to property
 checks = 1                    | # of not rejected calls
@@ -1237,10 +1169,49 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 3483673562346671690    | random seed to reproduce generated values
+seed = -8254835649090615801   | random seed to reproduce generated values
 
 
-timestamp = 2026-07-01T09:36:48.036168400, TaskUpdateDeletePropertyTest:deleteByNonCreatorRejectedWith403AndNoDataModification = 
+timestamp = 2026-07-02T08:42:31.964851, TaskUpdateDeletePropertyTest:editRoundTripPreservesAllUpdatedFields = 
+                              |-----------------------jqwik-----------------------
+tries = 100                   | # of calls to property
+checks = 100                  | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 35         | # of all combined edge cases
+edge-cases#tried = 20         | # of edge cases tried in current run
+seed = 3587851987761098499    | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:31.995859, TaskUpdateDeletePropertyTest:anyValidStatusCanTransitionToAnyOtherValidStatus = 
+                              |-----------------------jqwik-----------------------
+tries = 9                     | # of calls to property
+checks = 9                    | # of not rejected calls
+generation = EXHAUSTIVE       | parameters are exhaustively generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 0          | # of all combined edge cases
+edge-cases#tried = 0          | # of edge cases tried in current run
+seed = 3358278065490341945    | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:32.168971700, TaskUpdateDeletePropertyTest:editWithNullInteractionIdSkipsValidation = 
+                              |-----------------------jqwik-----------------------
+tries = 100                   | # of calls to property
+checks = 100                  | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 7          | # of all combined edge cases
+edge-cases#tried = 7          | # of edge cases tried in current run
+seed = -2985173602425309785   | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:32.177718700, TaskUpdateDeletePropertyTest:editNonExistentTaskReturns404 = 
                               |-----------------------jqwik-----------------------
 tries = 1                     | # of calls to property
 checks = 1                    | # of not rejected calls
@@ -1250,22 +1221,78 @@ when-fixed-seed = ALLOW       | fixing the random seed is allowed
 edge-cases#mode = MIXIN       | edge cases are mixed in
 edge-cases#total = 0          | # of all combined edge cases
 edge-cases#tried = 0          | # of edge cases tried in current run
-seed = 7050695615622627635    | random seed to reproduce generated values
+seed = -4745034377893380071   | random seed to reproduce generated values
 
 
-[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.313 s -- in com.staffengagement.task.service.TaskUpdateDeletePropertyTest
+timestamp = 2026-07-02T08:42:32.364366100, TaskUpdateDeletePropertyTest:editWithProvidedInteractionIdIsValidated = 
+                              |-----------------------jqwik-----------------------
+tries = 100                   | # of calls to property
+checks = 100                  | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 7          | # of all combined edge cases
+edge-cases#tried = 5          | # of edge cases tried in current run
+seed = 4957225212156051084    | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:32.429227300, TaskUpdateDeletePropertyTest:pastDueDatesAreRejectedOnCreate = 
+                              |-----------------------jqwik-----------------------
+tries = 100                   | # of calls to property
+checks = 100                  | # of not rejected calls
+generation = RANDOMIZED       | parameters are randomly generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 4          | # of all combined edge cases
+edge-cases#tried = 4          | # of edge cases tried in current run
+seed = -5728068034127950264   | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:32.441083600, TaskUpdateDeletePropertyTest:editByNonCreatorSucceedsWhenRequesterIsActive = 
+                              |-----------------------jqwik-----------------------
+tries = 1                     | # of calls to property
+checks = 1                    | # of not rejected calls
+generation = EXHAUSTIVE       | parameters are exhaustively generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 0          | # of all combined edge cases
+edge-cases#tried = 0          | # of edge cases tried in current run
+seed = -4376758953038506191   | random seed to reproduce generated values
+
+
+timestamp = 2026-07-02T08:42:32.454456700, TaskUpdateDeletePropertyTest:deleteByNonCreatorRejectedWith403AndNoDataModification = 
+                              |-----------------------jqwik-----------------------
+tries = 1                     | # of calls to property
+checks = 1                    | # of not rejected calls
+generation = EXHAUSTIVE       | parameters are exhaustively generated
+after-failure = SAMPLE_FIRST  | try previously failed sample, then previous seed
+when-fixed-seed = ALLOW       | fixing the random seed is allowed
+edge-cases#mode = MIXIN       | edge cases are mixed in
+edge-cases#total = 0          | # of all combined edge cases
+edge-cases#tried = 0          | # of edge cases tried in current run
+seed = -8523884583944874518   | random seed to reproduce generated values
+
+
+[INFO] Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.946 s -- in com.staffengagement.task.service.TaskUpdateDeletePropertyTest
 [INFO] 
 [INFO] Results:
 [INFO] 
-[WARNING] Tests run: 365, Failures: 0, Errors: 0, Skipped: 35
+[WARNING] Tests run: 501, Failures: 0, Errors: 0, Skipped: 40
 [INFO] 
 [INFO] 
 [INFO] --- jacoco:0.8.12:report (report) @ staff-engagement-backend ---
 [INFO] Loading execution data file C:\myworkbench\ai_training\Staff-Engagement-POC\backend\target\jacoco.exec
-[INFO] Analyzed bundle 'Staff Engagement Backend' with 89 classes
+[INFO] Analyzed bundle 'Staff Engagement Backend' with 116 classes
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (default-cli) @ staff-engagement-backend ---
+[INFO] Loading execution data file C:\myworkbench\ai_training\Staff-Engagement-POC\backend\target\jacoco.exec
+[INFO] Analyzed bundle 'Staff Engagement Backend' with 116 classes
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  20.831 s
-[INFO] Finished at: 2026-07-01T09:36:48+02:00
+[INFO] Total time:  01:05 min
+[INFO] Finished at: 2026-07-02T08:42:37+02:00
 [INFO] ------------------------------------------------------------------------

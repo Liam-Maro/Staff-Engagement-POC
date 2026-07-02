@@ -13,7 +13,8 @@ import {
   UpdateProjectRequest,
   PortfolioLink,
   CreateLinkRequest,
-  UpdateLinkRequest
+  UpdateLinkRequest,
+  ImportResult
 } from '../models/portfolio.models';
 
 @Injectable({ providedIn: 'root' })
@@ -82,5 +83,13 @@ export class PortfolioService {
 
   deleteLink(linkId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/links/${linkId}`);
+  }
+
+  // GitHub Import
+  importGitHubSkills(employeeId: string, githubProfileUrl: string): Observable<ImportResult> {
+    return this.http.post<ImportResult>(
+      `${this.apiUrl}/${employeeId}/github-import`,
+      { githubProfileUrl }
+    );
   }
 }

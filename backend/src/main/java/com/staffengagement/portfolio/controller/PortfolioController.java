@@ -11,6 +11,9 @@ import com.staffengagement.portfolio.dto.ProjectResponse;
 import com.staffengagement.portfolio.dto.UpdateEducationRequest;
 import com.staffengagement.portfolio.dto.UpdateLinkRequest;
 import com.staffengagement.portfolio.dto.UpdateProjectRequest;
+import com.staffengagement.portfolio.github.GitHubImportRequest;
+import com.staffengagement.portfolio.github.GitHubImportService;
+import com.staffengagement.portfolio.github.ImportResult;
 import com.staffengagement.portfolio.service.PortfolioService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -24,9 +27,11 @@ import java.util.UUID;
 class PortfolioController {
 
     private final PortfolioService portfolioService;
+    private final GitHubImportService gitHubImportService;
 
-    PortfolioController(PortfolioService portfolioService) {
+    PortfolioController(PortfolioService portfolioService, GitHubImportService gitHubImportService) {
         this.portfolioService = portfolioService;
+        this.gitHubImportService = gitHubImportService;
     }
 
     // ==================== Skills (read-only, managed via /api/skills) ====================
@@ -119,5 +124,13 @@ class PortfolioController {
     @GetMapping("/{employeeId}")
     FullPortfolioResponse getFullPortfolio(@PathVariable UUID employeeId) {
         return portfolioService.getFullPortfolio(employeeId);
+    }
+
+    // ==================== GitHub Import ====================
+
+    @PostMapping("/{employeeId}/github-import")
+    ImportResult importGitHubSkills(@PathVariable UUID employeeId,
+                                    @RequestBody @Valid GitHubImportRequest request) {
+        return gitHubImportService.importFromGitHub(employeeId, request.githubProfileUrl());
     }
 }
