@@ -28,6 +28,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import org.mockito.ArgumentCaptor;
+
 @ExtendWith(MockitoExtension.class)
 class PortfolioServiceImplTest {
 
@@ -147,6 +149,29 @@ class PortfolioServiceImplTest {
     }
 
     @Test
+    void createEducation_shouldSetAllFieldsOnEntity() {
+        UUID employeeId = UUID.randomUUID();
+        var request = new CreateEducationRequest("Harvard", "PhD", "Physics", LocalDate.of(2022, 5, 20));
+
+        when(employeeRepository.existsById(employeeId)).thenReturn(true);
+
+        var savedEntity = createEducationEntity(UUID.randomUUID(), employeeId);
+        when(educationRepository.save(any(PortfolioEducation.class))).thenReturn(savedEntity);
+
+        service.createEducation(employeeId, request);
+
+        ArgumentCaptor<PortfolioEducation> captor = ArgumentCaptor.forClass(PortfolioEducation.class);
+        verify(educationRepository).save(captor.capture());
+
+        PortfolioEducation captured = captor.getValue();
+        assertThat(captured.getEmployeeId()).isEqualTo(employeeId);
+        assertThat(captured.getInstitution()).isEqualTo("Harvard");
+        assertThat(captured.getDegree()).isEqualTo("PhD");
+        assertThat(captured.getFieldOfStudy()).isEqualTo("Physics");
+        assertThat(captured.getGraduationDate()).isEqualTo(LocalDate.of(2022, 5, 20));
+    }
+
+    @Test
     void createEducation_employeeNotFound_throwsEntityNotFoundException() {
         UUID employeeId = UUID.randomUUID();
         var request = new CreateEducationRequest("MIT", "BSc", "CS", LocalDate.of(2020, 6, 15));
@@ -253,6 +278,32 @@ class PortfolioServiceImplTest {
         assertThat(response.role()).isEqualTo("Developer");
         assertThat(response.technologies()).containsExactly("Java", "Angular");
         verify(projectRepository).save(any(PortfolioProject.class));
+    }
+
+    @Test
+    void createProject_shouldSetAllFieldsOnEntity() {
+        UUID employeeId = UUID.randomUUID();
+        var request = new CreateProjectRequest("My Project", "Desc here", "Architect",
+                List.of("Kotlin", "React"), LocalDate.of(2024, 3, 1), LocalDate.of(2024, 9, 30));
+
+        when(employeeRepository.existsById(employeeId)).thenReturn(true);
+
+        var savedEntity = createProjectEntity(UUID.randomUUID(), employeeId);
+        when(projectRepository.save(any(PortfolioProject.class))).thenReturn(savedEntity);
+
+        service.createProject(employeeId, request);
+
+        ArgumentCaptor<PortfolioProject> captor = ArgumentCaptor.forClass(PortfolioProject.class);
+        verify(projectRepository).save(captor.capture());
+
+        PortfolioProject captured = captor.getValue();
+        assertThat(captured.getEmployeeId()).isEqualTo(employeeId);
+        assertThat(captured.getProjectName()).isEqualTo("My Project");
+        assertThat(captured.getDescription()).isEqualTo("Desc here");
+        assertThat(captured.getRole()).isEqualTo("Architect");
+        assertThat(captured.getTechnologies()).containsExactly("Kotlin", "React");
+        assertThat(captured.getStartDate()).isEqualTo(LocalDate.of(2024, 3, 1));
+        assertThat(captured.getEndDate()).isEqualTo(LocalDate.of(2024, 9, 30));
     }
 
     @Test
@@ -365,6 +416,27 @@ class PortfolioServiceImplTest {
         assertThat(response.url()).isEqualTo("https://github.com/johndoe");
         assertThat(response.label()).isEqualTo("GitHub");
         verify(linkRepository).save(any(PortfolioLink.class));
+    }
+
+    @Test
+    void createLink_shouldSetAllFieldsOnEntity() {
+        UUID employeeId = UUID.randomUUID();
+        var request = new CreateLinkRequest("https://linkedin.com/in/test", "LinkedIn");
+
+        when(employeeRepository.existsById(employeeId)).thenReturn(true);
+
+        var savedEntity = createLinkEntity(UUID.randomUUID(), employeeId);
+        when(linkRepository.save(any(PortfolioLink.class))).thenReturn(savedEntity);
+
+        service.createLink(employeeId, request);
+
+        ArgumentCaptor<PortfolioLink> captor = ArgumentCaptor.forClass(PortfolioLink.class);
+        verify(linkRepository).save(captor.capture());
+
+        PortfolioLink captured = captor.getValue();
+        assertThat(captured.getEmployeeId()).isEqualTo(employeeId);
+        assertThat(captured.getUrl()).isEqualTo("https://linkedin.com/in/test");
+        assertThat(captured.getLabel()).isEqualTo("LinkedIn");
     }
 
     @Test

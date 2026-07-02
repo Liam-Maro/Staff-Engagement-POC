@@ -8,12 +8,14 @@ import com.staffengagement.task.dto.TaskQueryResult;
 import com.staffengagement.task.model.Task;
 import com.staffengagement.task.model.TaskStatus;
 import com.staffengagement.task.repository.TaskRepository;
+import com.staffengagement.task.repository.TaskSpecifications;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -29,8 +31,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Unit tests for TaskServiceImpl.findTasks() edge cases.
@@ -200,6 +201,186 @@ class TaskQueryEdgeCaseTest {
             TaskQueryResult result = taskService.findTasks(params);
             assertThat(result).isNotNull();
             assertThat(result.tasks()).isEmpty();
+        }
+    }
+
+    // --- Requirement: Verify each individual filter is actually composed into spec ---
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findTasks_withAssigneeId_shouldComposeAssigneeSpecification() {
+        UUID assigneeId = UUID.randomUUID();
+        var params = new TaskQueryParams(
+                assigneeId, null, null, null,
+                null, null, null, null,
+                null, null, 0, 50
+        );
+        Page<Task> emptyPage = new PageImpl<>(Collections.emptyList());
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<TaskSpecifications> specs = mockStatic(TaskSpecifications.class)) {
+            Specification<Task> mockSpec = mock(Specification.class);
+            specs.when(() -> TaskSpecifications.hasAssignee(assigneeId)).thenReturn(mockSpec);
+
+            taskService.findTasks(params);
+
+            specs.verify(() -> TaskSpecifications.hasAssignee(assigneeId));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findTasks_withCreatorId_shouldComposeCreatorSpecification() {
+        UUID creatorId = UUID.randomUUID();
+        var params = new TaskQueryParams(
+                null, creatorId, null, null,
+                null, null, null, null,
+                null, null, 0, 50
+        );
+        Page<Task> emptyPage = new PageImpl<>(Collections.emptyList());
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<TaskSpecifications> specs = mockStatic(TaskSpecifications.class)) {
+            Specification<Task> mockSpec = mock(Specification.class);
+            specs.when(() -> TaskSpecifications.hasCreator(creatorId)).thenReturn(mockSpec);
+
+            taskService.findTasks(params);
+
+            specs.verify(() -> TaskSpecifications.hasCreator(creatorId));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findTasks_withExcludeSelfAssigned_shouldComposeExcludeSpecification() {
+        var params = new TaskQueryParams(
+                null, null, Boolean.TRUE, null,
+                null, null, null, null,
+                null, null, 0, 50
+        );
+        Page<Task> emptyPage = new PageImpl<>(Collections.emptyList());
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<TaskSpecifications> specs = mockStatic(TaskSpecifications.class)) {
+            Specification<Task> mockSpec = mock(Specification.class);
+            specs.when(TaskSpecifications::excludeSelfAssigned).thenReturn(mockSpec);
+
+            taskService.findTasks(params);
+
+            specs.verify(TaskSpecifications::excludeSelfAssigned);
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findTasks_withDueDateFrom_shouldComposeDueDateFromSpecification() {
+        LocalDate from = LocalDate.of(2024, 6, 1);
+        var params = new TaskQueryParams(
+                null, null, null, null,
+                from, null, null, null,
+                null, null, 0, 50
+        );
+        Page<Task> emptyPage = new PageImpl<>(Collections.emptyList());
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<TaskSpecifications> specs = mockStatic(TaskSpecifications.class)) {
+            Specification<Task> mockSpec = mock(Specification.class);
+            specs.when(() -> TaskSpecifications.dueDateFrom(from)).thenReturn(mockSpec);
+
+            taskService.findTasks(params);
+
+            specs.verify(() -> TaskSpecifications.dueDateFrom(from));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findTasks_withDueDateTo_shouldComposeDueDateToSpecification() {
+        LocalDate to = LocalDate.of(2024, 12, 31);
+        var params = new TaskQueryParams(
+                null, null, null, null,
+                null, to, null, null,
+                null, null, 0, 50
+        );
+        Page<Task> emptyPage = new PageImpl<>(Collections.emptyList());
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<TaskSpecifications> specs = mockStatic(TaskSpecifications.class)) {
+            Specification<Task> mockSpec = mock(Specification.class);
+            specs.when(() -> TaskSpecifications.dueDateTo(to)).thenReturn(mockSpec);
+
+            taskService.findTasks(params);
+
+            specs.verify(() -> TaskSpecifications.dueDateTo(to));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findTasks_withCreatedFrom_shouldComposeCreatedFromSpecification() {
+        LocalDate from = LocalDate.of(2024, 1, 1);
+        var params = new TaskQueryParams(
+                null, null, null, null,
+                null, null, from, null,
+                null, null, 0, 50
+        );
+        Page<Task> emptyPage = new PageImpl<>(Collections.emptyList());
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<TaskSpecifications> specs = mockStatic(TaskSpecifications.class)) {
+            Specification<Task> mockSpec = mock(Specification.class);
+            specs.when(() -> TaskSpecifications.createdFrom(from)).thenReturn(mockSpec);
+
+            taskService.findTasks(params);
+
+            specs.verify(() -> TaskSpecifications.createdFrom(from));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findTasks_withCreatedTo_shouldComposeCreatedToSpecification() {
+        LocalDate to = LocalDate.of(2024, 12, 31);
+        var params = new TaskQueryParams(
+                null, null, null, null,
+                null, null, null, to,
+                null, null, 0, 50
+        );
+        Page<Task> emptyPage = new PageImpl<>(Collections.emptyList());
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<TaskSpecifications> specs = mockStatic(TaskSpecifications.class)) {
+            Specification<Task> mockSpec = mock(Specification.class);
+            specs.when(() -> TaskSpecifications.createdTo(to)).thenReturn(mockSpec);
+
+            taskService.findTasks(params);
+
+            specs.verify(() -> TaskSpecifications.createdTo(to));
+        }
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    void findTasks_withNoFilters_shouldNotCallAnySpecificationBuilder() {
+        var params = new TaskQueryParams(
+                null, null, null, null,
+                null, null, null, null,
+                null, null, 0, 50
+        );
+        Page<Task> emptyPage = new PageImpl<>(Collections.emptyList());
+        when(repository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(emptyPage);
+
+        try (MockedStatic<TaskSpecifications> specs = mockStatic(TaskSpecifications.class)) {
+            taskService.findTasks(params);
+
+            specs.verify(() -> TaskSpecifications.hasAssignee(any()), never());
+            specs.verify(() -> TaskSpecifications.hasCreator(any()), never());
+            specs.verify(TaskSpecifications::excludeSelfAssigned, never());
+            specs.verify(() -> TaskSpecifications.hasStatus(any()), never());
+            specs.verify(() -> TaskSpecifications.dueDateFrom(any()), never());
+            specs.verify(() -> TaskSpecifications.dueDateTo(any()), never());
+            specs.verify(() -> TaskSpecifications.createdFrom(any()), never());
+            specs.verify(() -> TaskSpecifications.createdTo(any()), never());
         }
     }
 }
